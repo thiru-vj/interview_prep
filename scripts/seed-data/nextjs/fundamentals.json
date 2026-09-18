@@ -1,0 +1,456 @@
+[
+  {
+    "question": "What is Next.js and what problem does it solve on top of React?",
+    "answer": "Next.js is a React framework that adds the pieces React itself doesn't provide out of the box: file-based routing, server-side rendering and static generation, an opinionated build pipeline, and built-in optimizations for images, fonts, and scripts. Instead of assembling a router, a bundler, and a rendering strategy yourself, Next.js gives you a batteries-included structure so you can focus on building pages and features.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between Next.js and Create React App / plain Vite React?",
+    "answer": "Plain React tooling like Vite gives you a client-only single-page app with no built-in routing or server rendering; you bolt on a router and data-fetching library yourself. Next.js is a full framework: it ships file-based routing, server-side rendering/static generation, API routes, and image/font optimization by default, and it runs a Node.js (or edge) server rather than shipping a purely static bundle.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "comparison"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the two routing systems Next.js supports, and how do they differ?",
+    "answer": "The Pages Router (the original system) uses a `pages/` directory where each file maps to a route, and data fetching is done with functions like `getServerSideProps` and `getStaticProps`. The App Router (introduced in Next.js 13, now the default) uses an `app/` directory built on React Server Components, folder-based routing with special files like `page.js` and `layout.js`, and fetches data directly inside async server components.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "app-router"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the minimum project structure needed to start a Next.js app?",
+    "answer": "A Next.js app needs a `package.json` with the `next`, `react`, and `react-dom` dependencies, a `next.config.js` (optional, for custom config), and either a `pages/` or `app/` directory containing at least one route file. `create-next-app` scaffolds this structure automatically along with sensible defaults for TypeScript, ESLint, and Tailwind if selected.",
+    "example": null,
+    "code": "npx create-next-app@latest my-app",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "project-structure"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `public/` folder do in a Next.js project?",
+    "answer": "Files placed in `public/` are served as static assets directly from the site's root URL — for example, `public/logo.png` is reachable at `/logo.png`. It's the right place for favicons, robots.txt, manifest files, and images that don't need build-time optimization, as opposed to images imported into components, which Next.js can optimize automatically via the `next/image` pipeline.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "project-structure"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the root `layout.js` file in the App Router, and why is it required?",
+    "answer": "The root layout at `app/layout.js` wraps every page in the application and must render the `<html>` and `<body>` tags, since the App Router no longer uses a `_document.js` or `_app.js` file for that purpose. It's the one layout every route shares, making it the natural place for global providers, fonts, and shared chrome like a navbar.",
+    "example": null,
+    "code": "export default function RootLayout({ children }) {\n  return (\n    <html lang=\"en\">\n      <body>{children}</body>\n    </html>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "app-router",
+      "layouts"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What did `_app.js` and `_document.js` do in the Pages Router?",
+    "answer": "`_app.js` is a special component that wraps every page, useful for persisting layout, injecting global CSS, or wrapping the app in context providers across navigations. `_document.js` customizes the shared `<html>` and `<body>` markup that wraps the entire page (e.g. adding a `lang` attribute or custom fonts link) and only renders on the server, so it can't contain interactive logic.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you add global CSS to a Next.js application?",
+    "answer": "Global CSS can only be imported in one place: the root layout (`app/layout.js`) in the App Router, or `_app.js` in the Pages Router. Next.js intentionally disallows importing global stylesheets inside individual page or component files to avoid style leakage and unpredictable ordering.",
+    "example": null,
+    "code": "import './globals.css';\n\nexport default function RootLayout({ children }) {\n  return <html><body>{children}</body></html>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "styling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `next.config.js` used for?",
+    "answer": "`next.config.js` (or `next.config.ts`/`.mjs`) is the framework's central configuration file, used for things like setting up redirects and rewrites, configuring allowed image domains, enabling experimental features, customizing webpack/Turbopack, and setting environment-specific build options. Most Next.js apps run fine with no custom config at all, since the defaults are designed to be sensible out of the box.",
+    "example": null,
+    "code": "/** @type {import('next').NextConfig} */\nconst nextConfig = {\n  images: { domains: ['example.com'] },\n};\n\nmodule.exports = nextConfig;",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "configuration"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What build commands does a typical Next.js `package.json` define, and what does each do?",
+    "answer": "`next dev` starts a local development server with fast refresh and detailed error overlays. `next build` compiles and optimizes the app for production, generating the `.next/` output directory. `next start` runs that production build with a Node.js server, and `next lint` runs ESLint using Next.js's recommended rule set.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "tooling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Turbopack, and how does it relate to webpack in Next.js?",
+    "answer": "Turbopack is a Rust-based bundler built by Vercel intended as a faster successor to webpack, used in Next.js for local development (`next dev --turbo`, or the default in newer versions) to dramatically speed up cold starts and hot module replacement. As of recent Next.js versions it's stabilizing for production builds too, but webpack remains the default/fallback for builds that rely on unsupported plugins or loaders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "tooling",
+      "turbopack"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a Next.js page and a component?",
+    "answer": "A page is any file inside `app/` named `page.js` (or, in the Pages Router, any file directly under `pages/`) — Next.js automatically turns it into a routable URL. A regular component is just a normal React function that can live anywhere and is only rendered when explicitly imported and used, with no automatic route created for it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "routing"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js handle TypeScript support out of the box?",
+    "answer": "Next.js detects a `tsconfig.json` (or you can let `create-next-app` generate one) and automatically configures TypeScript support, including type-checking during `next build` and generating types for routes and config. You don't need to manually wire up a TypeScript loader or babel preset — Next.js's compiler (SWC) handles the transpilation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "typescript"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is SWC and why did Next.js replace Babel with it by default?",
+    "answer": "SWC is a Rust-based JavaScript/TypeScript compiler that Next.js uses by default for transpilation and minification instead of Babel. It's significantly faster than Babel because it's compiled to native code rather than running in JavaScript, which speeds up both development builds and production builds; a custom `.babelrc` still opts a project back into Babel when needed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "tooling",
+      "swc"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do environment variables work in Next.js, and what does the `NEXT_PUBLIC_` prefix mean?",
+    "answer": "Variables in `.env.local` (or `.env.production`, etc.) are available on the server by default, but are not exposed to client-side JavaScript unless prefixed with `NEXT_PUBLIC_`. That prefix tells Next.js to inline the value into the client bundle at build time, so only non-sensitive values (like a public API base URL) should ever use it.",
+    "example": null,
+    "code": "// .env.local\nDATABASE_URL=postgres://...        # server only\nNEXT_PUBLIC_API_URL=https://api.example.com  # exposed to the browser",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "environment-variables"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `create-next-app` and what choices does it prompt you for?",
+    "answer": "`create-next-app` is the official CLI scaffolding tool for bootstrapping a new Next.js project. It prompts for options like TypeScript vs JavaScript, ESLint setup, Tailwind CSS, whether to use the `src/` directory, and whether to use the App Router, then generates a working starter project with those choices applied.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "tooling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the optional `src/` directory in a Next.js project?",
+    "answer": "Using a `src/` directory (e.g. `src/app/` instead of `app/` at the project root) is purely organizational — it separates application source code from root-level config files like `next.config.js`, `package.json`, and `.eslintrc`. Next.js supports both layouts identically; it's a preference, not a functional difference.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "project-structure"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Who maintains Next.js, and how does that relationship shape the framework?",
+    "answer": "Next.js is developed and maintained primarily by Vercel, a hosting company, though it's open source and accepts community contributions. This relationship means Next.js is deeply optimized for deployment on Vercel's platform (features like ISR and edge functions map closely to Vercel infrastructure), though it can be self-hosted or deployed elsewhere with some feature trade-offs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "ecosystem"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'zero-config' mean in the context of Next.js, and where does it stop being true?",
+    "answer": "Zero-config means a new Next.js project works with sensible defaults for routing, bundling, TypeScript, and CSS support without hand-writing build configuration. It stops being true once you need custom behavior — custom webpack loaders, non-default redirects, multi-tenant routing, or specific caching rules — at which point you configure `next.config.js` explicitly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "configuration"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a React Server Component, at a fundamental level, and why does Next.js default to it?",
+    "answer": "A React Server Component renders entirely on the server and sends only its resulting output (not its JavaScript) to the browser, meaning it never re-renders on the client and can't use browser-only APIs or hooks like `useState`. The App Router defaults every component to a server component because it reduces client bundle size and lets components fetch data directly without an API round trip, reserving client components for interactivity.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "server-components"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the `metadata` export used for in the App Router?",
+    "answer": "Exporting a `metadata` object (or a `generateMetadata` function) from a `page.js` or `layout.js` file lets Next.js manage `<head>` content like the page title, meta description, and Open Graph tags declaratively, without manually rendering a `<head>` tag. It replaces the `next/head` component used in the Pages Router.",
+    "example": "export const metadata = { title: 'My Page', description: 'A page about things' };",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "metadata",
+      "seo"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How did the Pages Router historically manage `<head>` content, and what component did it use?",
+    "answer": "The Pages Router uses the `next/head` component, which lets you declare tags like `<title>` and meta tags inside a page component; Next.js merges and deduplicates these into the document head during rendering. It has to be used inside each page's JSX rather than as a plain export, unlike the App Router's `metadata` object.",
+    "example": null,
+    "code": "import Head from 'next/head';\n\nfunction Page() {\n  return (\n    <>\n      <Head><title>My Page</title></Head>\n      <main>...</main>\n    </>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "pages-router",
+      "seo"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might a team choose to stick with the Pages Router on a new project instead of the App Router?",
+    "answer": "Reasons include familiarity and existing team expertise, reliance on libraries or patterns (like certain data-fetching libraries or class components) that don't yet fully support Server Components, or a simpler mental model when the app doesn't need fine-grained server/client component splitting. The Pages Router is still fully supported, just no longer the default or the focus of new feature development.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "pages-router",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `.next/` folder, and should it be committed to version control?",
+    "answer": "`.next/` is the build output directory Next.js generates during `next dev` (a dev cache) and `next build` (production artifacts including compiled pages, server bundles, and static assets). It should never be committed — it's machine-generated, environment-specific, and regenerated on every build, so it belongs in `.gitignore`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "project-structure"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js support absolute imports and custom path aliases?",
+    "answer": "Next.js reads the `baseUrl` and `paths` settings from `tsconfig.json` (or `jsconfig.json` for JS projects) to enable absolute imports and custom aliases like `@/components/Button` instead of long relative paths, with no extra bundler configuration required.",
+    "example": null,
+    "code": "// tsconfig.json\n{ \"compilerOptions\": { \"baseUrl\": \".\", \"paths\": { \"@/*\": [\"./src/*\"] } } }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "tooling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'framework' mean in Next.js's own description of itself, as opposed to a 'library'?",
+    "answer": "Next.js describes itself as a framework because it dictates structure and makes architectural decisions for you — routing conventions, where data fetching happens, how rendering strategies are chosen per route — rather than being an unopinionated toolkit you assemble freely, which is how React itself is described as a library. This trade-off gives faster setup and consistent patterns across a team at the cost of some flexibility.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "comparison"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you use Next.js purely as a static site generator with no server at runtime?",
+    "answer": "Yes — using `output: 'export'` in `next.config.js` produces a fully static HTML/CSS/JS export that can be hosted on any static file host with no Node.js server required. This disables features that need a live server at request time, such as `getServerSideProps`, on-demand ISR, and API routes/route handlers that aren't statically generated.",
+    "example": null,
+    "code": "// next.config.js\nmodule.exports = { output: 'export' };",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "static-export"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does the `layout.js` vs `template.js` distinction play in the App Router?",
+    "answer": "A `layout.js` persists across navigations between sibling routes and preserves its state and DOM (children just swap inside it), while a `template.js` re-mounts from scratch on every navigation, resetting state and re-running effects. Templates are useful when you specifically want fresh state or re-triggered animations/effects on each navigation rather than the persistence layouts provide.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "app-router",
+      "layouts"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Next.js's font optimization feature and why does it matter for fundamentals like page structure?",
+    "answer": "`next/font` (built into the App Router and available in the Pages Router) self-hosts Google Fonts or local font files at build time rather than fetching them from an external CDN at runtime, eliminating extra network requests and layout shift from font swapping. It's imported and applied directly in a layout or page file, making font loading part of the app's declared structure instead of a separate `<link>` tag.",
+    "example": "import { Inter } from 'next/font/google';\nconst inter = Inter({ subsets: ['latin'] });",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "fonts"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is Next.js commonly described as a good default choice for production React apps?",
+    "answer": "It bundles the pieces most production apps need anyway — routing, SSR/SSG, image and font optimization, code splitting, and API endpoints — behind sensible defaults, reducing the setup and decision-making overhead compared to hand-assembling a React SPA. Its strong SEO story (via server rendering) and first-class Vercel hosting integration also make it a common default for content-facing and marketing-adjacent sites, not just dashboards.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "fundamentals"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between `page.js`, `layout.js`, `loading.js`, and `error.js` as App Router file conventions?",
+    "answer": "`page.js` defines the unique UI for a route and makes it publicly accessible. `layout.js` wraps a segment and its children with shared UI that persists across navigation. `loading.js` automatically wraps the segment in a React Suspense boundary and renders while the page's data is loading. `error.js` wraps the segment in an error boundary and renders when a rendering error occurs within it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "app-router",
+      "conventions"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you migrate an existing Pages Router app to the App Router?",
+    "answer": "Next.js supports incremental migration: both `pages/` and `app/` can coexist in the same project, with `app/` routes taking precedence over `pages/` routes if they overlap. Teams typically move one route or feature at a time, converting `getServerSideProps`/`getStaticProps` data fetching into async server components and splitting out client components where interactivity is needed, rather than rewriting the whole app at once.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "fundamentals",
+      "migration"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

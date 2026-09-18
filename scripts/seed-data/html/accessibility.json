@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is web accessibility (a11y) and why does it matter?",
+    "answer": "Web accessibility means designing and building sites so people with disabilities — visual, auditory, motor, or cognitive — can perceive, understand, navigate, and interact with them, often using assistive technology like screen readers or switch devices. Beyond being a legal requirement in many jurisdictions (like the ADA or EN 301 549), accessible sites tend to also be more usable and SEO-friendly for everyone.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is ARIA and when should you use it, according to the first rule of ARIA?",
+    "answer": "ARIA (Accessible Rich Internet Applications) is a set of attributes that add semantic information to HTML for assistive technology, covering roles, states, and properties. The first rule of ARIA is: if a native HTML element or attribute already has the semantics and behavior you need, use it instead of re-purposing a generic element with ARIA — ARIA only changes what's announced, never the element's actual behavior or keyboard handling.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between ARIA roles, states, and properties?",
+    "answer": "A role (like role=\"button\" or role=\"alert\") defines what an element is or how it functions for assistive technology. Properties (like aria-label or aria-required) describe characteristics that generally don't change during the element's lifecycle. States (like aria-checked or aria-expanded) represent dynamic conditions that change in response to user interaction and must be kept in sync with JavaScript.",
+    "example": null,
+    "code": "<button aria-expanded=\"false\" aria-controls=\"menu\">Menu</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the alt attribute on <img>, and when should it be left empty?",
+    "answer": "alt provides a text alternative describing an image's content or function for screen readers and in cases the image fails to load. It should be left as an empty string (alt=\"\") — not omitted — for purely decorative images with no informational value, which tells assistive technology to skip announcing it entirely rather than reading the filename.",
+    "example": null,
+    "code": "<img src=\"decorative-swirl.png\" alt=\"\">\n<img src=\"chart-q3.png\" alt=\"Q3 revenue grew 15% year over year\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "accessibility", "media"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between aria-label, aria-labelledby, and a visible <label> or heading?",
+    "answer": "aria-label sets an accessible name directly as a string, useful when no visible text exists (like an icon-only button). aria-labelledby references the id(s) of other elements whose text content is concatenated to form the accessible name, useful for reusing existing visible text. A visible label/heading is always preferable when feasible, since it benefits sighted users too, not just assistive technology.",
+    "example": null,
+    "code": "<button aria-label=\"Close dialog\">×</button>\n<h2 id=\"billing-heading\">Billing Address</h2>\n<section aria-labelledby=\"billing-heading\">...</section>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the tabindex attribute do, and why should positive values generally be avoided?",
+    "answer": "tabindex=\"0\" adds an element to the natural tab order at its position in the DOM. tabindex=\"-1\" makes an element programmatically focusable (via .focus()) but removes it from the tab order. Positive values (tabindex=\"1\", \"2\"...) force a custom tab order that overrides the DOM order, which is almost always a maintenance and usability trap since it's easy to create an order that doesn't match the visual layout.",
+    "example": null,
+    "code": "<div tabindex=\"0\" role=\"button\">Custom focusable element</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why is it important to maintain a logical focus order that matches the visual reading order of a page?",
+    "answer": "Keyboard and screen reader users navigate primarily via Tab and arrow keys, relying on focus order to understand the page's structure sequentially. If CSS repositions elements visually (e.g. with flexbox order or absolute positioning) without a matching DOM order, keyboard users experience a confusing, illogical jump between elements that doesn't match what they see.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a focus trap and when is it appropriate to use one?",
+    "answer": "A focus trap constrains keyboard Tab navigation to loop within a specific set of elements, most commonly a modal dialog, so users can't accidentally tab to content behind or outside it while it's open. It's appropriate for true modal contexts, but must always include a way to close and return focus to the triggering element, and should never be applied to the whole page or non-modal content.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of a 'skip to main content' link?",
+    "answer": "A skip link is typically the first focusable element on the page, visually hidden until focused, that lets keyboard users jump directly to the main content, bypassing repetitive navigation menus that would otherwise need to be tabbed through on every single page load.",
+    "example": null,
+    "code": "<a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n...\n<main id=\"main-content\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between aria-hidden=\"true\" and the hidden HTML attribute?",
+    "answer": "The hidden attribute removes an element from both the visual rendering and the accessibility tree entirely — it's not displayed or announced. aria-hidden=\"true\" hides an element only from assistive technology while it can remain visually present, which is useful for purely decorative icons next to visible text, but dangerous if misapplied to visible interactive content since it becomes invisible to screen readers while still focusable.",
+    "example": null,
+    "code": "<button>\n  <svg aria-hidden=\"true\">...</svg>\n  Save\n</button>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an ARIA live region, and what's the difference between aria-live=\"polite\" and aria-live=\"assertive\"?",
+    "answer": "A live region tells assistive technology to announce content changes within it even when it's not currently focused, useful for things like form errors or async status updates. aria-live=\"polite\" waits until the screen reader finishes its current announcement before reading the update, while aria-live=\"assertive\" interrupts immediately — assertive should be reserved for urgent, time-sensitive messages like errors, since overuse is disruptive.",
+    "example": null,
+    "code": "<div aria-live=\"polite\" id=\"status\"></div>\n<script>\n  document.getElementById('status').textContent = 'Saved successfully';\n</script>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you make a custom dropdown built from <div> elements accessible, versus using a native <select>?",
+    "answer": "A native <select> gets keyboard support, focus management, and correct roles for free. A custom div-based dropdown needs role=\"listbox\"/role=\"option\" (or role=\"combobox\" for a search-filterable version), aria-expanded on the trigger, aria-activedescendant or explicit focus management for the highlighted option, and full keyboard handling for arrow keys, Enter, Escape, and typeahead — all of which is substantial work to replicate correctly, which is why native elements are preferred whenever the design allows.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is relying solely on color to convey information (like form errors or status) an accessibility problem?",
+    "answer": "Users with color blindness or low vision may not be able to distinguish the color difference, and screen reader users receive no information from color at all. Status or error states should be reinforced with text, icons, or patterns in addition to color — for example, an invalid field should also show error text, not just a red border.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the WCAG minimum contrast ratio requirement for normal body text at the AA level?",
+    "answer": "WCAG 2.1 Level AA requires a contrast ratio of at least 4.5:1 between normal-sized text and its background, and at least 3:1 for large text (roughly 18pt+ or 14pt+ bold). Level AAA raises these to 7:1 and 4.5:1 respectively, and UI components/graphical objects have their own separate 3:1 minimum under WCAG 2.1's non-text contrast criterion.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "wcag"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How should decorative icon fonts or SVG icons used without accompanying text be made accessible?",
+    "answer": "An icon that conveys meaning on its own (like a trash icon acting as a delete button) needs an accessible name via aria-label on the interactive element itself, or visually-hidden text inside it. A purely decorative icon accompanying visible text should be hidden from assistive technology with aria-hidden=\"true\" so it isn't announced redundantly.",
+    "example": null,
+    "code": "<button aria-label=\"Delete item\">\n  <svg aria-hidden=\"true\"><!-- trash icon --></svg>\n</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the accessibility tree represent, and how does it relate to the DOM?",
+    "answer": "The accessibility tree is a parallel structure the browser derives from the DOM, containing only the nodes and information relevant to assistive technology — each node's role, accessible name, state, and value. Elements can be excluded from it (like those hidden via CSS, the hidden attribute, or aria-hidden), and this tree is what screen readers actually query, not the raw DOM.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the accessible name of an element and how is it computed when multiple sources are present?",
+    "answer": "The accessible name is the text assistive technology announces to identify an element. Its computation follows a precedence order defined by the Accessible Name and Description Computation spec: aria-labelledby takes priority over aria-label, which takes priority over a native labeling mechanism (like a <label>), which takes priority over the element's title attribute or visible text content.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should interactive elements always have a visible focus indicator, and when is it acceptable to remove the default outline?",
+    "answer": "A visible focus indicator lets keyboard users see which element currently has focus as they tab through the page; removing it with `outline: none` and providing nothing in its place makes the site unusable for keyboard-only users. It's acceptable to customize (not remove) the default outline's appearance, as long as a clear, sufficiently contrasted alternative replaces it, ideally only shown for keyboard users via the :focus-visible pseudo-class.",
+    "example": null,
+    "code": "button:focus-visible {\n  outline: 2px solid #2563eb;\n  outline-offset: 2px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "css"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the four principles of WCAG, summarized by the acronym POUR?",
+    "answer": "Perceivable — information must be presentable in ways users can perceive (e.g. text alternatives, sufficient contrast). Operable — interface components must be usable via keyboard and given enough time. Understandable — content and operation must be predictable and clear. Robust — content must work reliably across current and future assistive technologies and browsers.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "wcag"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you make an image that's also a link accessible, given the image might have decorative alt text elsewhere on the page?",
+    "answer": "When an <img> is wrapped in an <a>, the alt text should describe the link's destination or purpose, not just the image's visual content — for example alt=\"Go to homepage\" rather than alt=\"Company logo\", since the accessible name of the whole link is derived from the image's alt text when no other link text is present.",
+    "example": null,
+    "code": "<a href=\"/\">\n  <img src=\"logo.png\" alt=\"Acme Inc. home\">\n</a>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does the <button> element's implicit keyboard behavior play, and why does recreating it with a styled <div> often go wrong?",
+    "answer": "A native <button> is automatically focusable, is announced as 'button' with its accessible name, and responds to both Enter and Space key presses to activate its click handler. A <div onclick=\"...\"> has none of this by default — developers often forget tabindex=\"0\", role=\"button\", and manually wiring both Enter and Space key handlers, resulting in a control that's invisible to keyboard users.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between aria-describedby and aria-labelledby?",
+    "answer": "aria-labelledby contributes to (or overrides) an element's accessible name — its primary identification. aria-describedby provides supplementary descriptive text, exposed to assistive technology as a description rather than the name, commonly used to associate hint text or validation error messages with an input without duplicating the label.",
+    "example": null,
+    "code": "<input id=\"pwd\" type=\"password\" aria-describedby=\"pwd-hint\">\n<p id=\"pwd-hint\">Must be at least 8 characters.</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How should form validation errors be announced to screen reader users when a form is submitted with invalid fields?",
+    "answer": "Errors should be programmatically associated with their field via aria-describedby, the invalid field should get aria-invalid=\"true\", and a summary of errors is often placed in a live region (or given focus) at the top of the form so screen reader users are immediately informed rather than having to discover errors by tabbing through every field again.",
+    "example": null,
+    "code": "<input id=\"email\" aria-invalid=\"true\" aria-describedby=\"email-error\">\n<span id=\"email-error\" role=\"alert\">Enter a valid email address.</span>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is using role='presentation' or role='none' on a table sometimes necessary, and what does it do?",
+    "answer": "role=\"presentation\" (or its alias role=\"none\") strips an element's default semantic role from the accessibility tree while keeping it visually unchanged, historically used on <table> elements that were being (mis)used purely for layout rather than tabular data, so screen readers wouldn't announce confusing row/column navigation for what is really just a visual grid.",
+    "example": null,
+    "code": "<table role=\"presentation\">\n  <tr><td>Logo</td><td>Nav</td></tr>\n</table>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are landmark roles and how do screen reader users typically use them to navigate a page?",
+    "answer": "Landmark roles (banner, navigation, main, complementary, contentinfo, search, form) mark out major regions of a page, most of which map directly to semantic HTML elements (<header>, <nav>, <main>, <aside>, <footer>). Screen reader users can pull up a landmarks list to jump directly between these regions instead of navigating linearly through the whole page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a screen reader announcing an element's role automatically versus needing an explicit ARIA role?",
+    "answer": "Native HTML elements have implicit ARIA roles baked into the browser's accessibility mapping — a <button> is automatically role 'button', an <a href> is role 'link' — so no explicit role attribute is needed. An explicit role is only necessary when using a generic element (like <div> or <span>) to build a custom widget that has no native HTML equivalent, or in rare cases to override an element's default semantics.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the prefers-reduced-motion media feature relate to HTML/CSS accessibility, even though it's a CSS feature?",
+    "answer": "prefers-reduced-motion lets a page detect that the user has requested reduced motion at the OS level (often due to vestibular disorders triggered by animation) and respond by disabling or simplifying animations and transitions defined in the page's CSS. It's an accessibility consideration that spans both markup (structuring content so it's still usable without motion cues) and CSS implementation.",
+    "example": null,
+    "code": "@media (prefers-reduced-motion: reduce) {\n  * { animation: none !important; transition: none !important; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What common testing tools or techniques would you use to audit a page's accessibility?",
+    "answer": "Automated tools like axe DevTools, Lighthouse, or WAVE catch programmatically detectable issues (missing alt text, low contrast, missing labels), but they only cover a subset of WCAG criteria. Manual testing — navigating the page using only the keyboard, and testing with an actual screen reader like NVDA, JAWS, or VoiceOver — is necessary to catch issues like illogical focus order or unclear announcements that automated tools can't detect.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of visually-hidden (screen-reader-only) CSS classes, and how do they differ from display: none?",
+    "answer": "A visually-hidden class positions content off-screen or collapses it to a 1px box (without using display: none or visibility: hidden, which both remove it from the accessibility tree) so it remains readable by screen readers while being invisible sighted users — commonly used to give icon-only buttons extra descriptive text without cluttering the visual design.",
+    "example": null,
+    "code": ".sr-only {\n  position: absolute;\n  width: 1px; height: 1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["html", "accessibility", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does an accordion or tab widget built with plain <div>s need role, aria-selected, and keyboard handling, while <details>/<summary> doesn't?",
+    "answer": "<details>/<summary> is a native disclosure widget that the browser already exposes with the correct implicit role, expanded state, and keyboard behavior (click or Enter toggles it, and it's reachable via Tab). A custom div-based tab or accordion widget has none of that built in, so the developer must manually add roles like tab/tabpanel, manage aria-selected/aria-expanded state, and implement arrow-key or Enter/Space handling to match the ARIA Authoring Practices pattern for that widget.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "accessibility", "aria"],
+    "isFrequentlyAsked": false
+  }
+]

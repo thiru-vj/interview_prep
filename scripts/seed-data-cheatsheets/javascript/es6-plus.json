@@ -1,0 +1,182 @@
+[
+  {
+    "name": "let",
+    "syntax": "let variableName = value;",
+    "description": "Declares a block-scoped variable that can be reassigned but not redeclared in the same scope.",
+    "example": "let count = 1; count = 2; // ok",
+    "codeLanguage": "javascript",
+    "notes": "Unlike var, let is not hoisted to a usable state — accessing it before declaration throws a ReferenceError (the \"temporal dead zone\").",
+    "tags": ["javascript", "es6", "variables"]
+  },
+  {
+    "name": "const",
+    "syntax": "const variableName = value;",
+    "description": "Declares a block-scoped variable whose binding cannot be reassigned after initialization.",
+    "example": "const PI = 3.14; PI = 3; // TypeError",
+    "codeLanguage": "javascript",
+    "notes": "const prevents reassignment, not mutation — const obj = {} still allows obj.key = 'x'.",
+    "tags": ["javascript", "es6", "variables"]
+  },
+  {
+    "name": "Arrow Functions",
+    "syntax": "const fn = (param1, param2) => expression;",
+    "description": "A concise function syntax that does not bind its own `this`, `arguments`, or `super`, instead inheriting them from the enclosing scope.",
+    "example": "const add = (a, b) => a + b; add(2, 3); // 5",
+    "codeLanguage": "javascript",
+    "notes": "Not suitable as object methods that need their own `this`, or as constructors — they cannot be used with `new`.",
+    "tags": ["javascript", "es6", "functions"]
+  },
+  {
+    "name": "Template Literals",
+    "syntax": "`text ${expression} more text`",
+    "description": "String literals delimited by backticks that allow embedded expressions and multi-line strings.",
+    "example": "const name = 'Sam'; `Hello, ${name}!`; // 'Hello, Sam!'",
+    "codeLanguage": "javascript",
+    "notes": "Also support tagged templates: fn`text ${value}` passes the pieces to a custom function.",
+    "tags": ["javascript", "es6", "strings"]
+  },
+  {
+    "name": "Array Destructuring",
+    "syntax": "const [a, b] = array;",
+    "description": "Unpacks values from an array into distinct variables based on position.",
+    "example": "const [first, second] = [1, 2, 3]; // first = 1, second = 2",
+    "codeLanguage": "javascript",
+    "notes": "Supports skipping elements ([, second]) and default values ([a = 10] = []).",
+    "tags": ["javascript", "es6", "destructuring"]
+  },
+  {
+    "name": "Object Destructuring",
+    "syntax": "const { key1, key2: alias } = obj;",
+    "description": "Unpacks properties from an object into distinct variables based on property name, with optional renaming and defaults.",
+    "example": "const { name, age = 30 } = { name: 'Sam' }; // name = 'Sam', age = 30",
+    "codeLanguage": "javascript",
+    "notes": "Commonly used for destructuring function parameters, e.g. function greet({ name }) { ... }.",
+    "tags": ["javascript", "es6", "destructuring"]
+  },
+  {
+    "name": "Spread Operator",
+    "syntax": "[...array] or {...object} or fn(...args)",
+    "description": "Expands an iterable (array, string) or an object's own enumerable properties into individual elements or key-value pairs.",
+    "example": "const merged = [...[1, 2], ...[3, 4]]; // [1, 2, 3, 4]",
+    "codeLanguage": "javascript",
+    "notes": "Performs a shallow copy — commonly used for immutable updates like { ...state, key: value }.",
+    "tags": ["javascript", "es6", "operators"]
+  },
+  {
+    "name": "Rest Parameters",
+    "syntax": "function fn(a, b, ...rest) { ... }",
+    "description": "Collects all remaining arguments passed to a function into a real array, instead of using the array-like `arguments` object.",
+    "example": "function sum(...nums) { return nums.reduce((a, b) => a + b, 0); } sum(1, 2, 3); // 6",
+    "codeLanguage": "javascript",
+    "notes": "Must be the last parameter in the function signature; also works in destructuring, e.g. const [first, ...others] = arr.",
+    "tags": ["javascript", "es6", "functions"]
+  },
+  {
+    "name": "Default Parameters",
+    "syntax": "function fn(param = defaultValue) { ... }",
+    "description": "Allows named parameters to be initialized with default values if no value or undefined is passed.",
+    "example": "function greet(name = 'Guest') { return `Hi, ${name}`; } greet(); // 'Hi, Guest'",
+    "codeLanguage": "javascript",
+    "notes": "Default values are evaluated at call time and can reference earlier parameters.",
+    "tags": ["javascript", "es6", "functions"]
+  },
+  {
+    "name": "Classes",
+    "syntax": "class Name { constructor(...) { ... } method() { ... } }",
+    "description": "Syntactic sugar over JavaScript's prototype-based inheritance, providing a cleaner syntax for creating objects and handling inheritance.",
+    "example": "class Point { constructor(x, y) { this.x = x; this.y = y; } }",
+    "codeLanguage": "javascript",
+    "notes": "Class declarations are not hoisted the way function declarations are — they exist in the temporal dead zone until evaluated.",
+    "tags": ["javascript", "es6", "classes"]
+  },
+  {
+    "name": "Class Inheritance (extends/super)",
+    "syntax": "class Child extends Parent { constructor() { super(); } }",
+    "description": "Lets one class inherit properties and methods from another using extends, with super() used to call the parent constructor.",
+    "example": "class Animal { speak() { return 'sound'; } } class Dog extends Animal { speak() { return 'bark'; } }",
+    "codeLanguage": "javascript",
+    "notes": "super() must be called before `this` can be used in a subclass constructor.",
+    "tags": ["javascript", "es6", "classes"]
+  },
+  {
+    "name": "ES Modules (import/export)",
+    "syntax": "export const value = 1; / import { value } from './module.js';",
+    "description": "The standard system for splitting JavaScript code into reusable, statically-analyzable files that explicitly declare their dependencies.",
+    "example": "// math.js\nexport function add(a, b) { return a + b; }\n// main.js\nimport { add } from './math.js';",
+    "codeLanguage": "javascript",
+    "notes": "Supports named exports and a single default export per module (export default ...).",
+    "tags": ["javascript", "es6", "modules"]
+  },
+  {
+    "name": "Optional Chaining (?.)",
+    "syntax": "obj?.prop / obj?.[key] / obj?.method?.()",
+    "description": "Accesses a deeply nested property without throwing an error if an intermediate property is null or undefined.",
+    "example": "const city = user?.address?.city; // undefined instead of throwing, if address is missing",
+    "codeLanguage": "javascript",
+    "notes": "Short-circuits and returns undefined as soon as it hits a nullish value, without evaluating the rest of the chain.",
+    "tags": ["javascript", "es6", "operators"]
+  },
+  {
+    "name": "Nullish Coalescing (??)",
+    "syntax": "value ?? defaultValue",
+    "description": "Returns the right-hand operand only when the left-hand operand is null or undefined, unlike || which also treats 0, '', and false as absent.",
+    "example": "const count = 0 ?? 5; // 0 (|| would incorrectly give 5)",
+    "codeLanguage": "javascript",
+    "notes": "Cannot be directly combined with && or || without parentheses due to operator precedence rules.",
+    "tags": ["javascript", "es6", "operators"]
+  },
+  {
+    "name": "Map",
+    "syntax": "new Map([[key1, value1], [key2, value2]])",
+    "description": "A collection of key-value pairs where keys can be of any type (including objects), and insertion order is preserved.",
+    "example": "const m = new Map(); m.set('a', 1); m.get('a'); // 1",
+    "codeLanguage": "javascript",
+    "notes": "Unlike plain objects, Map keys aren't coerced to strings and Map has a built-in .size property.",
+    "tags": ["javascript", "es6", "data-structures"]
+  },
+  {
+    "name": "Set",
+    "syntax": "new Set([value1, value2, ...])",
+    "description": "A collection of unique values of any type, with insertion order preserved and no duplicate entries allowed.",
+    "example": "const s = new Set([1, 2, 2, 3]); [...s]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "notes": "A common idiom for deduplicating an array: [...new Set(array)].",
+    "tags": ["javascript", "es6", "data-structures"]
+  },
+  {
+    "name": "Symbol",
+    "syntax": "const sym = Symbol('description');",
+    "description": "A primitive data type whose values are unique and immutable, often used as collision-free object property keys.",
+    "example": "const id = Symbol('id'); const obj = { [id]: 123 };",
+    "codeLanguage": "javascript",
+    "notes": "Symbol properties are excluded from Object.keys(), JSON.stringify(), and for...in loops.",
+    "tags": ["javascript", "es6", "data-types"]
+  },
+  {
+    "name": "Generator Functions",
+    "syntax": "function* gen() { yield value; }",
+    "description": "Functions that can be paused and resumed, producing a sequence of values over multiple calls via the yield keyword.",
+    "example": "function* count() { yield 1; yield 2; } const it = count(); it.next(); // { value: 1, done: false }",
+    "codeLanguage": "javascript",
+    "notes": "Generators return an iterator, making them useful for lazy sequences and custom iteration protocols.",
+    "tags": ["javascript", "es6", "iterators"]
+  },
+  {
+    "name": "Computed Property Names",
+    "syntax": "const obj = { [expression]: value };",
+    "description": "Allows an object property's key to be computed dynamically from an expression at object-literal creation time.",
+    "example": "const key = 'name'; const obj = { [key]: 'Sam' }; // { name: 'Sam' }",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "es6", "objects"]
+  },
+  {
+    "name": "Shorthand Property Names",
+    "syntax": "const obj = { name, age };",
+    "description": "Lets you create an object property using a variable's name as the key and its value as the property value, without repeating the name.",
+    "example": "const name = 'Sam'; const age = 30; const person = { name, age }; // { name: 'Sam', age: 30 }",
+    "codeLanguage": "javascript",
+    "notes": "Also applies to method definitions: { greet() { ... } } instead of { greet: function() { ... } }.",
+    "tags": ["javascript", "es6", "objects"]
+  }
+]

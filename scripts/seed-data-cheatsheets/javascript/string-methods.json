@@ -1,0 +1,239 @@
+[
+  {
+    "name": "charAt()",
+    "syntax": "string.charAt(index)",
+    "description": "Returns the character at the specified index in a string.",
+    "parameters": "index — zero-based position of the character to return (default 0).",
+    "returns": "A single-character string, or an empty string if the index is out of range.",
+    "example": "'hello'.charAt(1); // 'e'",
+    "codeLanguage": "javascript",
+    "notes": "Bracket notation ('hello'[1]) does the same thing and is more commonly used today.",
+    "tags": ["javascript", "string", "access"]
+  },
+  {
+    "name": "charCodeAt()",
+    "syntax": "string.charCodeAt(index)",
+    "description": "Returns the UTF-16 numeric code of the character at the given index.",
+    "parameters": "index — zero-based position of the character (default 0).",
+    "returns": "A number representing the UTF-16 code unit, or NaN if out of range.",
+    "example": "'A'.charCodeAt(0); // 65",
+    "codeLanguage": "javascript",
+    "notes": "Use String.fromCharCode() to go the other direction, from code to character.",
+    "tags": ["javascript", "string", "unicode"]
+  },
+  {
+    "name": "String.at()",
+    "syntax": "string.at(index)",
+    "description": "Returns the character at the given index, supporting negative indices to count from the end of the string.",
+    "parameters": "index — position to access; negative values count backward from the end.",
+    "returns": "A single-character string, or undefined if out of range.",
+    "example": "'hello'.at(-1); // 'o'",
+    "codeLanguage": "javascript",
+    "notes": "Also available on arrays as array.at(index).",
+    "tags": ["javascript", "string", "access"]
+  },
+  {
+    "name": "String.indexOf()",
+    "syntax": "string.indexOf(searchValue, fromIndex)",
+    "description": "Returns the index of the first occurrence of a substring within the string, or -1 if not found.",
+    "parameters": "searchValue — substring to search for. fromIndex — optional index to start searching from.",
+    "returns": "The index of the first match, or -1.",
+    "example": "'hello world'.indexOf('world'); // 6",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "search"]
+  },
+  {
+    "name": "String.lastIndexOf()",
+    "syntax": "string.lastIndexOf(searchValue, fromIndex)",
+    "description": "Returns the index of the last occurrence of a substring, searching the string backwards.",
+    "parameters": "searchValue — substring to search for. fromIndex — optional index to start searching backward from.",
+    "returns": "The index of the last match, or -1 if not found.",
+    "example": "'a-b-a'.lastIndexOf('a'); // 4",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "search"]
+  },
+  {
+    "name": "String.includes()",
+    "syntax": "string.includes(searchValue, fromIndex)",
+    "description": "Determines whether one string may be found within another, returning true or false.",
+    "parameters": "searchValue — substring to search for. fromIndex — optional index to start searching from.",
+    "returns": "Boolean indicating whether the substring was found.",
+    "example": "'hello world'.includes('wor'); // true",
+    "codeLanguage": "javascript",
+    "notes": "Case-sensitive — normalize casing with toLowerCase() first if needed.",
+    "tags": ["javascript", "string", "search"]
+  },
+  {
+    "name": "startsWith()",
+    "syntax": "string.startsWith(searchValue, position)",
+    "description": "Determines whether a string begins with the characters of a specified substring.",
+    "parameters": "searchValue — substring to check for. position — optional index to start checking from.",
+    "returns": "Boolean indicating whether the string starts with searchValue.",
+    "example": "'hello.js'.startsWith('hello'); // true",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "search"]
+  },
+  {
+    "name": "endsWith()",
+    "syntax": "string.endsWith(searchValue, endPosition)",
+    "description": "Determines whether a string ends with the characters of a specified substring.",
+    "parameters": "searchValue — substring to check for. endPosition — optional index treated as the end of the string.",
+    "returns": "Boolean indicating whether the string ends with searchValue.",
+    "example": "'file.txt'.endsWith('.txt'); // true",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "search"]
+  },
+  {
+    "name": "String.slice()",
+    "syntax": "string.slice(start, end)",
+    "description": "Extracts a section of a string and returns it as a new string, without modifying the original.",
+    "parameters": "start — index to begin extraction. end — index to stop before (exclusive).",
+    "returns": "A new string containing the extracted section.",
+    "example": "'hello world'.slice(0, 5); // 'hello'",
+    "codeLanguage": "javascript",
+    "notes": "Supports negative indices, which count from the end of the string — unlike substring().",
+    "tags": ["javascript", "string", "extraction"]
+  },
+  {
+    "name": "substring()",
+    "syntax": "string.substring(start, end)",
+    "description": "Returns the part of the string between two indices, similar to slice() but without negative index support.",
+    "parameters": "start — index to begin extraction. end — index to stop before (exclusive).",
+    "returns": "A new string containing the extracted section.",
+    "example": "'hello world'.substring(6, 11); // 'world'",
+    "codeLanguage": "javascript",
+    "notes": "Negative or swapped arguments are automatically clamped/swapped, unlike slice().",
+    "tags": ["javascript", "string", "extraction"]
+  },
+  {
+    "name": "split()",
+    "syntax": "string.split(separator, limit)",
+    "description": "Splits a string into an array of substrings based on a specified separator.",
+    "parameters": "separator — string or regex to split on. limit — optional maximum number of pieces to include.",
+    "returns": "An array of substrings.",
+    "example": "'a,b,c'.split(','); // ['a', 'b', 'c']",
+    "codeLanguage": "javascript",
+    "notes": "Passing an empty string splits into individual characters.",
+    "tags": ["javascript", "string", "conversion"]
+  },
+  {
+    "name": "trim()",
+    "syntax": "string.trim()",
+    "description": "Removes whitespace from both ends of a string, without affecting the original string.",
+    "returns": "A new string with leading and trailing whitespace removed.",
+    "example": "'  hello  '.trim(); // 'hello'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "trimStart()",
+    "syntax": "string.trimStart()",
+    "description": "Removes whitespace from the beginning of a string only.",
+    "returns": "A new string with leading whitespace removed.",
+    "example": "'  hello'.trimStart(); // 'hello'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "trimEnd()",
+    "syntax": "string.trimEnd()",
+    "description": "Removes whitespace from the end of a string only.",
+    "returns": "A new string with trailing whitespace removed.",
+    "example": "'hello  '.trimEnd(); // 'hello'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "toUpperCase()",
+    "syntax": "string.toUpperCase()",
+    "description": "Converts a string to upper case, returning a new string.",
+    "returns": "A new upper-cased string.",
+    "example": "'hello'.toUpperCase(); // 'HELLO'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "toLowerCase()",
+    "syntax": "string.toLowerCase()",
+    "description": "Converts a string to lower case, returning a new string.",
+    "returns": "A new lower-cased string.",
+    "example": "'HELLO'.toLowerCase(); // 'hello'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "replace()",
+    "syntax": "string.replace(pattern, replacement)",
+    "description": "Returns a new string with the first match of a pattern replaced by a given replacement.",
+    "parameters": "pattern — string or regex to match. replacement — string or function producing the replacement.",
+    "returns": "A new string with the replacement applied.",
+    "example": "'2024-01-01'.replace('-', '/'); // '2024/01-01'",
+    "codeLanguage": "javascript",
+    "notes": "Only replaces the first match unless a global regex (/pattern/g) is used.",
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "replaceAll()",
+    "syntax": "string.replaceAll(pattern, replacement)",
+    "description": "Returns a new string with all matches of a pattern replaced by a given replacement.",
+    "parameters": "pattern — string or global regex to match. replacement — string or function producing the replacement.",
+    "returns": "A new string with all replacements applied.",
+    "example": "'2024-01-01'.replaceAll('-', '/'); // '2024/01/01'",
+    "codeLanguage": "javascript",
+    "notes": "A non-global regex pattern throws a TypeError — use the /g flag or a string pattern.",
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "repeat()",
+    "syntax": "string.repeat(count)",
+    "description": "Constructs and returns a new string containing the specified number of copies of the original string.",
+    "parameters": "count — number of times to repeat, must be a non-negative integer.",
+    "returns": "A new, repeated string.",
+    "example": "'ab'.repeat(3); // 'ababab'",
+    "codeLanguage": "javascript",
+    "notes": "Throws a RangeError for negative or infinite counts.",
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "padStart()",
+    "syntax": "string.padStart(targetLength, padString)",
+    "description": "Pads the current string from the start with a given string until it reaches the target length.",
+    "parameters": "targetLength — desired total length. padString — string to pad with (default is a space).",
+    "returns": "A new, padded string.",
+    "example": "'5'.padStart(3, '0'); // '005'",
+    "codeLanguage": "javascript",
+    "notes": "Commonly used for zero-padding numbers or aligning output.",
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "padEnd()",
+    "syntax": "string.padEnd(targetLength, padString)",
+    "description": "Pads the current string from the end with a given string until it reaches the target length.",
+    "parameters": "targetLength — desired total length. padString — string to pad with (default is a space).",
+    "returns": "A new, padded string.",
+    "example": "'5'.padEnd(3, '0'); // '500'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "string", "formatting"]
+  },
+  {
+    "name": "String.concat()",
+    "syntax": "string.concat(str2, str3, ...)",
+    "description": "Combines the text of one or more strings and returns a new string.",
+    "parameters": "str2, str3, ... — strings to concatenate.",
+    "returns": "A new string combining all inputs.",
+    "example": "'Hello, '.concat('World', '!'); // 'Hello, World!'",
+    "codeLanguage": "javascript",
+    "notes": "Template literals or the + operator are generally preferred over concat() in modern code.",
+    "tags": ["javascript", "string", "formatting"]
+  }
+]

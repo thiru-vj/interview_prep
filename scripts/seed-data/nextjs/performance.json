@@ -1,0 +1,439 @@
+[
+  {
+    "question": "What does the `next/image` component do differently from a plain HTML `<img>` tag?",
+    "answer": "`next/image` automatically optimizes images by resizing and re-encoding them (typically to WebP/AVIF) on demand, lazy-loads images below the fold by default, generates a responsive `srcset` for different device sizes, and requires explicit width/height (or `fill`) to prevent layout shift while the image loads. A plain `<img>` does none of this automatically.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "import Image from 'next/image';\n\n<Image src=\"/photo.jpg\" alt=\"A photo\" width={600} height={400} />",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does `next/image` require you to specify `width` and `height` (or use `fill`)?",
+    "answer": "Knowing the image's intrinsic dimensions ahead of time lets the browser reserve the correct amount of space for it before the image finishes loading, preventing cumulative layout shift (CLS) as content jumps around the page. The `fill` prop is the escape hatch for when the image should size itself to its parent container instead of fixed dimensions.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization",
+      "cls"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do remote images (hosted on another domain) work with `next/image`, and what configuration do they require?",
+    "answer": "For security, Next.js doesn't optimize images from arbitrary external domains by default — you must explicitly allow them via `images.remotePatterns` (or the older `images.domains`) in `next.config.js`, listing the hostnames the optimizer is permitted to fetch from and process.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// next.config.js\nmodule.exports = {\n  images: {\n    remotePatterns: [{ protocol: 'https', hostname: 'cdn.example.com' }],\n  },\n};",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization",
+      "configuration"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `priority` prop on `next/image`, and when should you use it?",
+    "answer": "`priority` tells Next.js to preload an image and skip its default lazy loading, which should be used for the Largest Contentful Paint (LCP) image on a page — typically a hero image above the fold — since lazily loading it would delay the metric that most affects perceived load speed.",
+    "example": null,
+    "code": "<Image src=\"/hero.jpg\" alt=\"Hero\" width={1200} height={600} priority />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization",
+      "lcp"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does `next/font` improve performance compared to loading fonts via a `<link>` tag to Google Fonts?",
+    "answer": "`next/font` downloads and self-hosts the font files at build time, serving them from your own domain instead of making a separate runtime request to Google's CDN, which removes an extra network round trip and avoids leaking user IP addresses to a third party. It also automatically applies `font-display: swap`-like behavior and precomputed fallback metrics to minimize layout shift while the font loads.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "import { Inter } from 'next/font/google';\n\nconst inter = Inter({ subsets: ['latin'], display: 'swap' });",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "fonts"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does code splitting work automatically in Next.js?",
+    "answer": "Next.js splits JavaScript by route by default — each page/route only ships the code it actually needs, rather than one giant bundle for the whole app, so navigating to a page doesn't download code for pages you haven't visited. Shared dependencies used across multiple routes are extracted into common chunks so they're only downloaded once.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "code-splitting"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you manually code-split a large client component using `next/dynamic`?",
+    "answer": "Wrap the import in `dynamic(() => import('./Component'))`, which generates a separate chunk loaded only when that component is actually rendered, instead of being bundled into the initial page load — useful for large, rarely-used components like a rich text editor or a chart library that most visitors never trigger.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "import dynamic from 'next/dynamic';\n\nconst Editor = dynamic(() => import('../components/Editor'), { ssr: false });",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "code-splitting",
+      "dynamic-import"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `ssr: false` option do when used with `next/dynamic`, and when is it necessary?",
+    "answer": "It skips server-side rendering for that component entirely, rendering it only in the browser — necessary for components that depend on browser-only APIs (like `window` or a library that assumes a DOM exists) and would error or behave incorrectly if Next.js tried to render them on the server.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "dynamic-import",
+      "ssr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you analyze what's actually inside a Next.js production bundle?",
+    "answer": "The `@next/bundle-analyzer` package wraps `next.config.js` and, when enabled via an environment variable, generates an interactive treemap visualization of each chunk's contents and size after `next build`, making it easy to spot unexpectedly large dependencies pulled into the client bundle.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// next.config.js\nconst withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: process.env.ANALYZE === 'true' });\nmodule.exports = withBundleAnalyzer({});",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "bundle-analysis"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common cause of an unexpectedly large client bundle in a Next.js App Router project?",
+    "answer": "A frequent cause is importing a large library (like a full charting or date library, or an entire icon set) inside a file that's part of the Client Component boundary when only a small piece of it is actually needed, or marking a component `'use client'` unnecessarily high up the tree, pulling everything beneath it into the client bundle instead of keeping most of the tree as zero-JS Server Components.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "bundle-analysis",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the `next/script` component help with performance, and what loading strategies does it offer?",
+    "answer": "`next/script` gives fine-grained control over when and how third-party scripts (analytics, ads, chat widgets) load, via a `strategy` prop: `beforeInteractive` for scripts needed before hydration, `afterInteractive` (default) to load soon after the page becomes interactive, and `lazyOnload` to defer loading until the browser is idle — preventing render-blocking scripts from hurting load performance metrics.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "import Script from 'next/script';\n\n<Script src=\"https://example.com/analytics.js\" strategy=\"lazyOnload\" />",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "scripts"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Incremental Static Regeneration contribute to performance beyond just SEO freshness?",
+    "answer": "By serving pre-built static HTML for most requests (only regenerating occasionally in the background), ISR avoids the per-request rendering cost of SSR while still keeping content reasonably fresh, which reduces server load and lets those cached pages be served from a CDN edge with very low latency, unlike SSR which must run rendering logic on every single request.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "isr",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does React Server Components play in reducing client-side JavaScript, and why does that matter for performance?",
+    "answer": "Server Components render fully on the server and send zero JavaScript to the client for that portion of the tree, whereas a fully client-rendered equivalent would ship its code, its dependencies, and require hydration. Less client JavaScript means a smaller bundle to download and parse, faster Time to Interactive, and less main-thread work, which is especially impactful on lower-end devices.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "server-components"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are Core Web Vitals, and how does Next.js help you measure them?",
+    "answer": "Core Web Vitals are Google's standardized metrics for real-world page experience: Largest Contentful Paint (loading speed), Interaction to Next Paint (responsiveness), and Cumulative Layout Shift (visual stability). Next.js provides a built-in `useReportWebVitals` hook (and integrates with Vercel Analytics/Speed Insights) to capture these metrics from real users and report them to an analytics endpoint.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "web-vitals"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does prefetching via `<Link>` improve perceived navigation performance, and what is its cost?",
+    "answer": "Prefetching loads a linked route's code (and cached static data) before the user clicks, so the actual navigation feels instant since the work was already done ahead of time. The cost is extra network requests and bandwidth usage for routes the user may never actually visit, which is why it's automatically limited to viewport-visible links and can be disabled per-link with `prefetch={false}` when it's not worth the trade-off.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "prefetching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is streaming with Suspense, and how does it improve perceived performance for slow data?",
+    "answer": "Instead of blocking the entire page's response until the slowest data-fetching component finishes, wrapping that component in `<Suspense>` lets Next.js send the rest of the page immediately and stream in the slow section once it's ready, so users see and can interact with most of the page far sooner instead of staring at a blank screen or spinner for the whole page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "streaming",
+      "suspense"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does automatic static optimization decide whether a Pages Router page ships as static HTML?",
+    "answer": "If a page doesn't export `getServerSideProps` or use `getInitialProps`, Next.js automatically pre-renders it to static HTML at build time (behaving like SSG even without an explicit `getStaticProps`), which is faster to serve and can be fully cached, without the developer having to opt in explicitly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "pages-router",
+      "static-optimization"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What performance problem can arise from putting a large client-side data-fetching library or heavy state management setup in a project's root layout?",
+    "answer": "Because the root layout wraps every single route in the app, any Client Component boundary or heavy dependency placed there gets included in the JavaScript sent to every page, even pages that don't need it — it's better to push such dependencies down to only the specific routes/components that actually use them, keeping the shared root layout as lean as possible.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "layouts",
+      "code-splitting"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What image formats does `next/image` automatically serve, and how does it decide which one to use?",
+    "answer": "Next.js's image optimizer can serve modern formats like WebP or AVIF instead of the original format (e.g. JPEG/PNG) when the requesting browser supports them, based on the request's `Accept` header, falling back to the original format for browsers without support — this typically produces significantly smaller file sizes than the source image at equivalent visual quality.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you lazy-load a below-the-fold image using `next/image`, and is this the default behavior?",
+    "answer": "It is the default behavior — every `next/image` component is lazy-loaded (deferred until it's near the viewport) automatically unless you pass the `priority` prop, which disables lazy loading and preloads the image instead. You don't need to add a separate `loading=\"lazy\"` attribute yourself as you might with a plain `<img>`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of route segment config options like `export const revalidate` for balancing freshness against performance?",
+    "answer": "Setting `revalidate` at the route level lets you tune how often cached content is allowed to go stale before regenerating, letting you choose an interval that matches how frequently the underlying data actually changes — a longer interval maximizes cache hits and performance, while a shorter one trades some performance for fresher content, without going all the way to fully dynamic (uncached) rendering.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "caching",
+      "isr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does minimizing the number of Client Component boundaries in a tree help performance, beyond just bundle size?",
+    "answer": "Fewer/smaller Client Component boundaries mean less work for React to hydrate on the client (attaching event listeners and reconciling state), which directly reduces main-thread blocking time during page load — even if the visual output looks identical, a tree with excessive unnecessary `'use client'` boundaries does more client-side work than one that keeps as much as possible as server-rendered, non-hydrated markup.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "client-components",
+      "hydration"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common strategy for optimizing a large list or table's rendering performance in Next.js?",
+    "answer": "Beyond generic React techniques like `React.memo` and virtualization libraries (e.g. `react-window` or `@tanstack/react-virtual`) for rendering only visible rows, Next.js-specific approaches include paginating data at the fetch level so the server never sends more than a page's worth of items, and rendering the list itself as a Server Component so the markup ships without extra client JS per row.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "lists",
+      "virtualization"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can misconfigured caching lead to a performance regression rather than an improvement in Next.js?",
+    "answer": "Caching content that should have been dynamic (e.g. accidentally caching a user-specific page) can serve stale or wrong data to the wrong users, and fixing it under pressure by disabling caching broadly (`cache: 'no-store'` everywhere) can regress performance far below what tuned, selective caching would have achieved — caching needs to be applied deliberately per data source rather than as an all-or-nothing setting.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "caching",
+      "gotcha"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does `next build`'s output summary (the route type table) tell you about your app's performance profile?",
+    "answer": "After running `next build`, Next.js prints a table listing every route along with symbols indicating whether it's static (○), dynamic server-rendered (λ/ƒ), or SSG with ISR, plus the JavaScript size for each page — this gives a quick audit of which routes are being served from fast cached HTML versus rendered per request, and which pages ship unusually large bundles.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "build-output"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does deploying to the edge versus a single-region server affect performance for a globally distributed user base?",
+    "answer": "Edge-deployed routes (Middleware, or Route Handlers/pages using `runtime: 'edge'`) execute at data centers close to the requesting user worldwide, cutting network latency significantly compared to a single-region Node.js deployment where far-away users incur a longer round trip to reach the one server location — the trade-off is the Edge Runtime's more limited API surface.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "edge"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the `sizes` prop on `next/image`, and why does omitting it hurt performance for responsive layouts?",
+    "answer": "`sizes` tells the browser how wide the image will actually be displayed at different viewport widths (e.g. `(max-width: 768px) 100vw, 50vw`), which lets it pick the most appropriately sized image from the generated `srcset` instead of guessing and potentially downloading a much larger image than needed for the layout, wasting bandwidth.",
+    "example": null,
+    "code": "<Image src=\"/banner.jpg\" alt=\"Banner\" fill sizes=\"(max-width: 768px) 100vw, 50vw\" />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you diagnose why a specific Next.js page has a slow Time to First Byte (TTFB) in production?",
+    "answer": "Check whether the route is unexpectedly dynamic (e.g. an accidental `cookies()`/`no-store` fetch forcing per-request rendering when it could be cached), profile the slow data-fetching calls themselves (database queries without indexes, slow third-party APIs), and check whether the deployment region is far from most users — the build output's route type table and server-side logging/tracing are the usual starting points.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "ttfb",
+      "debugging"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is minimizing third-party script usage often one of the highest-leverage performance fixes in a Next.js app?",
+    "answer": "Third-party scripts (analytics, ads, chat widgets, A/B testing tools) are often large, block the main thread during parsing/execution, and are outside the app's own code-splitting and optimization pipeline — using `next/script` with an appropriate loading strategy, or removing scripts that provide little value, frequently produces a bigger Core Web Vitals improvement than micro-optimizing the app's own component code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "performance",
+      "scripts",
+      "web-vitals"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between build-time image optimization and Next.js's default on-demand image optimization?",
+    "answer": "By default, `next/image` optimizes images on demand the first time they're requested (and caches the result), rather than generating every size/format variant at build time, which keeps build times fast even with many images. This requires a running image optimization server (built into `next start` or a hosting platform's equivalent) — a fully static export (`output: 'export'`) can't do on-demand optimization and instead needs a custom loader or pre-optimized source images.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "performance",
+      "image-optimization",
+      "static-export"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

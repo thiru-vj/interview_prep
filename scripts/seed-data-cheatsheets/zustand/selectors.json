@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Selecting a slice of state",
+    "syntax": "const slice = useStore((state) => state.slice)",
+    "description": "Passing a selector function to the store hook subscribes a component to only that piece of state, so it re-renders only when that specific value changes.",
+    "parameters": "selector — function (state) => selectedValue.",
+    "returns": "The value returned by the selector.",
+    "example": "const bears = useBearStore((state) => state.bears);\n// Component only re-renders when `bears` changes, not on unrelated state updates",
+    "codeLanguage": "jsx",
+    "notes": "Avoid selecting the whole state object (useStore()) unless the component genuinely needs everything — it re-renders on every store change.",
+    "tags": ["zustand", "selectors", "performance"]
+  },
+  {
+    "name": "Selector functions as a core concept",
+    "syntax": null,
+    "description": "In Zustand, the selector passed to the hook is the primary API for controlling re-renders — instead of memoizing components, you narrow what each component subscribes to.",
+    "parameters": null,
+    "returns": null,
+    "example": "// Selects and derives in one step\nconst bearCount = useBearStore((state) => state.bears.length);",
+    "codeLanguage": "javascript",
+    "notes": "Selectors can also compute derived values inline, avoiding extra state fields just for derived data.",
+    "tags": ["zustand", "selectors", "fundamentals"]
+  },
+  {
+    "name": "Selecting multiple values",
+    "syntax": "const { a, b } = useStore((state) => ({ a: state.a, b: state.b }))",
+    "description": "A selector can return an object or array combining multiple state values, but by default a new object is created on every call, causing re-renders even when the underlying values haven't changed.",
+    "parameters": null,
+    "returns": "An object or array of the selected values.",
+    "example": "const { bears, fish } = useStore((state) => ({\n  bears: state.bears,\n  fish: state.fish,\n}));",
+    "codeLanguage": "javascript",
+    "notes": "Without a custom equality check, this pattern re-renders on every store update — pair it with useShallow to fix that.",
+    "tags": ["zustand", "selectors", "re-renders"]
+  },
+  {
+    "name": "useShallow()",
+    "syntax": "import { useShallow } from 'zustand/react/shallow'\nconst { a, b } = useStore(useShallow((state) => ({ a: state.a, b: state.b })))",
+    "description": "useShallow wraps a selector so the returned object/array is compared with shallow equality, preventing re-renders when the selected values themselves haven't changed.",
+    "parameters": "selector — function returning an object or array of selected values.",
+    "returns": "The selected object/array, memoized by shallow comparison across renders.",
+    "example": "const { bears, fish } = useStore(\n  useShallow((state) => ({ bears: state.bears, fish: state.fish }))\n);",
+    "codeLanguage": "javascript",
+    "notes": "This is the recommended replacement for the older shallow equality function passed as a second hook argument in Zustand v4.",
+    "tags": ["zustand", "selectors", "shallow"]
+  },
+  {
+    "name": "shallow equality function",
+    "syntax": "import { shallow } from 'zustand/shallow'",
+    "description": "shallow is a standalone comparator that checks top-level equality between two objects/arrays, used internally by useShallow and available for manual comparisons.",
+    "parameters": null,
+    "returns": "true if all top-level keys/values are reference-equal, false otherwise.",
+    "example": "import { shallow } from 'zustand/shallow';\nshallow({ a: 1 }, { a: 1 }); // true",
+    "codeLanguage": "javascript",
+    "notes": "In Zustand v4 this could be passed directly as a second argument to the store hook; v5 recommends useShallow instead.",
+    "tags": ["zustand", "selectors", "shallow"]
+  },
+  {
+    "name": "Selecting whole state (anti-pattern)",
+    "syntax": "const state = useStore()",
+    "description": "Calling the store hook with no selector returns the entire state object and subscribes the component to every change in the store.",
+    "parameters": null,
+    "returns": "The full state object.",
+    "example": "// Re-renders on ANY store change, even unrelated fields\nconst state = useBearStore();",
+    "codeLanguage": "javascript",
+    "notes": "Reserve this for debugging or components that truly depend on most of the store — otherwise select only what you need.",
+    "tags": ["zustand", "selectors", "performance"]
+  }
+]

@@ -1,0 +1,322 @@
+[
+  {
+    "question": "What is the CSS box model?",
+    "answer": "The box model describes how every element is rendered as a rectangular box made of four layers, from innermost to outermost: content, padding, border, and margin. The content holds text or child elements, padding adds space inside the border, the border wraps the padding, and the margin adds space outside the border separating it from other elements.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics", "box-model"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between box-sizing: content-box and box-sizing: border-box?",
+    "answer": "With content-box (the default), width and height apply only to the content area, so padding and border are added on top, making the rendered box larger than the specified size. With border-box, width and height include padding and border, so the element's total rendered size matches the value you set, which makes layout math far more predictable.",
+    "example": null,
+    "code": "* {\n  box-sizing: border-box;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "box-model"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between a class selector and an ID selector?",
+    "answer": "A class selector (.name) can be applied to multiple elements and multiple classes can be applied to a single element, making it ideal for reusable styling. An ID selector (#name) must be unique per page and has much higher specificity than a class, which is why relying on IDs for styling is generally discouraged in favor of classes.",
+    "example": null,
+    "code": ".card { color: blue; }\n#header { color: red; }",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a descendant combinator and a child combinator?",
+    "answer": "The descendant combinator (a space, e.g. `div p`) selects an element that is nested anywhere inside another element, no matter how deep. The child combinator (`>`, e.g. `div > p`) only selects elements that are direct children, one level deep, ignoring deeper nested matches.",
+    "example": null,
+    "code": "div p { color: green; }   /* any nested p */\ndiv > p { color: red; }   /* only direct child p */",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between display: none and visibility: hidden?",
+    "answer": "display: none removes the element from the document entirely — it takes up no space and isn't rendered, as if it weren't in the DOM at all. visibility: hidden keeps the element's space reserved in the layout but makes it invisible, so surrounding elements don't shift to fill the gap.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics", "display"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the different values of the display property and what do they do?",
+    "answer": "block elements start on a new line and take up the full available width (e.g. div, p). inline elements flow within text and don't accept width/height or vertical margin (e.g. span, a). inline-block behaves like inline for flow but accepts width, height, and margin like a block. none removes the element from rendering entirely.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics", "display"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does margin collapsing work in CSS?",
+    "answer": "When two block elements' vertical margins meet — such as the bottom margin of one element and the top margin of the next sibling, or a parent and its first/last child with no border or padding between them — the two margins collapse into a single margin equal to the larger of the two, rather than adding together. Horizontal margins never collapse, and margin collapsing can be prevented with padding, a border, or by establishing a new block formatting context (e.g. overflow: auto or display: flow-root).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "basics", "box-model"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a shorthand and a longhand CSS property?",
+    "answer": "A longhand property sets exactly one value, like border-top-width or margin-left. A shorthand property, like border, margin, or font, combines several related longhand properties into a single declaration, saving space — but omitting a sub-value in a shorthand usually resets it to its initial value, which can accidentally override a previously set longhand.",
+    "example": null,
+    "code": "margin: 10px 20px; /* top/bottom: 10px, left/right: 20px */",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the :hover, :focus, and :active pseudo-classes?",
+    "answer": ":hover applies while the pointer is positioned over an element. :focus applies when an element (like an input or link) has received keyboard or programmatic focus. :active applies only during the moment an element is being clicked or pressed, such as between mousedown and mouseup.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an attribute selector and a class selector?",
+    "answer": "A class selector matches elements that carry a specific class in their class attribute. An attribute selector, like [type=\"text\"] or [data-active], matches elements based on the presence or value of any HTML attribute, which is useful for styling form inputs or elements without needing to add extra classes.",
+    "example": null,
+    "code": "input[type=\"checkbox\"] { accent-color: teal; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do universal selectors and grouping selectors work?",
+    "answer": "The universal selector (*) matches every element on the page and is often used for CSS resets. A grouping selector uses a comma to apply the same declaration block to multiple, unrelated selectors at once, avoiding repetition.",
+    "example": null,
+    "code": "h1, h2, h3 {\n  font-family: sans-serif;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between inline styles, internal stylesheets, and external stylesheets?",
+    "answer": "Inline styles are written directly on an element via the style attribute and have very high specificity, making them hard to override and hard to maintain. Internal stylesheets use a <style> block inside the HTML document's head. External stylesheets live in a separate .css file linked with <link>, which is the most maintainable approach since it allows caching and reuse across pages.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the CSS cascade, at a high level?",
+    "answer": "The cascade is the algorithm the browser uses to resolve conflicting CSS declarations for the same element and property. It considers, in order, the origin and importance of the rule (author vs. user-agent, !important), specificity of the selector, and finally source order — the last declared rule wins if everything else is equal.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "basics", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the !important rule do and why is it generally discouraged?",
+    "answer": "Adding !important to a declaration makes it override any other declaration for that property, regardless of specificity or source order (except another !important rule with higher specificity). It's discouraged because it breaks the normal cascade, makes debugging harder, and often forces other developers to also use !important to override it, creating a maintenance spiral.",
+    "example": null,
+    "code": ".alert { color: red !important; }",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the overflow values visible, hidden, scroll, and auto?",
+    "answer": "visible (default) lets content spill outside its container without clipping. hidden clips overflowing content and hides it. scroll always shows scrollbars, even if content fits. auto only shows scrollbars when content actually overflows the container's box.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between em and rem units?",
+    "answer": "em is relative to the font-size of the current element's parent (or the element itself for properties like font-size), which means it compounds when nested, since each level multiplies against its own parent's size. rem is always relative to the root (html) element's font-size, making it more predictable for consistent sizing across a page.",
+    "example": null,
+    "code": "html { font-size: 16px; }\n.text { font-size: 1.5rem; } /* always 24px */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "units"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does CSS specificity get calculated?",
+    "answer": "Specificity is calculated as a tuple of counts: inline styles rank highest, followed by the number of ID selectors, then the number of classes/attributes/pseudo-classes, then the number of type selectors/pseudo-elements. Higher counts in an earlier category always beat any number of items in a lower category, e.g. one ID beats a hundred classes.",
+    "example": null,
+    "code": "#nav .link { color: blue; } /* 1 id, 1 class → higher specificity */\n.link { color: red; }       /* 1 class */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "specificity"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between a pseudo-class and a pseudo-element?",
+    "answer": "A pseudo-class (single colon, e.g. :hover, :first-child) selects an element based on a state or position it's already in. A pseudo-element (double colon, e.g. ::before, ::first-line) targets a specific sub-part of an element, or generates content that isn't otherwise represented in the DOM.",
+    "example": null,
+    "code": "p::first-letter { font-size: 2em; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "pseudo-elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS ::before and ::after pseudo-element work, and what is required for them to render?",
+    "answer": "::before and ::after insert generated content as the first or last child of an element, respectively, without adding markup to the DOM. They require the content property to be set (even to an empty string) or they won't render at all, and they're commonly used for decorative icons, tooltips, or clearfix hacks.",
+    "example": null,
+    "code": ".required::after {\n  content: \" *\";\n  color: red;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "pseudo-elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is CSS inheritance and which properties are inherited by default?",
+    "answer": "Inheritance means a child element automatically takes on certain computed property values from its parent unless explicitly overridden. Text-related properties like color, font-family, font-size, and line-height inherit by default, while box-model properties like margin, padding, border, and width do not, since inheriting layout properties would make positioning unpredictable.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "basics", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you force a non-inherited property to inherit its parent's value, or reset it entirely?",
+    "answer": "The `inherit` keyword forces any property to explicitly take its parent's computed value, even properties that don't inherit by default. `initial` resets a property to its specification-defined default, and `unset` acts like inherit for naturally-inheriting properties or initial for non-inheriting ones.",
+    "example": null,
+    "code": "button {\n  font: inherit;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "basics", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the :nth-child() and :nth-of-type() pseudo-classes?",
+    "answer": ":nth-child(n) selects an element based on its position among all sibling elements, regardless of tag type, so it only matches if the element at that position is also the correct tag. :nth-of-type(n) selects based on position counted only among siblings of the same tag, which avoids mismatches when different element types are interleaved.",
+    "example": null,
+    "code": "li:nth-child(2n) { background: #eee; } /* even list items */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a CSS reset or normalize stylesheet, and why is one commonly used?",
+    "answer": "Browsers ship with different default user-agent stylesheets (different default margins on headings, list bullet styles, form control fonts, etc.), which causes inconsistent rendering across browsers. A CSS reset aggressively zeroes out these defaults, while a normalize stylesheet instead makes defaults consistent across browsers while preserving useful baseline styling — both are applied early to establish a predictable starting point.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS width: auto and width: 100%?",
+    "answer": "For a block element, width: auto lets the browser calculate the width to fill the available space in the containing block while still respecting margins, so a fixed margin plus auto width leaves the exact remaining space. width: 100% forces the content box to be exactly the full width of the parent, which — with content-box sizing — can cause overflow if padding or border is also set, since they're added on top.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "basics", "box-model"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are combinators in CSS selectors, and what are the four main types?",
+    "answer": "Combinators define the relationship between two selectors. The four main types are: the descendant combinator (space) for any nested descendant, the child combinator (>) for direct children only, the adjacent sibling combinator (+) for the immediately following sibling, and the general sibling combinator (~) for any sibling that comes after, regardless of distance.",
+    "example": null,
+    "code": "h2 + p { margin-top: 0; }  /* paragraph immediately after an h2 */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the outline property and the border property?",
+    "answer": "border is part of the box model — it takes up space, affects layout, and can have different widths per side. outline is drawn outside the border, doesn't affect layout or box size, and is typically used to indicate keyboard focus for accessibility; removing it without a visible replacement harms keyboard users.",
+    "example": null,
+    "code": "button:focus-visible {\n  outline: 2px solid blue;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS box model differ between block-level and inline elements regarding margin and padding?",
+    "answer": "Block-level elements respect margin and padding on all four sides, affecting the layout of surrounding elements. Inline elements respect horizontal (left/right) padding and margin visually, but vertical (top/bottom) margin has no effect on layout, and vertical padding can visually overlap surrounding lines without pushing them away.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "basics", "box-model"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a CSS comment and how do you write one?",
+    "answer": "CSS comments are written between /* and */ and can span multiple lines; they're ignored by the browser at render time. Unlike some languages, CSS has no single-line // comment syntax.",
+    "example": null,
+    "code": "/* This hides the sidebar on small screens */\n.sidebar { display: none; }",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between absolute and relative units in CSS?",
+    "answer": "Absolute units, like px, cm, and pt, always represent the same physical or fixed size regardless of context. Relative units, like %, em, rem, vw, and vh, are computed relative to another value — a parent's size, the root font size, or the viewport — making them essential for responsive, scalable layouts.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "basics", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the :not() pseudo-class do, and what is one limitation of its classic form?",
+    "answer": ":not() excludes elements that match the given selector from being selected, e.g. `li:not(.active)` selects all list items except those with the active class. In its original (level 3) form it only accepted a single simple selector, though modern CSS (Selectors Level 4) allows a comma-separated selector list inside it.",
+    "example": null,
+    "code": "input:not([type=\"submit\"]) {\n  border: 1px solid gray;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "basics", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do CSS custom properties differ from Sass/SCSS variables at a conceptual level?",
+    "answer": "Sass variables are compiled away at build time into static values, so they have no runtime presence and can't be read or changed once compiled. CSS custom properties (--name) are live in the DOM, can be read and updated via JavaScript, cascade and inherit like normal CSS properties, and can even be changed dynamically per-element or via media queries.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens when two CSS rules have the exact same specificity and target the same element?",
+    "answer": "When specificity is tied, the cascade falls back to source order: whichever rule appears later in the stylesheet (or in a later linked stylesheet) wins. This is why the order of CSS rules and imports matters even when specificity looks identical.",
+    "example": null,
+    "code": ".btn { color: blue; }\n.btn { color: green; } /* wins - declared later */",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "basics", "cascade"],
+    "isFrequentlyAsked": false
+  }
+]

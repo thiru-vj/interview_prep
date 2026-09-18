@@ -1,0 +1,362 @@
+[
+  {
+    "question": "What does HTML stand for and what is its role in web development?",
+    "answer": "HTML stands for HyperText Markup Language. It provides the structural skeleton of a web page by defining elements like headings, paragraphs, links, and images, which the browser then parses into the DOM. CSS handles presentation and JavaScript handles behavior, but HTML is the content and structure layer they both build on.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the purpose of the <!DOCTYPE html> declaration?",
+    "answer": "The doctype tells the browser to render the page in standards mode according to the HTML5 specification, rather than falling back to quirks mode, which emulates older, inconsistent browser behavior. It isn't an HTML tag itself but an instruction to the parser and must be the very first line of the document.",
+    "example": null,
+    "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head></head>\n  <body></body>\n</html>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "document-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an HTML element and an HTML tag?",
+    "answer": "A tag is the markup syntax itself, like <p> (opening tag) or </p> (closing tag). An element is the complete unit made up of the opening tag, its content, and the closing tag (or a single self-closing tag for void elements). People often use the terms interchangeably, but technically the element is the whole structure.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are void (self-closing) elements in HTML? Give examples.",
+    "answer": "Void elements cannot have any child content and never need a closing tag because they represent a single, complete piece of markup, such as an image or a line break. Common examples are <img>, <br>, <hr>, <input>, <meta>, and <link>. In HTML5 the trailing slash (<br />) is optional and purely stylistic.",
+    "example": null,
+    "code": "<img src=\"logo.png\" alt=\"Company logo\">\n<br>\n<hr>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <div> and <span> elements?",
+    "answer": "<div> is a block-level container that starts on a new line and takes up the full available width by default, used to group larger chunks of content. <span> is an inline container that only wraps its content without forcing a line break, used for styling or scripting a small portion of text within a line.",
+    "example": null,
+    "code": "<div>Block-level content</div>\n<p>Some text with a <span>highlighted word</span> inline.</p>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between block-level and inline elements in HTML?",
+    "answer": "Block-level elements (like <div>, <p>, <h1>) always start on a new line and expand to fill the width of their parent container, and they can contain other block or inline elements. Inline elements (like <span>, <a>, <strong>) flow within the surrounding text, only take up as much width as their content needs, and generally can't contain block-level children.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "basics", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an HTML attribute and a DOM property?",
+    "answer": "Attributes are defined in the HTML markup and represent the initial state of an element; they're always strings. Properties live on the corresponding DOM object in JavaScript and can hold other types, and for many attributes (like value or checked) the property reflects the current live state, which can diverge from the original attribute after user interaction.",
+    "example": null,
+    "code": "// input.getAttribute('value') stays the initial HTML value\n// input.value reflects what the user currently typed",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the lang attribute on the <html> tag?",
+    "answer": "The lang attribute declares the primary language of the page's content, such as lang=\"en\" or lang=\"fr\". It helps screen readers choose the correct pronunciation rules, lets browsers offer accurate translation prompts, and assists search engines with language-specific indexing.",
+    "example": null,
+    "code": "<html lang=\"en\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between id and class attributes?",
+    "answer": "id must be unique within a page and is used to identify a single specific element, commonly for anchor links, JavaScript targeting, or label associations. class can be applied to multiple elements and an element can have multiple classes, making it suited for reusable styling and grouping.",
+    "example": null,
+    "code": "<button id=\"submit-btn\" class=\"btn btn-primary\">Submit</button>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are HTML comments and how do you write them?",
+    "answer": "HTML comments are written as <!-- comment text --> and are ignored by the browser's rendering engine, though they remain visible in the page source. They're used to leave notes for developers or temporarily disable a block of markup, but shouldn't be relied on to hide sensitive information since anyone can view them.",
+    "example": null,
+    "code": "<!-- TODO: replace with dynamic content -->\n<p>Static placeholder</p>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between HTML entities and raw special characters?",
+    "answer": "Characters like <, >, and & have special meaning in HTML markup, so to display them literally you must use their entity references, such as &lt;, &gt;, and &amp;. Using the raw character instead can break parsing or be misinterpreted as the start of a tag or entity.",
+    "example": null,
+    "code": "<p>5 &lt; 10 &amp;&amp; 10 &gt; 5</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the correct basic structure of an HTML document?",
+    "answer": "A valid HTML document starts with <!DOCTYPE html>, followed by an <html> root element containing a <head> (metadata, title, links to stylesheets/scripts) and a <body> (the visible page content). Browsers are lenient about missing tags, but omitting them can cause inconsistent rendering or invalid markup.",
+    "example": null,
+    "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My Page</title>\n</head>\n<body>\n  <h1>Hello World</h1>\n</body>\n</html>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "document-structure"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the <head> and <body> sections of an HTML document?",
+    "answer": "The <head> contains metadata that isn't directly rendered as page content, such as the title, character encoding, linked stylesheets, and meta tags. The <body> contains everything the user actually sees and interacts with, like text, images, and forms.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "basics", "document-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create hyperlinks in HTML, and what does the target attribute do?",
+    "answer": "Hyperlinks are created with the <a> tag and an href attribute pointing to a URL, fragment, or resource. The target attribute controls where the link opens; target=\"_blank\" opens it in a new tab, and it should be paired with rel=\"noopener noreferrer\" to prevent the new page from accessing window.opener for security reasons.",
+    "example": null,
+    "code": "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visit site</a>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "links"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between relative and absolute URLs in HTML?",
+    "answer": "An absolute URL includes the full path, including protocol and domain (e.g. https://example.com/about), and always points to the same location regardless of where the current page is hosted. A relative URL (e.g. /about or ../images/logo.png) is resolved based on the current page's location, making it more portable across environments like staging and production.",
+    "example": null,
+    "code": "<a href=\"/about\">About</a>\n<a href=\"https://example.com/about\">About (absolute)</a>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "links"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create ordered and unordered lists in HTML?",
+    "answer": "An unordered list uses <ul> with <li> child items, rendered with bullet points by default. An ordered list uses <ol> with <li> items, rendered with numbers, and supports a start attribute and a type attribute (e.g. \"a\", \"i\") to change the numbering style.",
+    "example": null,
+    "code": "<ul>\n  <li>Apples</li>\n  <li>Oranges</li>\n</ul>\n<ol start=\"3\">\n  <li>Step three</li>\n  <li>Step four</li>\n</ol>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <table> element and its child elements like <thead>, <tbody>, and <tfoot>?",
+    "answer": "<table> defines a tabular data grid, with <tr> for rows, <th> for header cells, and <td> for data cells. <thead>, <tbody>, and <tfoot> group rows semantically into header, body, and footer sections, which helps both styling (e.g. sticky headers) and accessibility, since screen readers can announce column headers correctly.",
+    "example": null,
+    "code": "<table>\n  <thead>\n    <tr><th>Name</th><th>Age</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Alice</td><td>30</td></tr>\n  </tbody>\n</table>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "tables"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are data-* attributes and when would you use them?",
+    "answer": "data-* attributes let you store custom, private data on HTML elements without resorting to non-standard attributes or extra DOM properties. They're accessible in JavaScript via the element.dataset object and are commonly used to pass server-rendered values to client-side scripts or to hook up event delegation.",
+    "example": null,
+    "code": "<button data-user-id=\"42\">Delete</button>\n<script>\n  button.addEventListener('click', () => console.log(button.dataset.userId));\n</script>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between HTML and XHTML?",
+    "answer": "XHTML is a stricter, XML-based reformulation of HTML that requires well-formed markup — every tag must be properly closed, attribute values must be quoted, and tags must be lowercase, or the browser refuses to render the page. HTML5 is more forgiving and error-tolerant, which is why it largely superseded XHTML in modern web development.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the browser handle invalid or malformed HTML?",
+    "answer": "HTML parsers are designed to be error-tolerant: browsers apply well-defined error-recovery rules to auto-close unclosed tags, move misplaced elements, and reparent invalid nesting so the page still renders instead of failing outright. This forgiving behavior is convenient but can lead to unpredictable layout bugs, so writing valid, well-nested markup is still best practice.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "basics", "parsing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <b> / <i> tags and the <strong> / <em> tags?",
+    "answer": "<strong> and <em> carry semantic meaning — strong importance and stressed emphasis respectively — which is conveyed to assistive technology and typically rendered as bold/italic. <b> and <i> are purely presentational (bold and italic styling) with no semantic weight, so they're appropriate only when the visual style has no underlying importance, like a keyword or a book title.",
+    "example": null,
+    "code": "<p><strong>Warning:</strong> this action is <em>irreversible</em>.</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "semantic-html"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the contenteditable attribute do?",
+    "answer": "Setting contenteditable=\"true\" on an element makes its content directly editable by the user in the browser, essentially turning it into a rich text editing surface without needing a <textarea> or <input>. It's commonly used to build custom WYSIWYG editors but requires careful sanitization since it can introduce XSS risks if the resulting HTML is saved and re-rendered.",
+    "example": null,
+    "code": "<div contenteditable=\"true\">Click here and start typing...</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <template> element?",
+    "answer": "<template> holds markup that is parsed by the browser but not rendered or executed until it's explicitly cloned and inserted into the DOM via JavaScript. It's useful for defining reusable chunks of markup, such as row templates for a table, without them appearing on the page or triggering resource loads (like images) until activated.",
+    "example": null,
+    "code": "<template id=\"row-template\">\n  <tr><td class=\"name\"></td></tr>\n</template>\n<script>\n  const clone = document.getElementById('row-template').content.cloneNode(true);\n</script>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "basics", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <script> attributes async and defer?",
+    "answer": "Both let a script download in parallel with HTML parsing instead of blocking it. defer executes the script only after parsing finishes, in the order the scripts appear in the document. async executes the script as soon as it finishes downloading, which can be before parsing completes and out of order relative to other async scripts.",
+    "example": null,
+    "code": "<script src=\"app.js\" defer></script>\n<script src=\"analytics.js\" async></script>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why is it generally recommended to place <script> tags at the end of the <body>, or use defer?",
+    "answer": "Script tags without async or defer block HTML parsing while they download and execute, delaying when the page becomes visible and interactive. Placing them at the end of <body>, or marking them defer, lets the browser render the visible content first and fetch/run scripts without blocking the critical rendering path.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "basics", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <ol>, <ul>, and <dl> elements?",
+    "answer": "<ol> and <ul> represent ordered and unordered lists of items respectively, using <li> children. <dl> represents a description (or definition) list, pairing <dt> terms with one or more <dd> descriptions, commonly used for glossaries, FAQs, or metadata key-value pairs.",
+    "example": null,
+    "code": "<dl>\n  <dt>HTML</dt>\n  <dd>HyperText Markup Language</dd>\n</dl>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the colspan and rowspan attributes in a table?",
+    "answer": "colspan lets a table cell (<td> or <th>) span across multiple columns, and rowspan lets it span across multiple rows, both used to merge cells for layouts like grouped headers. They must be used carefully because they can make tables harder for screen readers to interpret correctly if not paired with proper header associations.",
+    "example": null,
+    "code": "<tr>\n  <th colspan=\"2\">Full Name</th>\n</tr>\n<tr>\n  <td>Jane</td><td>Doe</td>\n</tr>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "tables"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What character encoding should modern HTML documents declare, and why does it matter?",
+    "answer": "Modern documents should declare <meta charset=\"UTF-8\"> as the first element in <head>, which covers virtually every character and symbol used worldwide. Declaring the wrong or no encoding can cause the browser to misinterpret bytes, producing garbled text ('mojibake') for non-ASCII characters like accented letters or emoji.",
+    "example": null,
+    "code": "<head>\n  <meta charset=\"UTF-8\">\n</head>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "document-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <pre> element and normal text rendering?",
+    "answer": "By default, browsers collapse consecutive whitespace and line breaks in HTML into a single space. <pre> preserves whitespace and line breaks exactly as written in the source, and renders text in a monospace font by default, which makes it useful for displaying code blocks or ASCII-formatted content.",
+    "example": null,
+    "code": "<pre>\nfunction add(a, b) {\n  return a + b;\n}\n</pre>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you comment out a section of HTML to prevent it from rendering, and what are the limitations of doing so?",
+    "answer": "Wrapping markup in <!-- --> prevents it from rendering, but HTML comments cannot be nested — if the commented content itself contains '--', it can prematurely close the comment. Unlike JavaScript or CSS comments, HTML comments also can't be used inside attribute values or tag names.",
+    "example": null,
+    "code": "<!-- <p>This paragraph is hidden</p> -->",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <a> element's href and the deprecated <a name=\"...\"> anchor pattern?",
+    "answer": "Historically, <a name=\"section\"> created a named anchor that other links could jump to with #section. This is deprecated in favor of giving any element an id attribute, since any element (not just <a>) can now be a link target via its id, and href continues to define the destination of a link, not the target.",
+    "example": null,
+    "code": "<h2 id=\"faq\">FAQ</h2>\n<a href=\"#faq\">Jump to FAQ</a>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "basics", "links"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <base> element?",
+    "answer": "<base href=\"...\"> set in the <head> defines a default base URL that all relative URLs on the page (links, images, form actions) are resolved against, overriding the document's own URL. It can only appear once per document and must come before any element referencing a URL.",
+    "example": null,
+    "code": "<head>\n  <base href=\"https://example.com/app/\">\n</head>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "basics", "document-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are custom elements and the general idea behind Web Components?",
+    "answer": "Web Components is a set of browser APIs (Custom Elements, Shadow DOM, HTML Templates) that let developers define their own reusable, encapsulated HTML tags, like <my-widget>, with their own behavior and scoped styling. Custom elements must contain a hyphen in their tag name to avoid colliding with future standard HTML elements.",
+    "example": null,
+    "code": "class MyWidget extends HTMLElement {\n  connectedCallback() {\n    this.textContent = 'Hello from custom element';\n  }\n}\ncustomElements.define('my-widget', MyWidget);",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["html", "basics", "web-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <link> and <a> elements?",
+    "answer": "<link> goes in the <head> and defines a relationship between the current document and an external resource, most commonly a stylesheet (rel=\"stylesheet\"), without producing visible content. <a> creates a clickable hyperlink in the page body that navigates the user to another resource or location.",
+    "example": null,
+    "code": "<link rel=\"stylesheet\" href=\"styles.css\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "basics", "elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the disabled attribute do, and how does it differ across form elements?",
+    "answer": "The disabled boolean attribute prevents an element from being interacted with, focused, or submitted as part of a form, and browsers typically render it visually greyed out. Unlike readonly, a disabled input's value is excluded entirely from form submission data, whereas a readonly input's value is still submitted.",
+    "example": null,
+    "code": "<button disabled>Submit</button>\n<input type=\"text\" disabled value=\"Can't edit or submit this\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "basics", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is progressive enhancement in the context of HTML?",
+    "answer": "Progressive enhancement is the practice of building a baseline experience with plain, semantic HTML that works without CSS or JavaScript, then layering on styling and interactivity as enhancements for browsers that support them. It ensures the core content and functionality remain accessible even if a script fails to load or a user has JavaScript disabled.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "basics", "best-practices"],
+    "isFrequentlyAsked": false
+  }
+]

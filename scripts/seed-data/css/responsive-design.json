@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is a media query and how is it used for responsive design?",
+    "answer": "A media query applies a block of CSS only when a specified condition about the device or viewport is true, such as a minimum or maximum width. They let a single stylesheet adapt layout, typography, or visibility based on screen size, orientation, or other device characteristics.",
+    "example": null,
+    "code": "@media (max-width: 768px) {\n  .sidebar { display: none; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does 'mobile-first' responsive design mean, and why is it generally preferred?",
+    "answer": "Mobile-first means writing base styles for the smallest screen first, then progressively enhancing the layout for larger screens using min-width media queries. It's preferred because it forces you to prioritize essential content and performance for constrained devices, and generally results in less CSS overriding itself compared to a desktop-first approach using max-width.",
+    "example": null,
+    "code": "/* base: mobile */\n.card { flex-direction: column; }\n\n@media (min-width: 768px) {\n  .card { flex-direction: row; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "mobile-first"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the viewport units vw, vh, and vmin/vmax?",
+    "answer": "vw and vh are 1% of the viewport's width and height respectively. vmin is 1% of whichever of the two (width or height) is smaller, and vmax is 1% of whichever is larger — vmin/vmax are useful for sizing elements consistently regardless of device orientation.",
+    "example": null,
+    "code": ".hero {\n  height: 100vh;\n  font-size: 5vmin;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the viewport meta tag do, and why is it necessary for responsive design?",
+    "answer": "The <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> tag tells mobile browsers to render the page at the device's actual CSS pixel width instead of a default desktop-width virtual viewport (typically 980px) that gets zoomed out. Without it, media queries based on device width won't behave as expected because the browser assumes a much wider layout viewport.",
+    "example": null,
+    "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between fluid (percentage-based) and fixed layouts?",
+    "answer": "A fixed layout uses absolute units like px for widths, so the layout stays the same size regardless of viewport, often causing overflow or wasted space on different screens. A fluid layout uses relative units like %, which resize proportionally with the viewport or parent container, adapting more gracefully across screen sizes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you make an image responsive so it scales with its container?",
+    "answer": "Setting max-width: 100% and height: auto on an image prevents it from overflowing its container while preserving its aspect ratio, scaling down proportionally on smaller screens. Using width: 100% alone can cause upscaling and distortion beyond the image's natural size unless additionally constrained.",
+    "example": null,
+    "code": "img {\n  max-width: 100%;\n  height: auto;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "responsive-design", "images"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the srcset attribute and how does it relate to responsive images in CSS/HTML?",
+    "answer": "srcset lets an <img> element offer multiple image sources at different resolutions, letting the browser choose the most appropriate one based on the device's pixel density and viewport size, paired with the sizes attribute to describe expected rendered width. This improves performance by avoiding downloading unnecessarily large images on smaller or lower-density screens, complementing CSS-only responsive scaling.",
+    "example": null,
+    "code": "<img srcset=\"small.jpg 480w, large.jpg 1080w\" sizes=\"(max-width: 600px) 480px, 1080px\" src=\"large.jpg\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "images"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are CSS breakpoints, and how do you decide where to place them?",
+    "answer": "Breakpoints are the viewport widths at which a layout's media queries change the design to better fit the available space. Rather than targeting specific devices (which constantly change), best practice is to let the content itself dictate breakpoints — add one wherever the design starts to look cramped or awkward as the viewport is resized, rather than hardcoding common device widths.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between min-width and max-width media queries, and how do they interact with mobile-first vs. desktop-first strategies?",
+    "answer": "A min-width media query applies its styles when the viewport is at least that wide, which is the basis of mobile-first design (progressively adding styles as screens grow). A max-width media query applies when the viewport is at most that wide, which is typical of desktop-first design (overriding base desktop styles as screens shrink). Mixing both approaches inconsistently in one project often leads to specificity conflicts and hard-to-follow overrides.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use CSS Grid or Flexbox alone to build a responsive layout without any media queries?",
+    "answer": "Using flexible sizing functions like repeat(auto-fit, minmax(min, max)) in Grid, or flex-wrap combined with flex-basis/flex-grow in Flexbox, lets the browser automatically adjust the number of columns or wrap items based on available space. This intrinsic responsiveness avoids hardcoded breakpoints entirely for many card-grid or list layouts.",
+    "example": null,
+    "code": ".cards {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 1rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a CSS length unit's difference between vw and %  when sizing an element's width?",
+    "answer": "vw is always relative to the full viewport width, regardless of the element's parent, so an element sized in vw ignores any padding or width constraints on its ancestors. % is relative to the containing block's own computed width, so a percentage-width element scales with its immediate parent, which can differ significantly from the full viewport.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you handle typography that scales smoothly across screen sizes without relying purely on multiple media query breakpoints?",
+    "answer": "clamp(min, preferred, max) lets font-size scale fluidly with the viewport (often using vw in the preferred value) while never going below a minimum or above a maximum readable size. This produces smooth, continuous scaling instead of the abrupt jumps caused by discrete breakpoint-based font sizes.",
+    "example": null,
+    "code": "h1 {\n  font-size: clamp(1.5rem, 4vw, 3rem);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "typography"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the CSS orientation media feature and width/height-based media queries?",
+    "answer": "orientation: portrait or orientation: landscape targets whether the viewport's height is greater than its width (portrait) or vice versa (landscape), which is useful for adapting layouts on rotatable devices like tablets. Width/height media queries target specific pixel dimensions directly and don't account for the relationship between the two, so a device could be 'landscape' at very different absolute widths.",
+    "example": null,
+    "code": "@media (orientation: landscape) {\n  .gallery { grid-template-columns: repeat(4, 1fr); }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are container queries and how do they differ from media queries?",
+    "answer": "Media queries respond to the viewport's dimensions, so a component's styles change based on the whole page's size, regardless of how much space the component itself actually has. Container queries (@container) respond to the size of a nearby ancestor that's been declared a containment context, letting a component adapt based on its own available space — essential for truly reusable components that might appear in a narrow sidebar or a wide main area.",
+    "example": null,
+    "code": ".card-container {\n  container-type: inline-size;\n}\n\n@container (min-width: 400px) {\n  .card { flex-direction: row; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "container-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between resolution-based media queries (like min-resolution) and viewport-size media queries?",
+    "answer": "Viewport-size media queries (min-width, max-width) target the CSS pixel dimensions of the browser viewport. Resolution media queries (min-resolution, targeting dppx or dpi) target the device's pixel density, letting you serve higher-resolution background images or assets to high-DPI (Retina-style) screens regardless of the viewport's logical size.",
+    "example": null,
+    "code": "@media (min-resolution: 2dppx) {\n  .logo { background-image: url('logo@2x.png'); }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you hide an element visually for sighted users while keeping it accessible to screen readers in a responsive layout?",
+    "answer": "display: none or visibility: hidden remove content from both the visual rendering and the accessibility tree, hiding it from screen readers too. To hide only visually, use a 'visually-hidden' utility class that clips the element to a 1px box with overflow hidden and absolute positioning, instead of collapsing it, which keeps it available to assistive technology while removing it from sighted view.",
+    "example": null,
+    "code": ".visually-hidden {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between adaptive design and responsive design?",
+    "answer": "Responsive design uses fluid grids and media queries so the layout continuously reflows to fit any viewport size. Adaptive design instead detects the device or viewport and serves one of several fixed, discrete layouts tailored to specific breakpoints, without the continuous fluidity in between.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can the CSS min(), max(), and clamp() functions help avoid excessive media queries in responsive layouts?",
+    "answer": "min(), max(), and clamp() let a single declaration adapt to context without a breakpoint: min() picks the smaller of two values (useful for capping width), max() picks the larger (useful for a minimum floor), and clamp() combines both to keep a value within a range while scaling fluidly in between — reducing the number of explicit @media rules needed for fluid sizing.",
+    "example": null,
+    "code": ".container {\n  width: min(90%, 1200px);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS prefers-color-scheme media feature detect, and how is it used?",
+    "answer": "prefers-color-scheme detects whether the user's operating system or browser is set to a light or dark color theme, letting the page automatically apply matching styles without a manual toggle. It's commonly combined with CSS custom properties to swap an entire color palette in one media query block.",
+    "example": null,
+    "code": "@media (prefers-color-scheme: dark) {\n  :root { --bg: #111; --text: #eee; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the prefers-reduced-motion media feature do and why does it matter for responsive/accessible design?",
+    "answer": "prefers-reduced-motion detects a user's OS-level preference to minimize non-essential animations, often set by people with vestibular disorders who can experience discomfort from motion. Wrapping animations and transitions in this media query lets you provide a reduced or instant alternative instead of forcing motion on everyone.",
+    "example": null,
+    "code": "@media (prefers-reduced-motion: reduce) {\n  * { animation: none !important; transition: none !important; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS ch unit and the em unit?",
+    "answer": "The ch unit is defined as the width of the '0' (zero) character in the element's font, making it especially useful for sizing text containers to a specific number of characters wide, like limiting a paragraph to 65ch for readability. em is based on the font-size itself and doesn't correspond directly to character width, which varies by font.",
+    "example": null,
+    "code": "p {\n  max-width: 65ch;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a responsive navigation bar that collapses into a hamburger menu on small screens using only CSS and a checkbox/label pattern?",
+    "answer": "A hidden checkbox input paired with a <label> styled as a hamburger icon lets you toggle visibility of a navigation menu purely with CSS, using the :checked pseudo-class and a sibling combinator to show/hide the menu, all wrapped in a media query so the toggle only applies below a certain breakpoint. This avoids JavaScript for the simplest cases, though a JS-based approach is usually preferred for better accessibility (e.g. proper aria-expanded state).",
+    "example": null,
+    "code": "@media (max-width: 600px) {\n  .nav-links { display: none; }\n  #menu-toggle:checked ~ .nav-links { display: flex; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS object-fit property do, and how does it help with responsive images?",
+    "answer": "object-fit controls how a replaced element's content (like an img or video) is resized to fit its box when the box's aspect ratio doesn't match the content's natural ratio. cover scales to fill the box while cropping overflow, contain scales to fit entirely within the box while preserving aspect ratio (possibly leaving empty space), and fill stretches to match the box exactly, distorting the content if needed.",
+    "example": null,
+    "code": "img {\n  width: 100%;\n  height: 300px;\n  object-fit: cover;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "images"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the dvh, svh, and lvh viewport units, and what problem do they solve on mobile browsers?",
+    "answer": "Traditional vh is based on the largest possible viewport, which causes layout jumps on mobile browsers when the address bar or toolbar shows/hides and changes the actual visible area. lvh (large viewport height) matches the old vh behavior, svh (small viewport height) accounts for UI chrome always being visible, and dvh (dynamic viewport height) updates live as the visible viewport changes, giving more accurate full-height sizing on mobile.",
+    "example": null,
+    "code": ".full-height {\n  height: 100dvh;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it generally discouraged to disable pinch-to-zoom with the viewport meta tag?",
+    "answer": "Setting user-scalable=no or a fixed maximum-scale in the viewport meta tag prevents users from zooming in, which is a significant accessibility barrier for people with low vision who rely on pinch-zoom to read content. It's considered a WCAG failure and modern browsers increasingly ignore these restrictions for that reason.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do relative font sizing strategies (setting html { font-size: 62.5% }) simplify working with rem units?",
+    "answer": "Since browsers default to a 16px root font-size, setting html { font-size: 62.5% } makes the root equal to 10px, so any rem value maps directly to a simple base-10 pixel equivalent (e.g. 1.6rem = 16px), which is easier to reason about than multiplying by 16. This must be done carefully, since it changes the effective size of any unstyled default rem-based measurements too, and it's increasingly considered unnecessary with modern calc/clamp workflows.",
+    "example": null,
+    "code": "html {\n  font-size: 62.5%; /* 1rem = 10px */\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "units"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between using CSS Grid's auto-fit and manually specifying different grid-template-columns per breakpoint?",
+    "answer": "auto-fit with minmax() creates an intrinsically responsive grid that recalculates column count continuously as the container resizes, without any explicit breakpoints, adapting to any width. Manually specifying grid-template-columns inside separate media queries gives precise, designed control over exactly how many columns appear at specific breakpoints, which is useful when the design calls for exact column counts rather than whatever fits.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "responsive-design", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between print stylesheets and screen media queries?",
+    "answer": "A print stylesheet, targeted with @media print, applies styles specifically when a page is printed or exported to PDF — commonly used to hide navigation/ads, force black text, and add page-break rules. Screen media queries (@media screen) target on-screen rendering, and most responsive design work targets screen by default since @media without a type applies to all media types including print.",
+    "example": null,
+    "code": "@media print {\n  nav, footer { display: none; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS gap property behave responsively compared to fixed-pixel margins between grid or flex items?",
+    "answer": "Using a relative unit or clamp() with gap lets spacing between items scale naturally with the viewport or container without needing separate margin overrides per breakpoint. Fixed-pixel margins on individual items require careful negative-margin or :not(:last-child) handling to avoid uneven edges, and don't automatically scale across screen sizes the way a responsive gap value can.",
+    "example": null,
+    "code": ".grid {\n  display: grid;\n  gap: clamp(0.5rem, 2vw, 2rem);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between 'fixed breakpoints' and 'content-based breakpoints' in responsive design strategy?",
+    "answer": "Fixed breakpoints are predetermined pixel widths (like 576px, 768px, 992px, often from a framework like Bootstrap) applied regardless of the specific component's content. Content-based breakpoints are chosen by resizing the actual component and noting exactly where its content starts to look broken or cramped, which produces more tailored results but requires more manual testing per component.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "responsive-design", "media-queries"],
+    "isFrequentlyAsked": false
+  }
+]

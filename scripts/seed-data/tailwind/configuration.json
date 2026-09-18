@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is `tailwind.config.js` for, and what are its main top-level sections?",
+    "answer": "It's the central configuration file that controls which files Tailwind scans for class names (`content`), the design tokens available to utilities (`theme`), any registered plugins (`plugins`), and options like `darkMode`. Everything Tailwind generates — colors, spacing, breakpoints, font sizes — ultimately traces back to values defined or extended in this file.",
+    "example": null,
+    "code": "module.exports = {\n  content: ['./src/**/*.{html,js,jsx,tsx}'],\n  theme: { extend: {} },\n  plugins: [],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "config-file"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the `content` option in the config do, and why is it critical to set correctly?",
+    "answer": "The `content` array tells Tailwind which files to scan for class name usage so it knows exactly which utility classes to actually generate in the final CSS output. If a template path is missing from `content`, any classes used only in that file will be silently omitted from the build, which is one of the most common Tailwind setup bugs (styles \"not working\" in production).",
+    "example": null,
+    "code": "module.exports = {\n  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "content"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between setting values directly under `theme` versus under `theme.extend`?",
+    "answer": "Keys placed directly under `theme` (e.g. `theme.colors`) completely replace Tailwind's default values for that key, so you lose all default colors unless you redefine them yourself. Keys placed under `theme.extend` are merged on top of the defaults, adding new values (or overriding a specific one) while keeping everything else from the default theme intact — `extend` is what you reach for in the vast majority of cases.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      colors: { brand: '#5b21b6' }, // adds brand, keeps all default colors\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "theme"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you completely replace Tailwind's default color palette with your own brand colors?",
+    "answer": "You assign an object directly to `theme.colors` (not `theme.extend.colors`), which discards every default color like `blue` and `emerald` and leaves only the colors you define. This is used when a project has a strict brand palette and doesn't want the default palette available at all, keeping generated CSS smaller and design choices constrained.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    colors: {\n      white: '#ffffff',\n      black: '#000000',\n      primary: '#0ea5e9',\n      danger: '#dc2626',\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "colors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you access Tailwind's default theme values inside your own config, for example to extend the default font family?",
+    "answer": "You import `defaultTheme` from `tailwindcss/defaultTheme` and spread or reference its values, which lets you add to a default array (like appending a custom font ahead of the default sans stack) instead of retyping the whole fallback list.",
+    "example": null,
+    "code": "const defaultTheme = require('tailwindcss/defaultTheme');\n\nmodule.exports = {\n  theme: {\n    extend: {\n      fontFamily: {\n        sans: ['Inter', ...defaultTheme.fontFamily.sans],\n      },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "default-theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you add a custom breakpoint alongside Tailwind's default `sm`/`md`/`lg`/`xl`/`2xl` screens?",
+    "answer": "You extend `theme.extend.screens` with a new key and a min-width value, which adds an additional responsive variant (e.g. `xs:` or `3xl:`) usable anywhere a built-in breakpoint prefix would be. If you instead assign directly to `theme.screens`, you replace the default breakpoints entirely rather than adding to them.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      screens: { '3xl': '1920px' },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "breakpoints"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you register an official Tailwind plugin like `@tailwindcss/forms` or `@tailwindcss/typography` in the config?",
+    "answer": "After installing the plugin package, you `require()` it and add it to the `plugins` array in `tailwind.config.js`. Plugins can inject base styles, component classes, new utilities, or new variants, and some accept an options object as an argument to customize their behavior.",
+    "example": null,
+    "code": "module.exports = {\n  plugins: [\n    require('@tailwindcss/forms'),\n    require('@tailwindcss/typography'),\n  ],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `safelist` option used for in the Tailwind config?",
+    "answer": "`safelist` forces specific class names (or patterns via regex) to always be generated in the output CSS even if they aren't found by scanning your `content` files, which is needed when class names are built dynamically at runtime (e.g. `` `bg-${color}-500` `` from a variable) and therefore invisible to Tailwind's static scanner.",
+    "example": null,
+    "code": "module.exports = {\n  safelist: ['bg-red-500', 'bg-green-500', { pattern: /bg-(red|green|blue)-(400|500|600)/ }],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "safelist"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `presets` option in Tailwind's configuration for?",
+    "answer": "`presets` lets you define a shared, reusable base configuration (a design system) in one file and import it as the starting point for multiple projects' configs, rather than duplicating theme customizations everywhere. Each project can still layer its own `theme.extend` and `plugins` on top of the shared preset.",
+    "example": null,
+    "code": "// tailwind.config.js\nmodule.exports = {\n  presets: [require('@company/tailwind-preset')],\n  theme: { extend: { colors: { accent: '#f59e0b' } } },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "presets"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can theme values in the config be defined as functions instead of static objects, and why would you do that?",
+    "answer": "Yes — many theme keys accept a function that receives a `{ theme }` helper (and sometimes other utilities), letting you compute one theme section from another, such as deriving `spacing` values or generating negative margin scales programmatically instead of hand-listing every value. This is more advanced and mainly used when building shareable presets or plugins.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      textColor: ({ theme }) => theme('colors'),\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you configure dark mode strategy in Tailwind, and what are the available options?",
+    "answer": "The `darkMode` option controls how the `dark:` variant is triggered: `'media'` (default in older versions) applies dark styles based on the OS-level `prefers-color-scheme` media query automatically, while `'class'` (or `'selector'` in newer versions) applies dark styles only when a `.dark` class is present on an ancestor (usually `<html>`), which lets the app toggle dark mode manually with JavaScript instead of following the OS setting.",
+    "example": null,
+    "code": "module.exports = {\n  darkMode: 'class',\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "dark-mode"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the `important` option in the Tailwind config do?",
+    "answer": "Setting `important: true` makes every generated utility use `!important`, which is sometimes used when integrating Tailwind into a legacy codebase where existing CSS has high specificity you need to reliably override. You can also scope it to a selector string (e.g. `'#app'`) so only utilities nested under that selector are marked important, which is gentler than a global flag.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "important"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `corePlugins` used for in the Tailwind config?",
+    "answer": "`corePlugins` lets you disable specific built-in utility groups entirely (by passing an array of names to disable, or an object mapping names to `false`), which is useful when a feature conflicts with another library or you want a smaller CSS output by removing utilities your project never uses, such as disabling `preflight` if you already have your own reset.",
+    "example": null,
+    "code": "module.exports = {\n  corePlugins: {\n    preflight: false,\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "core-plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `separator` option in the config control?",
+    "answer": "`separator` changes the character used between a variant prefix and the utility name, defaulting to `:` (as in `hover:bg-blue-500`). It's rarely changed, but exists for compatibility with template engines or tools where a colon in a class name causes parsing issues.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "separator"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you extend the font-size scale to include a custom size with a specific line height?",
+    "answer": "Font-size entries can be a plain string for just the size, or a tuple `[fontSize, lineHeight]` (or `[fontSize, { lineHeight, letterSpacing }]`) so a single utility like `text-xl` sets both properties together, avoiding the need to pair it with a separate leading utility every time.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      fontSize: {\n        display: ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],\n      },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "typography"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you add custom border-radius or box-shadow tokens to the theme?",
+    "answer": "You extend `theme.extend.borderRadius` or `theme.extend.boxShadow` with new named keys mapping to CSS values, which then become usable as `rounded-{key}` or `shadow-{key}` utilities alongside the built-in scale.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      borderRadius: { xl2: '1.25rem' },\n      boxShadow: { card: '0 4px 14px 0 rgba(0,0,0,0.1)' },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "design-tokens"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you define custom keyframes and animation utilities in the Tailwind config?",
+    "answer": "You add entries under `theme.extend.keyframes` describing the animation steps, and a matching entry under `theme.extend.animation` that references the keyframe name along with timing/duration/iteration settings, producing a new `animate-{name}` utility class.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      keyframes: {\n        fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },\n      },\n      animation: {\n        'fade-in': 'fadeIn 0.3s ease-out',\n      },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "animation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Where do you configure the default centering and padding behavior of the `container` utility class?",
+    "answer": "The `theme.container` key accepts options like `center: true` to auto-center the container with margins, and a `padding` value (a single value or an object per breakpoint) for horizontal gutter, both of which apply whenever the `container` utility class is used.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    container: {\n      center: true,\n      padding: { DEFAULT: '1rem', lg: '2rem' },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "container"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you extend Tailwind's z-index scale to add values for custom stacking contexts like modals or toasts?",
+    "answer": "You add named keys under `theme.extend.zIndex` mapping to numeric string values, which is preferable to reaching for arbitrary `z-[999]` values scattered throughout a codebase because it centralizes the app's stacking order in one place and documents intent through the key name.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      zIndex: { modal: '1000', toast: '1100' },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "z-index"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the general structure you'd expect in a typical `tailwind.config.js` file?",
+    "answer": "A typical config has `content` (glob paths to scan), `darkMode` (strategy), `theme` (with a nested `extend` object for customizations), and `plugins` (an array of registered plugin functions) — these four sections cover the vast majority of what teams configure day to day.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "config-file"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does theme configuration change in Tailwind CSS v4 compared to the v3 `tailwind.config.js` approach?",
+    "answer": "Tailwind v4 moves toward CSS-first configuration: instead of (or alongside) a JS config file, you define design tokens directly in CSS using an `@theme` block with CSS custom properties, and content detection is automatic in most setups rather than requiring an explicit `content` array. The JS config format is still supported for backward compatibility and complex cases like plugins, but the CSS-native approach is now the primary path for simple theme customization.",
+    "example": "@theme {\n  --color-brand: #5b21b6;\n  --font-display: 'Inter', sans-serif;\n}",
+    "code": "@theme {\n  --color-brand: #5b21b6;\n  --font-display: 'Inter', sans-serif;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "tailwind-v4"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why would you use a theme function like `({ theme }) => ({...})` instead of a plain object when configuring a design token?",
+    "answer": "A function gives you access to other already-resolved parts of the theme via the `theme()` helper, letting you derive one token set from another — for example, generating `outlineColor` values that mirror your color palette exactly, so a future palette change automatically propagates instead of requiring the derived section to be manually kept in sync.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you combine a shared company-wide preset with project-specific theme overrides without losing either?",
+    "answer": "You list the shared config in the `presets` array, and any `theme.extend` values you add in the project's own config are merged on top of the preset's theme (which itself may already extend Tailwind's defaults) — so the resolution order is Tailwind defaults, then preset, then the local project's own overrides, each layer only overriding what it explicitly defines.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "presets"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you add a completely custom color to the palette without discarding Tailwind's built-in colors?",
+    "answer": "Add it under `theme.extend.colors` with a name that doesn't collide with a default color, optionally as an object of shades (50–950) if you want a full scale, or a single value if you only need one shade like a fixed `brand` color.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      colors: {\n        brand: {\n          light: '#93c5fd',\n          DEFAULT: '#3b82f6',\n          dark: '#1d4ed8',\n        },\n      },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "colors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `DEFAULT` key convention used for within a theme object like `colors.brand`?",
+    "answer": "When a nested theme object includes a `DEFAULT` key, that value is used when the utility is referenced without a suffix — e.g. `bg-brand` maps to `colors.brand.DEFAULT` — while `bg-brand-light` and `bg-brand-dark` map to the other named keys in that object. It's the convention Tailwind's own default theme uses internally for things like `colors.gray.DEFAULT` equivalents.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you customize the default `fontFamily` theme to use a custom monospace font for code blocks?",
+    "answer": "You extend `theme.extend.fontFamily.mono` with your custom font stack, which then changes what the `font-mono` utility renders, keeping the utility name the same across the codebase while swapping the underlying font.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      fontFamily: {\n        mono: ['\"JetBrains Mono\"', 'monospace'],\n      },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "configuration", "typography"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if two plugins registered in the config both try to define the same utility class?",
+    "answer": "Plugins are applied in the order they appear in the `plugins` array, so a later plugin's definition for the same utility/selector will override an earlier one at the CSS-generation level, following the same last-rule-wins behavior as any other CSS cascade conflict Tailwind produces internally.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "configuration", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you disable Tailwind's Preflight base reset entirely while keeping all utility classes?",
+    "answer": "Set `corePlugins: { preflight: false }` in the config, which stops Tailwind from injecting its base reset styles but leaves every other utility, variant, and component class fully functional — useful when integrating Tailwind into an existing app that already has its own CSS reset.",
+    "example": null,
+    "code": "module.exports = {\n  corePlugins: { preflight: false },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "preflight"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you configure a custom spacing scale that adds a few extra values without losing the default scale?",
+    "answer": "Add the extra keys under `theme.extend.spacing`, using string keys (they don't have to be numeric) mapped to any valid CSS length, which then become usable across every utility that consumes the spacing scale — margin, padding, width, height, gap, and more, since they all reference the same shared spacing scale by default.",
+    "example": null,
+    "code": "module.exports = {\n  theme: {\n    extend: {\n      spacing: { 18: '4.5rem', 128: '32rem' },\n    },\n  },\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "spacing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it recommended to define `content` globs as specifically as possible rather than pointing at the whole project?",
+    "answer": "Narrower, accurate globs keep Tailwind's build fast since it has fewer files to scan on every rebuild, and they avoid accidentally scanning generated output, `node_modules`, or non-template files that could either slow the scan or (in rare cases) produce false-positive class matches from unrelated text.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "content"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you use environment variables or conditional logic inside `tailwind.config.js`?",
+    "answer": "Yes — since the config is a plain JavaScript (or TypeScript, in newer versions) module executed by Node, you can read `process.env` values or branch logic to, for example, enable a debug plugin only outside production, exactly as you would in any other Node config file.",
+    "example": null,
+    "code": "module.exports = {\n  plugins: process.env.NODE_ENV === 'development' ? [require('./debug-plugin')] : [],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "configuration", "config-file"],
+    "isFrequentlyAsked": false
+  }
+]

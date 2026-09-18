@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Object.keys()",
+    "syntax": "Object.keys(obj)",
+    "description": "Returns an array of a given object's own enumerable property names, in the same order as a for...in loop.",
+    "parameters": "obj — the object whose keys are to be returned.",
+    "returns": "An array of strings representing the object's own enumerable keys.",
+    "example": "Object.keys({ a: 1, b: 2 }); // ['a', 'b']",
+    "codeLanguage": "javascript",
+    "notes": "Does not include inherited or non-enumerable properties.",
+    "tags": ["javascript", "object", "iteration"]
+  },
+  {
+    "name": "Object.values()",
+    "syntax": "Object.values(obj)",
+    "description": "Returns an array of a given object's own enumerable property values.",
+    "parameters": "obj — the object whose values are to be returned.",
+    "returns": "An array of the object's own enumerable values, in the same order as Object.keys().",
+    "example": "Object.values({ a: 1, b: 2 }); // [1, 2]",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "object", "iteration"]
+  },
+  {
+    "name": "Object.entries()",
+    "syntax": "Object.entries(obj)",
+    "description": "Returns an array of a given object's own enumerable [key, value] pairs.",
+    "parameters": "obj — the object to convert.",
+    "returns": "An array of [key, value] pair arrays.",
+    "example": "Object.entries({ a: 1, b: 2 }); // [['a', 1], ['b', 2]]",
+    "codeLanguage": "javascript",
+    "notes": "Commonly paired with destructuring in a for...of loop: for (const [k, v] of Object.entries(obj))",
+    "tags": ["javascript", "object", "iteration"]
+  },
+  {
+    "name": "Object.assign()",
+    "syntax": "Object.assign(target, ...sources)",
+    "description": "Copies all enumerable own properties from one or more source objects to a target object, mutating and returning the target.",
+    "parameters": "target — object to copy properties into. sources — one or more objects to copy properties from.",
+    "returns": "The modified target object.",
+    "example": "Object.assign({}, { a: 1 }, { b: 2 }); // { a: 1, b: 2 }",
+    "codeLanguage": "javascript",
+    "notes": "Performs a shallow copy — nested objects are still shared by reference. Passing {} as target avoids mutating a source object.",
+    "tags": ["javascript", "object", "merging"]
+  },
+  {
+    "name": "Object.freeze()",
+    "syntax": "Object.freeze(obj)",
+    "description": "Freezes an object, preventing new properties from being added and existing ones from being removed or changed.",
+    "parameters": "obj — the object to freeze.",
+    "returns": "The same object that was passed in, now frozen.",
+    "example": "const o = Object.freeze({ a: 1 }); o.a = 2; // fails silently (throws in strict mode)",
+    "codeLanguage": "javascript",
+    "notes": "Freezing is shallow — nested objects inside a frozen object are not themselves frozen.",
+    "tags": ["javascript", "object", "immutability"]
+  },
+  {
+    "name": "Object.isFrozen()",
+    "syntax": "Object.isFrozen(obj)",
+    "description": "Determines whether an object is frozen, meaning it is non-extensible and all its properties are non-configurable and non-writable.",
+    "parameters": "obj — the object to check.",
+    "returns": "true if the object is frozen, otherwise false.",
+    "example": "Object.isFrozen(Object.freeze({})); // true",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "object", "immutability"]
+  },
+  {
+    "name": "Object.create()",
+    "syntax": "Object.create(proto, propertiesObject)",
+    "description": "Creates a new object using an existing object as the prototype of the newly created object.",
+    "parameters": "proto — the object to use as the new object's prototype. propertiesObject — optional property descriptors.",
+    "returns": "A new object with the specified prototype.",
+    "example": "const proto = { greet() { return 'hi'; } }; const o = Object.create(proto); o.greet(); // 'hi'",
+    "codeLanguage": "javascript",
+    "notes": "Object.create(null) creates an object with no prototype at all, useful as a plain dictionary.",
+    "tags": ["javascript", "object", "prototype"]
+  },
+  {
+    "name": "Object.getPrototypeOf()",
+    "syntax": "Object.getPrototypeOf(obj)",
+    "description": "Returns the prototype (internal [[Prototype]]) of the specified object.",
+    "parameters": "obj — the object whose prototype to return.",
+    "returns": "The object's prototype, or null if it has none.",
+    "example": "Object.getPrototypeOf([]) === Array.prototype; // true",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "object", "prototype"]
+  },
+  {
+    "name": "Object.setPrototypeOf()",
+    "syntax": "Object.setPrototypeOf(obj, prototype)",
+    "description": "Sets the prototype of a specified object to another object or null.",
+    "parameters": "obj — the object to modify. prototype — the new prototype (an object or null).",
+    "returns": "The modified object.",
+    "example": "const o = {}; Object.setPrototypeOf(o, { greet() { return 'hi'; } });",
+    "codeLanguage": "javascript",
+    "notes": "Changing the prototype after creation is slow — prefer Object.create() when possible.",
+    "tags": ["javascript", "object", "prototype"]
+  },
+  {
+    "name": "hasOwnProperty()",
+    "syntax": "obj.hasOwnProperty(prop)",
+    "description": "Returns a boolean indicating whether the object has the specified property as its own (not inherited).",
+    "parameters": "prop — the property name (string or symbol) to test.",
+    "returns": "true if the object directly owns the property, otherwise false.",
+    "example": "({ a: 1 }).hasOwnProperty('a'); // true",
+    "codeLanguage": "javascript",
+    "notes": "The safer Object.hasOwn(obj, prop) is now preferred since it works even on objects created with Object.create(null).",
+    "tags": ["javascript", "object", "prototype"]
+  },
+  {
+    "name": "Object.defineProperty()",
+    "syntax": "Object.defineProperty(obj, prop, descriptor)",
+    "description": "Defines a new property directly on an object, or modifies an existing one, with fine-grained control via a descriptor.",
+    "parameters": "obj — target object. prop — property name. descriptor — object describing value, writable, enumerable, configurable, or getter/setter.",
+    "returns": "The object that was passed to the function.",
+    "example": "Object.defineProperty(obj, 'x', { value: 1, writable: false });",
+    "codeLanguage": "javascript",
+    "notes": "Properties defined this way are non-enumerable by default, so they won't show up in Object.keys() or for...in.",
+    "tags": ["javascript", "object", "properties"]
+  },
+  {
+    "name": "Object.fromEntries()",
+    "syntax": "Object.fromEntries(iterable)",
+    "description": "Transforms a list of key-value pairs into an object, the inverse of Object.entries().",
+    "parameters": "iterable — an iterable such as an array of [key, value] pairs, or a Map.",
+    "returns": "A new object built from the entries.",
+    "example": "Object.fromEntries([['a', 1], ['b', 2]]); // { a: 1, b: 2 }",
+    "codeLanguage": "javascript",
+    "notes": "Handy for converting a Map back into a plain object, or for transforming entries with map()/filter() before rebuilding.",
+    "tags": ["javascript", "object", "conversion"]
+  },
+  {
+    "name": "Object.seal()",
+    "syntax": "Object.seal(obj)",
+    "description": "Seals an object, preventing new properties from being added but allowing existing writable properties to be changed.",
+    "parameters": "obj — the object to seal.",
+    "returns": "The same object that was passed in, now sealed.",
+    "example": "const o = Object.seal({ a: 1 }); o.a = 2; // allowed; o.b = 3; // ignored",
+    "codeLanguage": "javascript",
+    "notes": "Less restrictive than Object.freeze() — existing property values can still be reassigned.",
+    "tags": ["javascript", "object", "immutability"]
+  },
+  {
+    "name": "Object.is()",
+    "syntax": "Object.is(value1, value2)",
+    "description": "Determines whether two values are the same value, using stricter semantics than === for edge cases like NaN and signed zero.",
+    "parameters": "value1, value2 — the two values to compare.",
+    "returns": "true if the values are the same value, otherwise false.",
+    "example": "Object.is(NaN, NaN); // true — unlike NaN === NaN which is false",
+    "codeLanguage": "javascript",
+    "notes": "Object.is(0, -0) returns false, whereas 0 === -0 returns true.",
+    "tags": ["javascript", "object", "comparison"]
+  },
+  {
+    "name": "Object.getOwnPropertyNames()",
+    "syntax": "Object.getOwnPropertyNames(obj)",
+    "description": "Returns an array of all own property names of an object, including non-enumerable ones but excluding symbol keys.",
+    "parameters": "obj — the object whose property names to return.",
+    "returns": "An array of strings representing all own property names.",
+    "example": "Object.getOwnPropertyNames({ a: 1 }); // ['a']",
+    "codeLanguage": "javascript",
+    "notes": "Unlike Object.keys(), this also includes non-enumerable properties.",
+    "tags": ["javascript", "object", "properties"]
+  }
+]

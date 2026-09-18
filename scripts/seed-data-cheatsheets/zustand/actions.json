@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Defining actions in the store",
+    "syntax": null,
+    "description": "Actions are just functions defined alongside state inside the create() callback, closing over set (and optionally get) to update the store.",
+    "parameters": null,
+    "returns": null,
+    "example": "const useCounterStore = create((set) => ({\n  count: 0,\n  increment: () => set((s) => ({ count: s.count + 1 })),\n  reset: () => set({ count: 0 }),\n}));",
+    "codeLanguage": "javascript",
+    "notes": "Because actions live on the same object as state, they are automatically available wherever the store hook is used — no dispatch or action types required.",
+    "tags": ["zustand", "actions", "store"]
+  },
+  {
+    "name": "Calling actions from components",
+    "syntax": "const doThing = useStore((state) => state.doThing)",
+    "description": "Components select an action from the store using the hook, the same way they select state, and call it directly like a normal function.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Counter() {\n  const count = useCounterStore((s) => s.count);\n  const increment = useCounterStore((s) => s.increment);\n  return <button onClick={increment}>{count}</button>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Action references are stable across renders, so selecting them doesn't cause unnecessary re-renders.",
+    "tags": ["zustand", "actions", "hooks"]
+  },
+  {
+    "name": "Actions updating state via set()",
+    "syntax": null,
+    "description": "Actions update the store exclusively by calling set() with a partial state or an updater function — there is no separate reducer/dispatch step like in Redux.",
+    "parameters": null,
+    "returns": null,
+    "example": "addTodo: (text) => set((state) => ({\n  todos: [...state.todos, { text, done: false }],\n})),",
+    "codeLanguage": "javascript",
+    "notes": "Because set() merges shallowly, an action only needs to return the keys it changes.",
+    "tags": ["zustand", "actions", "set"]
+  },
+  {
+    "name": "Actions calling other actions",
+    "syntax": "get().otherAction()",
+    "description": "Actions can call other actions on the same store via get(), enabling composition without duplicating logic.",
+    "parameters": null,
+    "returns": null,
+    "example": "const useStore = create((set, get) => ({\n  count: 0,\n  increment: () => set((s) => ({ count: s.count + 1 })),\n  incrementTwice: () => { get().increment(); get().increment(); },\n}));",
+    "codeLanguage": "javascript",
+    "notes": "Keep composed action chains simple — deeply nested calls can make state changes harder to trace.",
+    "tags": ["zustand", "actions", "composition"]
+  },
+  {
+    "name": "Actions outside components",
+    "syntax": "useStore.getState().action()",
+    "description": "Because actions are plain functions on the store, they can be invoked outside React (e.g. in event handlers, utilities, or tests) via getState().",
+    "parameters": null,
+    "returns": null,
+    "example": "// In a non-component utility file\nuseCounterStore.getState().increment();",
+    "codeLanguage": "javascript",
+    "notes": "This avoids needing to pass actions down as props or through context for non-component code.",
+    "tags": ["zustand", "actions", "vanilla"]
+  },
+  {
+    "name": "Grouping actions in an actions object",
+    "syntax": null,
+    "description": "For larger stores, actions are sometimes grouped under a nested actions key (e.g. state.actions.increment) to visually separate them from data fields.",
+    "parameters": null,
+    "returns": null,
+    "example": "const useStore = create((set) => ({\n  count: 0,\n  actions: {\n    increment: () => set((s) => ({ count: s.count + 1 })),\n  },\n}));",
+    "codeLanguage": "javascript",
+    "notes": "This is a convention, not a Zustand requirement — it helps when a store has many actions and you want to select 'actions' as a stable group.",
+    "tags": ["zustand", "actions", "conventions"]
+  }
+]

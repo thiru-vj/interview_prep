@@ -7,6 +7,7 @@ import { SearchBar } from '@/components/search/SearchBar'
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Languages', to: '/languages' },
+  { label: 'Cheatsheets', to: '/cheatsheets' },
 ]
 
 export function Navbar() {

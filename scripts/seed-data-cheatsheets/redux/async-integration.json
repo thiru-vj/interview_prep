@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Middleware concept",
+    "syntax": "const middleware = (storeAPI) => (next) => (action) => { ...; return next(action); }",
+    "description": "Redux middleware sits between dispatching an action and it reaching the reducer, letting you intercept actions to log them, delay them, modify them, or handle async logic like API calls.",
+    "parameters": "storeAPI — { getState, dispatch }. next — calls the next middleware in the chain (or the reducer). action — the dispatched action.",
+    "returns": "Typically the result of calling next(action), though middleware can also swallow or replace an action.",
+    "example": "const logger = (store) => (next) => (action) => {\n  console.log('dispatching', action);\n  return next(action);\n};",
+    "codeLanguage": "javascript",
+    "notes": "redux-thunk, redux-saga, and RTK Query are all implemented as middleware.",
+    "tags": ["redux", "async-integration", "middleware"]
+  },
+  {
+    "name": "redux-thunk middleware",
+    "syntax": "const thunk = (dispatch, getState) => { /* async logic, then dispatch(...) */ };",
+    "description": "A middleware that allows dispatch() to accept a function ('thunk') instead of a plain action object. The thunk receives dispatch and getState, letting it perform async work (like fetching data) and dispatch plain actions when it resolves.",
+    "example": "const fetchTodos = () => async (dispatch, getState) => {\n  dispatch({ type: 'todos/loading' });\n  const res = await fetch('/api/todos');\n  dispatch({ type: 'todos/loaded', payload: await res.json() });\n};\ndispatch(fetchTodos());",
+    "codeLanguage": "javascript",
+    "notes": "redux-thunk is included by default in configureStore's middleware, so no manual setup is needed in a standard Redux Toolkit app.",
+    "tags": ["redux", "async-integration", "redux-thunk"]
+  },
+  {
+    "name": "createAsyncThunk() lifecycle",
+    "syntax": "createAsyncThunk('todos/fetch', async (arg, thunkAPI) => { ... })",
+    "description": "A Redux Toolkit function that wraps an async function and automatically dispatches three action types based on its outcome: 'pending' when it starts, 'fulfilled' when it resolves, and 'rejected' when it throws or the promise rejects.",
+    "parameters": "typePrefix — base string used to build the pending/fulfilled/rejected action types. payloadCreator — async function receiving (arg, thunkAPI) and returning the fulfilled payload.",
+    "returns": "A thunk action creator; dispatching it returns a promise that resolves to the fulfilled or rejected action.",
+    "example": "export const fetchTodos = createAsyncThunk('todos/fetch', async () => {\n  const res = await fetch('/api/todos');\n  return res.json();\n});\n// generates: todos/fetch/pending, todos/fetch/fulfilled, todos/fetch/rejected",
+    "codeLanguage": "javascript",
+    "notes": "Handle the three generated action types in a slice's extraReducers to drive loading/success/error UI state.",
+    "tags": ["redux", "async-integration", "redux-toolkit"]
+  },
+  {
+    "name": "Handling createAsyncThunk in extraReducers",
+    "syntax": "builder.addCase(thunk.pending, ...).addCase(thunk.fulfilled, ...).addCase(thunk.rejected, ...)",
+    "description": "The standard pattern for reacting to a createAsyncThunk's lifecycle inside a slice — setting a loading flag on pending, storing the result on fulfilled, and storing the error on rejected.",
+    "example": "extraReducers: (builder) => {\n  builder\n    .addCase(fetchTodos.pending, (state) => { state.status = 'loading'; })\n    .addCase(fetchTodos.fulfilled, (state, action) => {\n      state.status = 'idle';\n      state.items = action.payload;\n    })\n    .addCase(fetchTodos.rejected, (state, action) => {\n      state.status = 'error';\n      state.error = action.error.message;\n    });\n}",
+    "codeLanguage": "javascript",
+    "notes": "action.error (not action.payload) holds the error info on the rejected case, unless you use rejectWithValue in the thunk.",
+    "tags": ["redux", "async-integration", "redux-toolkit"]
+  },
+  {
+    "name": "redux-saga overview",
+    "description": "A middleware that manages side effects using ES6 generator functions, letting you write async workflows (including cancellation, debouncing, and complex sequencing) as sagas that listen for dispatched actions and yield declarative effects.",
+    "example": "function* fetchTodosSaga() {\n  const todos = yield call(api.getTodos);\n  yield put({ type: 'todos/loaded', payload: todos });\n}\nfunction* rootSaga() {\n  yield takeEvery('todos/fetch', fetchTodosSaga);\n}",
+    "codeLanguage": "javascript",
+    "notes": "More powerful but more complex than redux-thunk; commonly chosen for apps with intricate async flows like websockets, polling, or race conditions between requests.",
+    "tags": ["redux", "async-integration", "redux-saga"]
+  },
+  {
+    "name": "RTK Query queries",
+    "syntax": "builder.query({ query: (arg) => `todos/${arg}` })",
+    "description": "An RTK Query endpoint definition for fetching (read) data, which auto-generates a React hook (e.g. useGetTodoQuery) that returns data, isLoading, isError/error, and handles caching and automatic re-fetching.",
+    "returns": "A hook returning { data, isLoading, isFetching, isError, error, refetch }.",
+    "example": "endpoints: (builder) => ({\n  getTodo: builder.query({ query: (id) => `todos/${id}` })\n})\n// usage: const { data, isLoading } = useGetTodoQuery(id);",
+    "codeLanguage": "javascript",
+    "notes": "Query results are cached by endpoint name + argument, so multiple components calling the same query hook share one request.",
+    "tags": ["redux", "async-integration", "rtk-query"]
+  },
+  {
+    "name": "RTK Query mutations",
+    "syntax": "builder.mutation({ query: (body) => ({ url: 'todos', method: 'POST', body }) })",
+    "description": "An RTK Query endpoint definition for creating/updating/deleting data, generating a hook (e.g. useAddTodoMutation) that returns a trigger function plus the request's status, and that can invalidate cached queries via tags.",
+    "returns": "A hook returning [triggerFn, { data, isLoading, isError, error }].",
+    "example": "endpoints: (builder) => ({\n  addTodo: builder.mutation({\n    query: (body) => ({ url: 'todos', method: 'POST', body }),\n    invalidatesTags: ['Todo']\n  })\n})\n// usage: const [addTodo, { isLoading }] = useAddTodoMutation();",
+    "codeLanguage": "javascript",
+    "notes": "providesTags/invalidatesTags drive automatic cache invalidation — a mutation invalidating a tag triggers re-fetching of queries that provide it.",
+    "tags": ["redux", "async-integration", "rtk-query"]
+  },
+  {
+    "name": "rejectWithValue()",
+    "syntax": "createAsyncThunk('todos/add', async (todo, { rejectWithValue }) => { ... })",
+    "description": "A helper available on a createAsyncThunk's thunkAPI used to return a custom, serializable error payload on failure, so it ends up in action.payload of the rejected action instead of the generic action.error.",
+    "example": "createAsyncThunk('todos/add', async (todo, { rejectWithValue }) => {\n  try {\n    return await api.addTodo(todo);\n  } catch (err) {\n    return rejectWithValue(err.response.data);\n  }\n});",
+    "codeLanguage": "javascript",
+    "notes": "Check action.payload (not action.error) in the rejected case reducer when rejectWithValue is used.",
+    "tags": ["redux", "async-integration", "redux-toolkit"]
+  }
+]

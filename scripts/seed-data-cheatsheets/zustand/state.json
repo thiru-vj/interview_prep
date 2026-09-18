@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Reading state via the hook",
+    "syntax": "const value = useStore((state) => state.value)",
+    "description": "Components read store state by calling the store hook with a selector function, which subscribes the component to just that piece of state.",
+    "parameters": "selector — a function that receives the full state object and returns the piece(s) needed.",
+    "returns": "The value returned by the selector function.",
+    "example": "function Bears() {\n  const bears = useBearStore((state) => state.bears);\n  return <p>{bears}</p>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Only components that read a piece of state re-render when that piece changes, since each selector creates its own subscription.",
+    "tags": ["zustand", "state", "hooks"]
+  },
+  {
+    "name": "set()",
+    "syntax": "set(partialStateOrFn, replace?)",
+    "description": "The set() function passed into create() updates the store's state; it accepts either a partial state object or a function that receives the current state and returns a partial update.",
+    "parameters": "partialStateOrFn — an object merged into state, or a function (state) => partialState. replace — optional boolean; when true, replaces the whole state instead of merging.",
+    "returns": "undefined — set() triggers a re-render of subscribed components as a side effect.",
+    "example": "const useStore = create((set) => ({\n  count: 0,\n  increment: () => set((state) => ({ count: state.count + 1 })),\n}));",
+    "codeLanguage": "javascript",
+    "notes": "Prefer the functional form (state) => (...) when the update depends on the previous state, to avoid stale closures.",
+    "tags": ["zustand", "state", "set"]
+  },
+  {
+    "name": "get()",
+    "syntax": "get()",
+    "description": "The get() function passed into create() returns the store's current state, letting actions read up-to-date values without depending on React's render cycle.",
+    "parameters": null,
+    "returns": "The current state object at the time get() is called.",
+    "example": "const useStore = create((set, get) => ({\n  count: 0,\n  logCount: () => console.log(get().count),\n}));",
+    "codeLanguage": "javascript",
+    "notes": "get() is most useful inside actions that need to read other state values or compose logic before calling set().",
+    "tags": ["zustand", "state", "get"]
+  },
+  {
+    "name": "Partial updates / shallow merging",
+    "syntax": null,
+    "description": "By default, set() shallow-merges the object you pass into the existing state, so you only need to specify the keys that changed.",
+    "parameters": null,
+    "returns": null,
+    "example": "// State: { count: 0, name: 'Bear' }\nset({ count: 1 }); // -> { count: 1, name: 'Bear' }",
+    "codeLanguage": "javascript",
+    "notes": "Merging is shallow only — nested objects/arrays must be spread manually or replaced entirely, they are not deep-merged.",
+    "tags": ["zustand", "state", "immutability"]
+  },
+  {
+    "name": "Immutability best practice",
+    "syntax": null,
+    "description": "State updates in Zustand should be immutable: create new objects/arrays instead of mutating existing ones, since Zustand relies on reference changes to notify subscribers.",
+    "parameters": null,
+    "returns": null,
+    "example": "// Good\nset((state) => ({ items: [...state.items, newItem] }));\n// Bad — mutates in place, won't trigger a re-render reliably\n// state.items.push(newItem);",
+    "codeLanguage": "javascript",
+    "notes": "Mutating nested state directly can silently skip re-renders because the object reference stays the same.",
+    "tags": ["zustand", "state", "immutability"]
+  },
+  {
+    "name": "Replacing state entirely",
+    "syntax": "set(newState, true)",
+    "description": "Passing true as the second argument to set() replaces the whole state object instead of merging, removing any keys not present in the new object.",
+    "parameters": "replace — set to true to disable the default shallow merge.",
+    "returns": null,
+    "example": "set({ count: 0 }, true); // store state becomes exactly { count: 0 }",
+    "codeLanguage": "javascript",
+    "notes": "Use with care — any keys/actions not included in the replacement object are dropped from the store.",
+    "tags": ["zustand", "state", "set"]
+  }
+]

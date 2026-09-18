@@ -1,0 +1,112 @@
+[
+  {
+    "name": "@media",
+    "syntax": "@media (condition) { rules }",
+    "description": "Applies a block of CSS rules only when the specified condition, such as a viewport width, matches.",
+    "parameters": "Common conditions: min-width, max-width, orientation, prefers-color-scheme.",
+    "returns": null,
+    "example": "@media (max-width: 768px) {\n  .sidebar {\n    display: none;\n  }\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "responsive", "media-query"]
+  },
+  {
+    "name": "viewport meta tag",
+    "syntax": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+    "description": "An HTML tag placed in the document head that tells mobile browsers to render the page at the device's actual width instead of a scaled-down desktop layout.",
+    "parameters": null,
+    "returns": null,
+    "example": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+    "codeLanguage": "html",
+    "notes": "Without it, media queries based on device width won't behave as expected on mobile browsers.",
+    "tags": ["css", "responsive", "viewport"]
+  },
+  {
+    "name": "rem unit",
+    "syntax": "font-size: 1.5rem;",
+    "description": "A relative length unit based on the root (html) element's font-size, unaffected by the font-size of any parent element.",
+    "parameters": null,
+    "returns": null,
+    "example": "h1 {\n  font-size: 2rem;\n}",
+    "codeLanguage": "css",
+    "notes": "Preferred over em for most sizing since it avoids compounding when nested inside elements with different font sizes.",
+    "tags": ["css", "responsive", "units"]
+  },
+  {
+    "name": "em unit",
+    "syntax": "padding: 1em;",
+    "description": "A relative length unit based on the font-size of the element it's used on (or the parent's font-size, for font-size itself).",
+    "parameters": null,
+    "returns": null,
+    "example": ".button {\n  padding: 0.5em 1em;\n}",
+    "codeLanguage": "css",
+    "notes": "Useful for sizing that should scale with an element's own text, like button padding.",
+    "tags": ["css", "responsive", "units"]
+  },
+  {
+    "name": "Percentage (%) unit",
+    "syntax": "width: 50%;",
+    "description": "A relative length unit calculated as a percentage of a parent element's corresponding dimension.",
+    "parameters": null,
+    "returns": null,
+    "example": ".column {\n  width: 50%;\n}",
+    "codeLanguage": "css",
+    "notes": "Percentage height requires the parent to have an explicit height, or it typically resolves to auto.",
+    "tags": ["css", "responsive", "units"]
+  },
+  {
+    "name": "vw / vh units",
+    "syntax": "width: 100vw; height: 100vh;",
+    "description": "Relative length units equal to 1% of the viewport's width (vw) or height (vh).",
+    "parameters": null,
+    "returns": null,
+    "example": ".hero {\n  height: 100vh;\n}",
+    "codeLanguage": "css",
+    "notes": "On mobile browsers, 100vh can include space behind the address bar — consider dvh units for more accurate mobile heights.",
+    "tags": ["css", "responsive", "units"]
+  },
+  {
+    "name": "Mobile-first approach",
+    "syntax": null,
+    "description": "A responsive design strategy where base styles target small screens by default, and min-width media queries progressively add styles for larger viewports.",
+    "parameters": null,
+    "returns": null,
+    "example": ".grid {\n  display: block;\n}\n\n@media (min-width: 768px) {\n  .grid {\n    display: grid;\n  }\n}",
+    "codeLanguage": "css",
+    "notes": "Tends to produce simpler, more performant CSS than a desktop-first approach using max-width overrides.",
+    "tags": ["css", "responsive", "strategy"]
+  },
+  {
+    "name": "clamp()",
+    "syntax": "clamp(min, preferred, max)",
+    "description": "Returns a value that scales with the preferred value but is clamped between a minimum and maximum, useful for fluid typography and spacing.",
+    "parameters": "min — lower bound. preferred — ideal, often viewport-relative value. max — upper bound.",
+    "returns": null,
+    "example": "h1 {\n  font-size: clamp(1.5rem, 4vw, 3rem);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "responsive", "functions"]
+  },
+  {
+    "name": "min() / max()",
+    "syntax": "min(value1, value2, ...) | max(value1, value2, ...)",
+    "description": "Picks the smallest (min()) or largest (max()) value from a comma-separated list of values, which can mix units.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  width: min(90%, 1200px);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "responsive", "functions"]
+  },
+  {
+    "name": "@container",
+    "syntax": "@container (condition) { rules }",
+    "description": "Applies styles to an element based on the size of its nearest ancestor marked as a container, instead of the viewport.",
+    "parameters": null,
+    "returns": null,
+    "example": ".card-wrap {\n  container-type: inline-size;\n}\n\n@container (min-width: 400px) {\n  .card {\n    display: flex;\n  }\n}",
+    "codeLanguage": "css",
+    "notes": "Requires setting container-type (or the container shorthand) on an ancestor before @container rules can target it.",
+    "tags": ["css", "responsive", "container-query"]
+  }
+]

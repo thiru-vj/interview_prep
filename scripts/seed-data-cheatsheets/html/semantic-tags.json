@@ -1,0 +1,167 @@
+[
+  {
+    "name": "<header>",
+    "syntax": "<header>...</header>",
+    "description": "Represents introductory content for its nearest ancestor — page title and nav for the page, or a heading/byline for an <article>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<header>\n  <h1>My Blog</h1>\n  <nav>...</nav>\n</header>",
+    "codeLanguage": "html",
+    "notes": "Unlike a <div class=\"header\">, screen readers can jump straight to it as a landmark region.",
+    "tags": ["html", "semantic", "landmark"]
+  },
+  {
+    "name": "<nav>",
+    "syntax": "<nav>...</nav>",
+    "description": "Marks a block of major navigation links, such as a site's main menu or breadcrumbs.",
+    "parameters": null,
+    "returns": null,
+    "example": "<nav>\n  <a href=\"/\">Home</a>\n  <a href=\"/about\">About</a>\n</nav>",
+    "codeLanguage": "html",
+    "notes": "Reserve it for primary navigation blocks — not every group of links needs to be a <nav>.",
+    "tags": ["html", "semantic", "landmark"]
+  },
+  {
+    "name": "<main>",
+    "syntax": "<main>...</main>",
+    "description": "Identifies the dominant, unique content of the document, excluding repeated elements like headers, footers and sidebars.",
+    "parameters": null,
+    "returns": null,
+    "example": "<main>\n  <h1>Article title</h1>\n  <p>Content...</p>\n</main>",
+    "codeLanguage": "html",
+    "notes": "Should appear exactly once per page and lets screen reader users skip straight to the primary content.",
+    "tags": ["html", "semantic", "landmark"]
+  },
+  {
+    "name": "<article>",
+    "syntax": "<article>...</article>",
+    "description": "Represents a self-contained piece of content that would make sense distributed or syndicated on its own, like a blog post, news story or forum comment.",
+    "parameters": null,
+    "returns": null,
+    "example": "<article>\n  <h2>Post title</h2>\n  <p>Post body...</p>\n</article>",
+    "codeLanguage": "html",
+    "notes": "The test: if you could pull this out and reuse it elsewhere and it would still make sense, it's an <article>.",
+    "tags": ["html", "semantic", "block"]
+  },
+  {
+    "name": "<section>",
+    "syntax": "<section>...</section>",
+    "description": "Groups a thematically related chunk of content, typically with its own heading, that forms a distinct part of the page.",
+    "parameters": null,
+    "returns": null,
+    "example": "<section>\n  <h2>Reviews</h2>\n  <p>...</p>\n</section>",
+    "codeLanguage": "html",
+    "notes": "Unlike <div>, a <section> implies the content is a distinct, headed thematic group — not just a styling wrapper.",
+    "tags": ["html", "semantic", "block"]
+  },
+  {
+    "name": "<aside>",
+    "syntax": "<aside>...</aside>",
+    "description": "Represents content tangentially related to the surrounding content, such as a sidebar, pull quote or ad block.",
+    "parameters": null,
+    "returns": null,
+    "example": "<aside>\n  <h3>Related posts</h3>\n  <ul>...</ul>\n</aside>",
+    "codeLanguage": "html",
+    "notes": "Content could be removed without reducing the meaning of the main content around it.",
+    "tags": ["html", "semantic", "block"]
+  },
+  {
+    "name": "<footer>",
+    "syntax": "<footer>...</footer>",
+    "description": "Represents footer content for its nearest ancestor — copyright, contact links or related documents for the page, or metadata for an <article>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<footer>\n  <p>&copy; 2026 My Company</p>\n</footer>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "semantic", "landmark"]
+  },
+  {
+    "name": "<figure>",
+    "syntax": "<figure><img /><figcaption>...</figcaption></figure>",
+    "description": "Groups self-contained content — usually an image, diagram or code snippet — together with an optional caption, as a single referenceable unit.",
+    "parameters": null,
+    "returns": null,
+    "example": "<figure>\n  <img src=\"chart.png\" alt=\"Sales chart\" />\n  <figcaption>Fig 1. Quarterly sales</figcaption>\n</figure>",
+    "codeLanguage": "html",
+    "notes": "Semantically ties an image to its caption, unlike a plain <div> wrapping an <img> and a <p>.",
+    "tags": ["html", "semantic", "media"]
+  },
+  {
+    "name": "<figcaption>",
+    "syntax": "<figure>...<figcaption>caption</figcaption></figure>",
+    "description": "Provides a caption or legend describing the contents of its parent <figure>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<figcaption>A diagram of the request lifecycle.</figcaption>",
+    "codeLanguage": "html",
+    "notes": "Can appear as the first or last child of <figure>.",
+    "tags": ["html", "semantic", "media"]
+  },
+  {
+    "name": "<time>",
+    "syntax": "<time datetime=\"2026-09-18\">Sept 18, 2026</time>",
+    "description": "Marks up a human-readable date or time while also providing a machine-readable equivalent for browsers and search engines.",
+    "parameters": "datetime — the machine-readable ISO 8601 value.",
+    "returns": null,
+    "example": "<time datetime=\"2026-09-18T10:00\">10am on September 18</time>",
+    "codeLanguage": "html",
+    "notes": "Unlike a plain <span>, it lets tools reliably parse and index the date regardless of how it's displayed.",
+    "tags": ["html", "semantic", "inline"]
+  },
+  {
+    "name": "<mark>",
+    "syntax": "<mark>highlighted text</mark>",
+    "description": "Highlights text that is relevant or noteworthy in the current context, such as a search term match.",
+    "parameters": null,
+    "returns": null,
+    "example": "<p>Results for <mark>react hooks</mark> found 12 matches.</p>",
+    "codeLanguage": "html",
+    "notes": "Conveys relevance, unlike <span class=\"highlight\"> which carries no meaning without CSS.",
+    "tags": ["html", "semantic", "inline"]
+  },
+  {
+    "name": "<address>",
+    "syntax": "<address>...</address>",
+    "description": "Provides contact information for the nearest <article> or the page's author/owner — a person, organization or email, not a postal address specifically.",
+    "parameters": null,
+    "returns": null,
+    "example": "<address>\n  Written by <a href=\"mailto:jane@example.com\">Jane Doe</a>\n</address>",
+    "codeLanguage": "html",
+    "notes": "Despite the name, it's for authorship/contact info, not for marking up arbitrary street addresses.",
+    "tags": ["html", "semantic", "block"]
+  },
+  {
+    "name": "<details>",
+    "syntax": "<details><summary>Title</summary>content</details>",
+    "description": "Creates a native, collapsible disclosure widget that the user can toggle open or closed, with no JavaScript required.",
+    "parameters": "open — pre-expands the widget.",
+    "returns": null,
+    "example": "<details>\n  <summary>More info</summary>\n  <p>Hidden content revealed on click.</p>\n</details>",
+    "codeLanguage": "html",
+    "notes": "Replaces the common pattern of a button plus JS-toggled div for simple show/hide UI.",
+    "tags": ["html", "semantic", "ui"]
+  },
+  {
+    "name": "<summary>",
+    "syntax": "<details><summary>label</summary>...</details>",
+    "description": "Defines the always-visible label/heading for a <details> disclosure widget; clicking it toggles the widget open or closed.",
+    "parameters": null,
+    "returns": null,
+    "example": "<summary>Click to expand</summary>",
+    "codeLanguage": "html",
+    "notes": "Must be the first child of <details>; only one <summary> is used per <details>.",
+    "tags": ["html", "semantic", "ui"]
+  },
+  {
+    "name": "<search>",
+    "syntax": "<search>...</search>",
+    "description": "Identifies a section containing search or filtering controls for the current page or site, as a distinct landmark region.",
+    "parameters": null,
+    "returns": null,
+    "example": "<search>\n  <form action=\"/search\">\n    <input type=\"search\" name=\"q\" />\n  </form>\n</search>",
+    "codeLanguage": "html",
+    "notes": "A newer semantic landmark — before it existed, a <form role=\"search\"> was the common substitute.",
+    "tags": ["html", "semantic", "landmark"]
+  }
+]

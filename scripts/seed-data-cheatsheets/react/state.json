@@ -1,0 +1,90 @@
+[
+  {
+    "name": "State",
+    "syntax": null,
+    "description": "Data that a component owns and manages internally, which can change over time and causes the component to re-render when updated.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "Unlike props, state is local to the component and controlled by that component (or lifted to a parent), not passed in from outside.",
+    "tags": ["react", "state", "fundamentals"]
+  },
+  {
+    "name": "Lifting State Up",
+    "syntax": null,
+    "description": "Moving shared state to the closest common ancestor of the components that need it, then passing it back down via props, so multiple components stay in sync.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Parent() {\n  const [value, setValue] = useState('');\n  return (\n    <>\n      <InputA value={value} onChange={setValue} />\n      <InputB value={value} onChange={setValue} />\n    </>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": null,
+    "tags": ["react", "state", "patterns"]
+  },
+  {
+    "name": "State vs Props",
+    "syntax": null,
+    "description": "Props are passed in from a parent and are read-only from the receiving component's perspective; state is owned and can be updated by the component itself.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "A component re-renders when either its own state changes or the props it receives change.",
+    "tags": ["react", "state", "props"]
+  },
+  {
+    "name": "Immutability of State",
+    "syntax": "setItems([...items, newItem]); // not items.push(newItem)",
+    "description": "State must be updated by creating a new value (new object/array) rather than mutating the existing one in place, so React can detect the change and re-render.",
+    "parameters": null,
+    "returns": null,
+    "example": "setUser(prev => ({ ...prev, name: 'New Name' }));\nsetList(prev => [...prev, newItem]);",
+    "codeLanguage": "jsx",
+    "notes": "Mutating state directly (e.g. `arr.push()`, `obj.prop = x`) can silently fail to trigger a re-render because React compares references, not deep equality.",
+    "tags": ["react", "state", "immutability"]
+  },
+  {
+    "name": "Batched State Updates",
+    "syntax": null,
+    "description": "React groups multiple `setState` calls triggered within the same event handler (and, since React 18, in most other contexts too) into a single re-render for performance.",
+    "parameters": null,
+    "returns": null,
+    "example": "function handleClick() {\n  setCount(c => c + 1);\n  setFlag(f => !f);\n  // both updates applied, only one re-render\n}",
+    "codeLanguage": "jsx",
+    "notes": "Use the functional updater form (`setCount(c => c + 1)`) when a new value depends on the previous one, since batched updates can make reading the outer variable stale.",
+    "tags": ["react", "state", "performance"]
+  },
+  {
+    "name": "Derived State Anti-Pattern",
+    "syntax": null,
+    "description": "Storing a value in state that could instead be computed directly from existing props/state during render, which leads to state going out of sync with its source.",
+    "parameters": null,
+    "returns": null,
+    "example": "// avoid:\nconst [fullName, setFullName] = useState(first + ' ' + last);\n// prefer:\nconst fullName = first + ' ' + last;",
+    "codeLanguage": "jsx",
+    "notes": "If a value can be calculated from props/state during render, compute it inline (or with useMemo for expensive calculations) instead of duplicating it into its own state.",
+    "tags": ["react", "state", "anti-pattern"]
+  },
+  {
+    "name": "Lazy Initial State",
+    "syntax": "const [state, setState] = useState(() => computeInitial());",
+    "description": "Passing a function to `useState` so the initial value is computed only once, on the first render, instead of being recalculated on every render.",
+    "parameters": null,
+    "returns": null,
+    "example": "const [items, setItems] = useState(() => expensiveParse(rawData));",
+    "codeLanguage": "jsx",
+    "notes": "Useful when computing the initial value is expensive; passing `useState(expensiveParse(rawData))` directly would run that computation on every render even though only the first result is used.",
+    "tags": ["react", "state", "performance"]
+  },
+  {
+    "name": "Local vs Global State",
+    "syntax": null,
+    "description": "Local state lives in a single component (or is lifted to a nearby parent); global state is accessible application-wide, typically via Context or a state management library.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "Prefer local state by default and only reach for global state when data genuinely needs to be shared across distant, unrelated parts of the tree.",
+    "tags": ["react", "state", "architecture"]
+  }
+]

@@ -1,0 +1,485 @@
+[
+  {
+    "question": "How do you fetch data in an App Router server component?",
+    "answer": "You mark the component function `async` and `await` your data source directly inside it — a `fetch` call, a database query, or an ORM call — with no separate data-fetching function required. Since the component runs only on the server, this code (and any secrets or database credentials it uses) never reaches the client bundle.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "async function Page() {\n  const res = await fetch('https://api.example.com/posts');\n  const posts = await res.json();\n  return <PostList posts={posts} />;\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-components"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does Next.js extend the native `fetch` API for caching purposes?",
+    "answer": "Next.js patches the global `fetch` so that requests made on the server can opt into its caching system via extra options: `cache: 'force-cache'` (the default for most fetches, cached indefinitely until revalidated) or `cache: 'no-store'` (never cached, always fresh), plus `next: { revalidate: <seconds> }` for time-based revalidation and `next: { tags: [...] }` for tag-based on-demand revalidation.",
+    "example": null,
+    "code": "fetch('https://api.example.com/data', { next: { revalidate: 3600, tags: ['products'] } });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching",
+      "fetch"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does `cache: 'no-store'` do on a `fetch` call in the App Router, and what side effect does it have on the route?",
+    "answer": "It tells Next.js never to cache that specific request's response, so it's re-fetched fresh on every render. As a side effect, using it also opts the entire route into dynamic rendering, since a route containing genuinely uncacheable data can no longer be served as a single static page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching",
+      "fetch"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you fetch data from multiple sources in parallel inside a server component, rather than sequentially?",
+    "answer": "Start all the fetch calls before awaiting any of them (or use `Promise.all`), so they run concurrently instead of each one blocking the next. Writing `await fetch(a); await fetch(b);` back to back creates an unnecessary request waterfall, where the second fetch doesn't start until the first finishes.",
+    "example": null,
+    "code": "const [postsRes, userRes] = await Promise.all([\n  fetch('/api/posts'),\n  fetch('/api/user'),\n]);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a request waterfall in the context of Next.js data fetching, and how can nested Server Components cause one?",
+    "answer": "A request waterfall happens when fetches run sequentially because each depends on the previous component finishing before the next one starts fetching — for example, a parent component awaits its own data before rendering a child, and only then does the child start its own await. This serializes requests that could have run in parallel; fixing it usually means hoisting fetches higher up and starting them together, or using `Promise.all`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "performance",
+      "waterfalls"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is request memoization (deduplication) in the App Router's fetch caching, and why is it useful?",
+    "answer": "Within a single render pass, if multiple components call `fetch` with the exact same URL and options, Next.js automatically deduplicates them into a single underlying network request and shares the result — so you can call the same data-fetching function from several components (e.g. a layout and a page that both need the current user) without worrying about redundant requests.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching",
+      "fetch"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you fetch data that isn't from a URL-based API — for example, querying a database directly — inside a server component, and does Next.js's fetch caching still apply?",
+    "answer": "You just call your ORM or database client's query functions directly inside the async server component, since there's no browser sandbox restriction on the server. Next.js's built-in `fetch` cache patch doesn't apply to non-fetch calls; to cache those, you wrap them with React's `cache()` function for per-request memoization, or Next.js's `unstable_cache` for cross-request caching with revalidation.",
+    "example": null,
+    "code": "import { cache } from 'react';\n\nconst getUser = cache(async (id) => db.user.findUnique({ where: { id } }));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching",
+      "database"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What was `getServerSideProps` in the Pages Router, and when did you use it?",
+    "answer": "`getServerSideProps` is a function exported from a Pages Router page that runs on the server on every request, fetches whatever data the page needs, and returns it as props to the page component. You'd use it when a page needs fresh, request-specific data on every load — for example, content behind authentication or data that must never be stale.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function getServerSideProps(context) {\n  const res = await fetch('https://api.example.com/data');\n  const data = await res.json();\n  return { props: { data } };\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "pages-router",
+      "getserversideprops"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What was `getStaticProps` in the Pages Router, and how does its `revalidate` option relate to ISR?",
+    "answer": "`getStaticProps` runs at build time (or on-demand for fallback pages) to fetch data and generate a page's static HTML. Returning a `revalidate` number in seconds from it opts that page into ISR, so Next.js will regenerate the page in the background after that many seconds have passed since the last successful generation.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function getStaticProps() {\n  const data = await fetchData();\n  return { props: { data }, revalidate: 60 };\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "pages-router",
+      "getstaticprops"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is `getInitialProps` and why is it now considered legacy compared to `getStaticProps`/`getServerSideProps`?",
+    "answer": "`getInitialProps` was the original Next.js data-fetching API, usable on both pages and `_app.js`, that ran on the server for the initial request and on the client for subsequent navigations. It's considered legacy because it disables automatic static optimization for any page that uses it, has less predictable behavior across navigation types, and was superseded by the clearer, purpose-specific `getStaticProps`/`getServerSideProps` split.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "pages-router",
+      "legacy"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can `getStaticProps` and `getServerSideProps` be used together on the same page?",
+    "answer": "No — a Pages Router page can export at most one of `getStaticProps`, `getServerSideProps`, or neither (making it a plain statically optimized page with no data fetching); Next.js throws a build error if both are present, since they represent mutually exclusive rendering strategies for that page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you fetch data inside a Client Component in the App Router, since it can't be an `async` component?",
+    "answer": "A Client Component can't itself be an `async function` (that's only supported for Server Components), so data fetching there uses familiar client patterns: `useEffect` combined with `useState`, or a data-fetching library like TanStack Query or SWR, which also adds caching, revalidation, and loading/error state handling out of the box.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "'use client';\nimport useSWR from 'swr';\n\nfunction Profile() {\n  const { data, isLoading } = useSWR('/api/user', fetcher);\n  if (isLoading) return <p>Loading...</p>;\n  return <p>{data.name}</p>;\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is SWR (or React Query/TanStack Query) commonly used for in a Next.js app, given that Server Components can already fetch data?",
+    "answer": "These libraries handle client-side data fetching concerns Server Components don't cover: revalidating data on window focus or interval, optimistic updates, caching across client-side navigations, retrying failed requests, and keeping data fresh after mutations — all useful for genuinely interactive, client-rendered features even in an app that also uses Server Components elsewhere.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "client-components",
+      "swr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you pass data fetched in a server component down to a client component?",
+    "answer": "Fetch the data in the (async) server component as usual, then pass it as a regular prop into the client component you render — as long as the value is serializable (plain objects, arrays, strings, numbers), since props crossing the server-to-client boundary get serialized and sent to the browser as part of the React payload.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "async function Page() {\n  const data = await getData();\n  return <ClientChart data={data} />;\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-components",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't you pass a function (like an event handler) as a prop from a Server Component directly into a Client Component?",
+    "answer": "Props crossing from server to client have to be serialized to be sent over the network as part of the RSC payload, and functions/closures aren't serializable — there's no way to send executable server code to run natively in the browser this way. The exceptions are Server Actions, which are specially compiled into callable references the client can invoke as a request back to the server.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-components",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a Server Action, and how does it relate to data fetching/mutations?",
+    "answer": "A Server Action is an async function marked with `'use server'` that can be called directly from a Client Component (e.g. as a form's `action` or from an event handler) and runs on the server, letting you perform mutations like writing to a database without manually creating an API route. Next.js compiles the reference into a special endpoint the client invokes, handling the network call for you.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "'use server';\n\nexport async function createPost(formData) {\n  await db.post.create({ data: { title: formData.get('title') } });\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-actions"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do Server Actions typically trigger a UI update after a mutation, given that the page might be statically cached?",
+    "answer": "A Server Action commonly calls `revalidatePath()` or `revalidateTag()` after performing its mutation, which invalidates the relevant cached data/route so the next render reflects the change; it can also call `redirect()` to navigate the user afterward. Without an explicit revalidation call, a statically cached page wouldn't automatically reflect the mutation.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "'use server';\nimport { revalidatePath } from 'next/cache';\n\nexport async function addComment(formData) {\n  await db.comment.create({ data: {/* ... */} });\n  revalidatePath('/post/123');\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-actions",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the Data Cache in Next.js, and how is it different from the Router Cache (client-side cache)?",
+    "answer": "The Data Cache is a server-side persistent cache for `fetch` results (and manually cached functions), shared across requests and deployments, which is what powers ISR-style revalidation. The Router Cache is a client-side, in-memory cache of previously visited route segments' React Server Component payloads, used to make back/forward navigation and revisiting recently viewed routes feel instant without a server round trip.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you disable Next.js's fetch caching entirely for a specific request?",
+    "answer": "Pass `{ cache: 'no-store' }` as an option to that specific `fetch` call — this tells Next.js to skip the Data Cache for that request and always fetch fresh data, independent of any route-level or global caching configuration.",
+    "example": null,
+    "code": "await fetch(url, { cache: 'no-store' });",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching",
+      "fetch"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you fetch data for a page that needs both a static shell and streamed dynamic content, combining `generateStaticParams` with per-request fetching?",
+    "answer": "Use `generateStaticParams` to pre-render the known set of param values at build time, and inside the page component, `await` your data fetch normally — for params not covered by `generateStaticParams`, Next.js generates the page on first request (assuming `dynamicParams` isn't set to false) and caches it afterward. Any part of the page requiring truly per-request data can additionally be wrapped in `<Suspense>` with its own uncached fetch inside a nested async component.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "static-generation",
+      "streaming"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does `revalidateTag()` do, and how is it different from `revalidatePath()`?",
+    "answer": "`revalidateTag(tag)` invalidates every cached `fetch` request that was tagged with a matching tag via `next: { tags: [...] }`, regardless of which route it belongs to — useful when one data change affects many different pages. `revalidatePath(path)` invalidates the cache for a specific route path directly, which is simpler when you know exactly which route needs refreshing.",
+    "example": null,
+    "code": "await fetch(url, { next: { tags: ['posts'] } });\n// later:\nrevalidateTag('posts');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read cookies or headers during server-side data fetching in the App Router?",
+    "answer": "Call the `cookies()` or `headers()` functions from `next/headers` inside a Server Component, Route Handler, or Server Action — they return the request's cookies/headers synchronously (or as a promise in newer versions) without needing to be explicitly passed down as props. Using either automatically makes the route dynamic, since the result depends on the specific incoming request.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "import { cookies } from 'next/headers';\n\nasync function Page() {\n  const token = cookies().get('session')?.value;\n  const data = await fetchWithAuth(token);\n  return <Dashboard data={data} />;\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "cookies",
+      "headers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are common patterns for handling loading and error states for data fetching in a server component, since you can't use `useState` for a loading flag there?",
+    "answer": "Loading state is handled declaratively via a `loading.js` file (or a nested `<Suspense>` boundary), which automatically shows while the awaited data fetch is pending. Error state is handled by throwing an error from the fetch/data logic and letting the nearest `error.js` boundary catch it, or by returning `notFound()` for a specific 'not found' case — there's no manual `isLoading`/`error` state to track like in client-side fetching.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "loading-states",
+      "error-handling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js's data fetching model keep secrets like API keys out of the client bundle?",
+    "answer": "Data fetching that happens inside a Server Component, Route Handler, or Server Action runs exclusively on the server, so any API keys or database credentials referenced in that code (including non-`NEXT_PUBLIC_` environment variables) never get bundled or sent to the browser — only the resulting rendered output or returned data does.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-components",
+      "security"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if you call `fetch` with the same URL and options in two different Server Components rendered on the same page?",
+    "answer": "Next.js's request memoization deduplicates them automatically within a single render pass, issuing only one actual network request and reusing the result for both callers — this happens transparently without any extra code, as long as the URL and fetch options match exactly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "fetch",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `unstable_cache`, and when would you reach for it instead of relying on fetch caching alone?",
+    "answer": "`unstable_cache` (from `next/cache`) wraps an arbitrary async function — not just `fetch` — so its result is cached across requests with an optional revalidation time and tags, similar to how fetch caching works but usable for database queries, third-party SDK calls, or any computation that doesn't go through the patched `fetch`.",
+    "example": null,
+    "code": "import { unstable_cache } from 'next/cache';\n\nconst getPosts = unstable_cache(async () => db.post.findMany(), ['posts'], { revalidate: 60 });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you fetch and display paginated data in the App Router using `searchParams`?",
+    "answer": "Read the page number from the `searchParams` prop passed into the page component, pass it into your data-fetching call, and render `<Link>`s to adjacent pages that update the `page` query parameter — each navigation triggers a fresh (or cached, depending on config) fetch for that page's data since `searchParams` changes are treated as a new request to the server component.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "async function Page({ searchParams }) {\n  const page = Number(searchParams.page) || 1;\n  const items = await getItems(page);\n  return <List items={items} />;\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "pagination"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is fetching data directly inside a Server Component often described as removing the need for a traditional client-to-API-route round trip?",
+    "answer": "In a classic SPA, the browser has to render a loading state, then make a network request to your own API, wait for a response, and re-render with the data — two network hops in total (page load, then API call). A Server Component fetches its data on the server before sending any HTML, so the browser receives the page already containing the data in one hop, with no separate client-side API call needed for that content.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "server-components",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `use()` hook (from React) used for in the context of data fetching in Next.js, and how does it differ from `await` in a server component?",
+    "answer": "`use()` lets a Client Component (or a component rendered conditionally) read the value of a promise, suspending the component until it resolves, which is useful when a promise is created in a parent Server Component and passed down for the client to resume rendering once ready. Unlike `await` in an async Server Component (which blocks that component's own rendering on the server), `use()` integrates with Suspense on the client and can be called conditionally inside client rendering logic.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "'use client';\nimport { use } from 'react';\n\nfunction Comments({ commentsPromise }) {\n  const comments = use(commentsPromise);\n  return <ul>{comments.map(c => <li key={c.id}>{c.text}</li>)}</ul>;\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "streaming",
+      "suspense"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do route handlers (in `app/api/.../route.js`) fit into a data-fetching architecture when Server Components can already query data directly?",
+    "answer": "Route handlers are still needed for endpoints consumed by external clients (mobile apps, third-party webhooks, other services), for functionality that must be callable from a Client Component via a plain HTTP request instead of a Server Action, or when you specifically need to control raw request/response details like headers and status codes that a Server Component doesn't expose directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a common mistake when migrating `getServerSideProps` logic to the App Router's data fetching?",
+    "answer": "A common mistake is treating every migrated data fetch as needing `cache: 'no-store'` to replicate `getServerSideProps`'s always-fresh behavior, when much of that data could actually be cached with a `revalidate` window for better performance — `getServerSideProps` had no caching by default, but the App Router's caching defaults are an opportunity to improve performance, not just a behavior to blindly replicate.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "migration",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you type the data returned from a fetch call in a Server Component when using TypeScript?",
+    "answer": "Since `fetch`'s `res.json()` returns `Promise<any>` by default, you typically define an interface or type for the expected shape and assert or validate the response against it — either with a simple type assertion (`(await res.json()) as Post[]`) or, more safely, with a runtime validation library like Zod that both parses and gives you an inferred type.",
+    "example": null,
+    "codeLanguage": "typescript",
+    "code": "interface Post { id: string; title: string; }\nconst posts = (await res.json()) as Post[];",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "typescript"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between static params generated by `generateStaticParams` and dynamically rendering unknown params at request time?",
+    "answer": "Params returned by `generateStaticParams` are rendered and cached at build time, so requests for those specific paths are served instantly with no per-request work. Params not in that list are rendered on-demand the first time they're requested (unless `dynamicParams` is set to `false`, which makes unlisted params 404 instead), and the result is then cached for subsequent visitors just like the build-time ones.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "data-fetching",
+      "static-generation"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

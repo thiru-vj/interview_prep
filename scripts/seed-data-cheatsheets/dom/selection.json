@@ -1,0 +1,100 @@
+[
+  {
+    "name": "getElementById()",
+    "syntax": "document.getElementById(id)",
+    "description": "Returns the single element whose id attribute matches the given string.",
+    "parameters": "id — the value of the id attribute to match (without the # prefix).",
+    "returns": "The matching Element, or null if no element has that id.",
+    "example": "const header = document.getElementById('header');",
+    "codeLanguage": "javascript",
+    "notes": "Fastest selection method since ids are unique; only callable on document, not on other elements.",
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "getElementsByClassName()",
+    "syntax": "parent.getElementsByClassName(names)",
+    "description": "Returns all elements that have all of the given class names.",
+    "parameters": "names — one or more space-separated class names.",
+    "returns": "A live HTMLCollection of matching elements.",
+    "example": "document.getElementsByClassName('card active');",
+    "codeLanguage": "javascript",
+    "notes": "The returned collection is live — it updates automatically as the DOM changes, which can cause bugs when iterating and mutating at the same time.",
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "getElementsByTagName()",
+    "syntax": "parent.getElementsByTagName(tagName)",
+    "description": "Returns all elements with the given tag name, such as all <li> or <div> elements.",
+    "parameters": "tagName — the HTML tag name to match, or '*' for all elements.",
+    "returns": "A live HTMLCollection of matching elements.",
+    "example": "document.getElementsByTagName('li');",
+    "codeLanguage": "javascript",
+    "notes": "Like getElementsByClassName(), the result is a live collection, not a static array.",
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "querySelector()",
+    "syntax": "parent.querySelector(selectors)",
+    "description": "Returns the first element that matches a CSS selector.",
+    "parameters": "selectors — a valid CSS selector string.",
+    "returns": "The first matching Element, or null if nothing matches.",
+    "example": "document.querySelector('.card:first-child');",
+    "codeLanguage": "javascript",
+    "notes": "Supports any CSS selector, including combinators and pseudo-classes, unlike getElementById/getElementsByClassName.",
+    "tags": ["dom", "selection", "css-selectors"]
+  },
+  {
+    "name": "querySelectorAll()",
+    "syntax": "parent.querySelectorAll(selectors)",
+    "description": "Returns all elements that match a CSS selector.",
+    "parameters": "selectors — a valid CSS selector string.",
+    "returns": "A static (non-live) NodeList of matching elements.",
+    "example": "document.querySelectorAll('input[type=\"checkbox\"]:checked');",
+    "codeLanguage": "javascript",
+    "notes": "The NodeList is static, so it won't reflect later DOM changes; supports forEach() directly but not map()/filter() without Array.from().",
+    "tags": ["dom", "selection", "css-selectors"]
+  },
+  {
+    "name": "document.forms",
+    "syntax": "document.forms",
+    "description": "Returns a collection of all <form> elements in the document, accessible by index or by name/id.",
+    "returns": "A live HTMLCollection of form elements.",
+    "example": "document.forms['login'].elements['username'].value;",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "selection", "forms"]
+  },
+  {
+    "name": "document.body",
+    "syntax": "document.body",
+    "description": "References the <body> element of the current document.",
+    "returns": "The document's HTMLBodyElement.",
+    "example": "document.body.style.overflow = 'hidden';",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "document.documentElement",
+    "syntax": "document.documentElement",
+    "description": "References the root element of the document, i.e. the <html> element.",
+    "returns": "The document's root HTMLElement.",
+    "example": "document.documentElement.setAttribute('lang', 'en');",
+    "codeLanguage": "javascript",
+    "notes": "Commonly used to toggle a class or attribute (e.g. a dark-mode class) at the root level.",
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "Live vs static collections",
+    "description": "getElementById()/getElementsByClassName()/getElementsByTagName() return live collections (HTMLCollection) that auto-update as the DOM changes, while querySelectorAll() returns a static NodeList captured at call time.",
+    "example": "const live = document.getElementsByClassName('item'); // updates automatically\nconst frozen = document.querySelectorAll('.item'); // snapshot, won't change",
+    "codeLanguage": "javascript",
+    "notes": "Iterating and mutating a live collection in the same loop can silently skip elements — convert to an array first with Array.from() if needed.",
+    "tags": ["dom", "selection"]
+  },
+  {
+    "name": "document.querySelector vs getElementById",
+    "description": "getElementById() only matches by id and is marginally faster, while querySelector() accepts any CSS selector but always returns only the first match. Prefer querySelector()/querySelectorAll() for flexibility unless selecting by id in a hot path.",
+    "tags": ["dom", "selection", "best-practices"]
+  }
+]

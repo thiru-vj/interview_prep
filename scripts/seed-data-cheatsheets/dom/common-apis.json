@@ -1,0 +1,107 @@
+[
+  {
+    "name": "MutationObserver",
+    "syntax": "new MutationObserver(callback)",
+    "description": "Watches a DOM subtree for changes such as added/removed nodes, attribute changes, or text changes, and invokes a callback with a batch of mutations.",
+    "parameters": "callback — function receiving (mutations, observer). observe() takes a target node and an options object (childList, attributes, subtree, etc.).",
+    "returns": "A MutationObserver instance with observe()/disconnect() methods.",
+    "example": "const obs = new MutationObserver((muts) => console.log(muts));\nobs.observe(el, { childList: true, subtree: true });",
+    "codeLanguage": "javascript",
+    "notes": "Mutations are batched and delivered asynchronously via microtasks, not synchronously on every change.",
+    "tags": ["dom", "observers"]
+  },
+  {
+    "name": "IntersectionObserver",
+    "syntax": "new IntersectionObserver(callback, options)",
+    "description": "Asynchronously observes when a target element enters or exits the viewport (or another ancestor element), commonly used for lazy loading and infinite scroll.",
+    "parameters": "callback — receives an array of IntersectionObserverEntry objects. options — root, rootMargin, threshold.",
+    "returns": "An IntersectionObserver instance with observe()/unobserve()/disconnect().",
+    "example": "const obs = new IntersectionObserver((entries) => {\n  entries.forEach(e => { if (e.isIntersecting) loadImage(e.target); });\n});\nobs.observe(img);",
+    "codeLanguage": "javascript",
+    "notes": "Much more performant than listening to scroll events and computing getBoundingClientRect() manually.",
+    "tags": ["dom", "observers", "performance"]
+  },
+  {
+    "name": "ResizeObserver",
+    "syntax": "new ResizeObserver(callback)",
+    "description": "Watches an element for changes to its content box or border box size and invokes a callback whenever it resizes.",
+    "parameters": "callback — receives an array of ResizeObserverEntry objects.",
+    "returns": "A ResizeObserver instance with observe()/unobserve()/disconnect().",
+    "example": "const ro = new ResizeObserver((entries) => {\n  console.log(entries[0].contentRect.width);\n});\nro.observe(panel);",
+    "codeLanguage": "javascript",
+    "notes": "Useful for responsive components that need to react to their own container size rather than the viewport.",
+    "tags": ["dom", "observers"]
+  },
+  {
+    "name": "requestAnimationFrame()",
+    "syntax": "window.requestAnimationFrame(callback)",
+    "description": "Schedules a callback to run before the browser's next repaint, ideal for smooth, jank-free visual updates.",
+    "parameters": "callback — receives a high-resolution timestamp (DOMHighResTimeStamp).",
+    "returns": "A request id usable with cancelAnimationFrame().",
+    "example": "function loop(t) {\n  el.style.left = t % 300 + 'px';\n  requestAnimationFrame(loop);\n}\nrequestAnimationFrame(loop);",
+    "codeLanguage": "javascript",
+    "notes": "Automatically throttles/pauses in background tabs, unlike setTimeout/setInterval, making it the right tool for animations.",
+    "tags": ["dom", "performance", "animation"]
+  },
+  {
+    "name": "FormData",
+    "syntax": "new FormData(formElement)",
+    "description": "Builds a set of key/value pairs from a form's fields, suitable for submitting via fetch() including file inputs.",
+    "parameters": "formElement — optional HTMLFormElement to pre-populate from.",
+    "returns": "A FormData instance with get()/set()/append()/entries() methods.",
+    "example": "const data = new FormData(document.querySelector('form'));\nfetch('/submit', { method: 'POST', body: data });",
+    "codeLanguage": "javascript",
+    "notes": "Automatically sets the correct multipart/form-data Content-Type when used as a fetch body, including file uploads.",
+    "tags": ["dom", "forms"]
+  },
+  {
+    "name": "matchMedia()",
+    "syntax": "window.matchMedia(mediaQueryString)",
+    "description": "Evaluates a CSS media query in JavaScript and returns an object that can be checked immediately and listened to for changes.",
+    "parameters": "mediaQueryString — a CSS media query, e.g. '(max-width: 600px)'.",
+    "returns": "A MediaQueryList with a matches boolean and addEventListener('change', ...).",
+    "example": "const mq = window.matchMedia('(prefers-color-scheme: dark)');\nmq.addEventListener('change', (e) => console.log(e.matches));",
+    "codeLanguage": "javascript",
+    "notes": "The recommended way to react to responsive breakpoints or system preferences (dark mode, reduced motion) in JS.",
+    "tags": ["dom", "responsive", "media-queries"]
+  },
+  {
+    "name": "getBoundingClientRect()",
+    "syntax": "element.getBoundingClientRect()",
+    "description": "Returns the size and position of an element relative to the viewport.",
+    "returns": "A DOMRect with top, right, bottom, left, width and height properties.",
+    "example": "const rect = box.getBoundingClientRect();\nconsole.log(rect.top, rect.width);",
+    "codeLanguage": "javascript",
+    "notes": "Values are relative to the current viewport, so they change as the page scrolls — call it fresh whenever needed rather than caching it.",
+    "tags": ["dom", "layout"]
+  },
+  {
+    "name": "localStorage",
+    "syntax": "localStorage.setItem(key, value)\nlocalStorage.getItem(key)",
+    "description": "A key-value web storage API that persists string data in the browser with no expiration, scoped per origin.",
+    "parameters": "key/value — both strings; objects must be serialized with JSON.stringify()/JSON.parse().",
+    "returns": "getItem() returns the string value or null if not set.",
+    "example": "localStorage.setItem('theme', 'dark');\nlocalStorage.getItem('theme'); // 'dark'",
+    "codeLanguage": "javascript",
+    "notes": "Storage operations are synchronous and can block the main thread with large data; not accessible from Web Workers or across origins.",
+    "tags": ["dom", "web-storage"]
+  },
+  {
+    "name": "sessionStorage",
+    "syntax": "sessionStorage.setItem(key, value)\nsessionStorage.getItem(key)",
+    "description": "A key-value web storage API identical to localStorage in interface, but scoped to a single browser tab/session and cleared when that tab closes.",
+    "parameters": "key/value — both strings.",
+    "returns": "getItem() returns the string value or null if not set.",
+    "example": "sessionStorage.setItem('draftId', '42');",
+    "codeLanguage": "javascript",
+    "notes": "Unlike localStorage, data is not shared between tabs even on the same origin.",
+    "tags": ["dom", "web-storage"]
+  },
+  {
+    "name": "ResizeObserver vs window resize event",
+    "description": "The window 'resize' event only fires when the entire browser viewport changes, while ResizeObserver detects size changes of any individual element regardless of cause (e.g. content change, flex layout shifts).",
+    "codeLanguage": "javascript",
+    "notes": "Prefer ResizeObserver when you need to react to a specific element's size rather than the whole window.",
+    "tags": ["dom", "observers", "layout"]
+  }
+]

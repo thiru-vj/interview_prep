@@ -1,0 +1,322 @@
+[
+  {
+    "question": "What is Express.js, and what problem does it solve on top of Node's built-in http module?",
+    "answer": "Express is a minimal web framework built on Node's http module that adds routing, middleware chaining, and helpers for handling requests/responses (like parsing bodies or sending JSON) without hand-rolling them from scratch. It doesn't replace http — it wraps it, giving you a much more convenient API for building REST APIs and web servers while still exposing the underlying request/response objects when needed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "express"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is middleware in Express, and what is the signature of a middleware function?",
+    "answer": "Middleware is a function that runs during the request-response cycle, with access to the request, response, and a next() function to pass control to the next middleware in the chain: (req, res, next) => {...}. Middleware can modify req/res, end the response, or call next() to continue — Express apps are essentially a pipeline of middleware functions executed in the order they're registered.",
+    "example": null,
+    "code": "app.use((req, res, next) => {\n  console.log(`${req.method} ${req.url}`);\n  next();\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "middleware"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What happens if a middleware function never calls next() or sends a response?",
+    "answer": "The request hangs indefinitely — Express has no way of knowing the middleware is 'done' other than next() being called or a response method (res.send/res.json/res.end) being invoked, so the client's connection stays open until it times out on its own, which is a common cause of a server appearing to freeze on certain requests.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "middleware"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Express's error-handling middleware differ from regular middleware, and how do you trigger it?",
+    "answer": "Error-handling middleware is defined with four parameters instead of three — (err, req, res, next) — and Express recognizes this signature specifically to route errors to it. You trigger it either by calling next(err) from any regular middleware/route handler, or by throwing synchronously inside a route handler (Express catches synchronous throws automatically, though async errors need to be passed to next() explicitly in Express 4).",
+    "example": null,
+    "code": "app.use((err, req, res, next) => {\n  console.error(err);\n  res.status(500).json({ error: 'Internal Server Error' });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why doesn't Express 4 automatically catch errors thrown inside an async route handler, and how do you work around it?",
+    "answer": "Express 4's error handling relies on synchronous try/catch internally around each handler call — since an async function's rejection happens later, after that synchronous call has already returned, Express never sees it, leaving it an unhandled rejection. The common workaround is wrapping async handlers in a helper that catches rejections and forwards them to next(err), or using a library like express-async-errors that patches this behavior automatically. Express 5 fixes this natively by awaiting handlers that return a promise.",
+    "example": null,
+    "code": "const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);\napp.get('/users/:id', asyncHandler(async (req, res) => {\n  const user = await db.findUser(req.params.id);\n  res.json(user);\n}));",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "express", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between app.use() and app.get()/app.post() for registering middleware?",
+    "answer": "app.use() mounts middleware for all HTTP methods and, if given a path, matches any request path that starts with that prefix. app.get()/app.post()/etc. register handlers scoped to a specific HTTP method and match the path more precisely (by default, exact match unless route parameters or wildcards are used) — they're really just middleware registration too, but tied to both a method and a specific route pattern.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you define and access route parameters (e.g. /users/:id) in Express?",
+    "answer": "A colon-prefixed segment in a route path (like /users/:id) defines a named parameter, which Express extracts from the matched URL and makes available on req.params as a string — so a request to /users/42 gives req.params.id === '42'. Multiple parameters can appear in one route, and Express also supports more advanced patterns like optional parameters and wildcards.",
+    "example": null,
+    "code": "app.get('/users/:id', (req, res) => {\n  res.json({ userId: req.params.id });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between req.params, req.query, and req.body in Express?",
+    "answer": "req.params holds values extracted from named URL segments (e.g. /users/:id). req.query holds parsed query-string parameters after the '?' (e.g. ?sort=asc). req.body holds the parsed request body (JSON, form data, etc.), which requires body-parsing middleware like express.json() to populate — without it, req.body is undefined even if the client sent a body.",
+    "example": null,
+    "code": "// GET /users/42?sort=asc  with JSON body { \"name\": \"Alex\" }\napp.use(express.json());\napp.post('/users/:id', (req, res) => {\n  console.log(req.params.id, req.query.sort, req.body.name);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does express.json() middleware do, and why must it be registered before routes that use req.body?",
+    "answer": "express.json() parses incoming requests with a Content-Type of application/json, reading the raw request body stream and populating req.body with the resulting parsed object. It must be registered (via app.use()) before any route handlers that rely on req.body, since Express middleware and routes execute in registration order — a route defined before the parser would see req.body as undefined.",
+    "example": null,
+    "code": "app.use(express.json());\napp.post('/api/data', (req, res) => res.json(req.body));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "middleware"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you structure Express routes for a REST API across multiple resources (e.g. users, posts) to keep the codebase organized?",
+    "answer": "A common pattern is using express.Router() to create a separate, self-contained router per resource (userRoutes.js, postRoutes.js), each defining its own routes relative to a mount point, and then mounting each router on the main app with app.use('/api/users', userRoutes). This keeps route definitions modular and avoids a single monolithic file listing every endpoint.",
+    "example": null,
+    "code": "// userRoutes.js\nconst router = express.Router();\nrouter.get('/', listUsers);\nrouter.get('/:id', getUser);\nmodule.exports = router;\n// app.js\napp.use('/api/users', require('./userRoutes'));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement authentication middleware that protects certain routes but not others in Express?",
+    "answer": "Write a middleware function that checks for valid credentials (e.g. verifying a JWT from the Authorization header or checking a session), calling next() to allow the request through if valid, or responding with a 401 status and ending the chain if not. Apply it selectively either per-route (app.get('/admin', authMiddleware, handler)) or to a whole router/path prefix, rather than globally with app.use() if some routes should stay public.",
+    "example": null,
+    "code": "function requireAuth(req, res, next) {\n  const token = req.headers.authorization?.split(' ')[1];\n  if (!token || !isValid(token)) return res.status(401).json({ error: 'Unauthorized' });\n  next();\n}\napp.get('/admin', requireAuth, adminHandler);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "authentication"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is CORS, and how do you enable it in an Express application?",
+    "answer": "CORS (Cross-Origin Resource Sharing) is a browser security mechanism that blocks a web page from making requests to a different origin (domain/port/protocol) unless the server explicitly allows it via response headers like Access-Control-Allow-Origin. In Express, this is typically handled with the cors middleware package (app.use(cors())), which sets the appropriate headers and handles preflight OPTIONS requests automatically, rather than manually setting headers on every response.",
+    "example": null,
+    "code": "const cors = require('cors');\napp.use(cors({ origin: 'https://example.com' }));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "cors"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you validate incoming request data in an Express API, and why shouldn't you trust client input?",
+    "answer": "Validation is typically done with a schema library (like Joi, Zod, or express-validator) applied as middleware or at the top of a handler, checking types, required fields, and formats before any business logic runs, responding with a 400 status and details if validation fails. Client input can never be trusted since it may come from a malicious actor, a buggy client, or a stale frontend version — skipping validation risks crashes, injection attacks, or corrupted data reaching the database.",
+    "example": null,
+    "code": "const schema = z.object({ email: z.string().email(), age: z.number().min(0) });\napp.post('/users', (req, res) => {\n  const result = schema.safeParse(req.body);\n  if (!result.success) return res.status(400).json(result.error);\n  // proceed with result.data\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the correct order to register a 404 (not found) handler and an error-handling middleware in Express?",
+    "answer": "Both should be registered last, after all normal routes — a catch-all middleware with no matching route (app.use((req, res) => res.status(404).send(...))) handles requests that didn't match any defined route, and the four-argument error-handling middleware goes after that, so it catches errors passed via next(err) from anywhere earlier in the chain, including the 404 handler itself if it throws.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are appropriate HTTP status codes to return for common REST API scenarios (success, not found, validation error, server error)?",
+    "answer": "200 OK for a successful GET/PUT, 201 Created for a successful POST that creates a resource, 204 No Content for a successful action with no response body (like a DELETE). 400 Bad Request for invalid input, 401 Unauthorized for missing/invalid auth, 403 Forbidden for valid auth but insufficient permission, 404 Not Found for a missing resource, and 500 Internal Server Error for an unexpected server-side failure.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "http"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you implement rate limiting on an Express API to prevent abuse?",
+    "answer": "Use a rate-limiting middleware (like express-rate-limit) that tracks request counts per client (typically by IP or an API key) within a time window, stored in memory for a single instance or in a shared store like Redis for a multi-instance deployment, and responds with a 429 Too Many Requests status once the client exceeds the configured limit within that window.",
+    "example": null,
+    "code": "const rateLimit = require('express-rate-limit');\napp.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Express handle serving static files, and what middleware is used?",
+    "answer": "express.static(rootDir) is built-in middleware that serves files directly from a given directory based on the request path — e.g. app.use(express.static('public')) serves public/style.css at /style.css. It handles content-type detection, caching headers, and range requests automatically, avoiding the need to manually stream each static file yourself.",
+    "example": null,
+    "code": "app.use(express.static('public'));\n// GET /logo.png serves ./public/logo.png",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "static-files"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of next('route') in Express middleware?",
+    "answer": "Calling next('route') skips any remaining middleware and handlers registered for the current route specifically, jumping straight to the next matching route definition — distinct from a plain next(), which just moves to the next middleware in the current route's own chain. It's useful when a middleware needs to conditionally 'opt out' of handling a request entirely and let a different route definition handle it instead.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you structure an Express app to separate routing, business logic (services), and data access (repositories/models)?",
+    "answer": "A common layered structure has route/controller files that parse the request and call into service functions containing business logic, which in turn call repository/model functions responsible for actual database queries — each layer only depends on the one below it. This separation makes business logic testable independently of HTTP concerns and keeps route handlers thin, focused on request/response translation rather than embedding SQL or complex logic directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "architecture"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you version a REST API built with Express (e.g. /api/v1 vs /api/v2)?",
+    "answer": "The most common approach is URL-path versioning, mounting separate routers under distinct prefixes like app.use('/api/v1', v1Router) and app.use('/api/v2', v2Router), letting each version evolve independently. Alternatives include header-based versioning (reading a custom header or the Accept header to pick a handler) or query-parameter versioning, though path versioning is generally the most explicit and cache-friendly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "api-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you handle file uploads in an Express application?",
+    "answer": "A multipart/form-data body (used for file uploads) isn't parsed by express.json() or express.urlencoded(), so you typically use a dedicated middleware like multer, which parses the multipart body, saves uploaded files (to disk or memory, or streams them to cloud storage), and populates req.file / req.files with metadata about each uploaded file.",
+    "example": null,
+    "code": "const multer = require('multer');\nconst upload = multer({ dest: 'uploads/' });\napp.post('/upload', upload.single('avatar'), (req, res) => {\n  res.json({ filename: req.file.filename });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "file-upload"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What security-related HTTP headers should a production Express app typically set, and how is this usually done?",
+    "answer": "Headers like Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options, and a Content-Security-Policy help protect against common attacks (clickjacking, MIME-sniffing, XSS). Rather than setting each manually, most Express apps use the helmet middleware, which applies a sensible set of these security headers with one line: app.use(helmet()).",
+    "example": null,
+    "code": "const helmet = require('helmet');\napp.use(helmet());",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement pagination for a GET endpoint that lists a large number of resources?",
+    "answer": "Accept page and limit (or cursor-based) query parameters, use them to constrain the database query (e.g. LIMIT/OFFSET in SQL, or a cursor comparison for cursor-based pagination), and return both the page of results and metadata like total count or a next-page cursor/link so clients know how to fetch subsequent pages. Cursor-based pagination is generally preferred over offset-based for large or frequently-changing datasets, since offsets can skip or duplicate rows as data changes between requests.",
+    "example": null,
+    "code": "app.get('/posts', async (req, res) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 20;\n  const posts = await Post.find().skip((page - 1) * limit).limit(limit);\n  res.json({ page, limit, posts });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "api-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between res.send(), res.json(), and res.end() in Express?",
+    "answer": "res.json(data) serializes data to JSON and sets the Content-Type header to application/json. res.send(data) is more general-purpose — it inspects the argument type and sets an appropriate Content-Type (JSON for objects, text/html for strings), essentially delegating to res.json() internally for objects. res.end() sends the response immediately without any body processing, typically used to end a response that's already had headers/body set manually (or to close a response with no body at all).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "express"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you write integration tests for an Express API without starting a real server on a network port?",
+    "answer": "Libraries like supertest let you pass the Express app instance directly (rather than a URL) and make requests against it in-process, using Node's internal request/response handling without binding to an actual TCP port — this makes tests fast and avoids port conflicts, while still exercising the full middleware/routing stack exactly as it would run in production.",
+    "example": null,
+    "code": "const request = require('supertest');\nconst app = require('../app');\ntest('GET /health returns 200', async () => {\n  const res = await request(app).get('/health');\n  expect(res.status).toBe(200);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "testing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is idempotency in REST API design, and which HTTP methods are expected to be idempotent?",
+    "answer": "An idempotent operation produces the same server-side result no matter how many times it's repeated with the same input — GET, PUT, and DELETE are expected to be idempotent (calling PUT /users/1 with the same body twice leaves the resource in the same state as calling it once), while POST is not, since repeating it typically creates a new resource each time. This matters for safely retrying failed requests without risking duplicate side effects.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "express", "api-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you handle a request whose client disconnects before the server finishes processing it?",
+    "answer": "You can listen for the 'close' event on the request or response object, which fires if the underlying connection closes prematurely, and use it to abort in-progress work (like cancelling a database query or a downstream API call) rather than wasting resources computing a response nobody will receive. Not handling this can lead to unnecessary load under high request-cancellation scenarios, like a user rapidly navigating away from a slow-loading page.",
+    "example": null,
+    "code": "app.get('/report', (req, res) => {\n  const controller = new AbortController();\n  req.on('close', () => controller.abort());\n  runExpensiveQuery({ signal: controller.signal }).then((data) => res.json(data));\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "express", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between app.all() and registering the same handler on every individual HTTP method?",
+    "answer": "app.all(path, handler) registers a handler that matches a given path regardless of HTTP method (GET, POST, PUT, etc. all trigger it), which is a concise way to apply logic — like authentication or logging — uniformly across all verbs for a specific route, rather than manually duplicating app.get(path, ...), app.post(path, ...), and so on.",
+    "example": null,
+    "code": "app.all('/admin/*', requireAdmin);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you design consistent error response payloads across an Express API?",
+    "answer": "Define a standard error shape (e.g. { error: { code, message, details } }) and centralize error formatting in the error-handling middleware, having route handlers throw or pass custom error classes (like a NotFoundError or ValidationError with an associated status code) rather than manually formatting the response inline in every handler. This keeps error responses predictable for API consumers and avoids duplicated formatting logic scattered across routes.",
+    "example": null,
+    "code": "class ApiError extends Error {\n  constructor(status, message) { super(message); this.status = status; }\n}\napp.use((err, req, res, next) => {\n  const status = err.status || 500;\n  res.status(status).json({ error: { message: err.message } });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of a health-check endpoint (e.g. GET /health) in a production Express API?",
+    "answer": "A health-check endpoint returns a lightweight response (often just a 200 status, sometimes with basic diagnostic info like DB connectivity) that load balancers, container orchestrators, and monitoring tools use to determine whether an instance is alive and ready to receive traffic — an unhealthy instance can be automatically restarted or removed from a load balancer's rotation based on this check failing.",
+    "example": null,
+    "code": "app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "express", "deployment"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you prevent an Express route handler from directly exposing internal database error messages to API clients?",
+    "answer": "Catch database/internal errors in the error-handling middleware (or in a try/catch in the handler) and log the full error server-side for debugging, but respond to the client with a generic, sanitized message (and appropriate status code) instead of the raw error — leaking stack traces, SQL fragments, or internal paths to clients can expose implementation details useful to an attacker.",
+    "example": null,
+    "code": "app.use((err, req, res, next) => {\n  console.error(err); // full detail logged internally\n  res.status(500).json({ error: 'Something went wrong' }); // sanitized for client\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the role of a reverse proxy (like Nginx) in front of an Express application in production?",
+    "answer": "A reverse proxy typically handles TLS termination, serves static assets directly, load-balances across multiple Node process instances, and can buffer slow client connections — offloading work Node isn't especially efficient at (like raw TLS handshakes at scale) and providing a layer for things like rate limiting or request logging outside the application itself. Express's app.set('trust proxy', true) is often needed in this setup so req.ip and req.protocol reflect the original client rather than the proxy.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "express", "deployment"],
+    "isFrequentlyAsked": false
+  }
+]

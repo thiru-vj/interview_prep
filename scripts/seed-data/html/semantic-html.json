@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is semantic HTML and why does it matter?",
+    "answer": "Semantic HTML uses elements whose tag names convey the meaning and role of their content, such as <nav> for navigation or <article> for self-contained content, rather than generic <div>/<span> wrappers with classes. It improves accessibility for screen readers, gives search engines better context for indexing, and makes markup easier for other developers to understand at a glance.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between <header> and <h1>-<h6> heading elements?",
+    "answer": "<header> is a sectioning-related container for introductory content or navigation aids, like a logo and site nav, and can appear multiple times per page (e.g. once per <article>). Heading elements (<h1> through <h6>) define the actual title/hierarchy of a section's content and are used to build the page's outline; a <header> typically contains a heading but is not one itself.",
+    "example": null,
+    "code": "<header>\n  <img src=\"logo.png\" alt=\"Logo\">\n  <h1>Site Title</h1>\n</header>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between <section> and <div>?",
+    "answer": "<section> represents a thematic grouping of content that generally should have its own heading and makes sense as a standalone unit in the document outline, such as a chapter or a tab panel. <div> is a purely generic container with no semantic meaning, used only when no other semantic element fits or purely for styling/scripting hooks.",
+    "example": null,
+    "code": "<section>\n  <h2>Customer Reviews</h2>\n  <p>...</p>\n</section>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "When should you use <article> versus <section>?",
+    "answer": "<article> represents a self-contained piece of content that would make sense distributed independently, like a blog post, news story, or forum comment. <section> is a more general thematic grouping within a page and doesn't need to be independently distributable — an <article> can contain multiple <section>s, and a <section> can contain multiple <article>s.",
+    "example": null,
+    "code": "<article>\n  <h2>Blog Post Title</h2>\n  <section>\n    <h3>Introduction</h3>\n  </section>\n</article>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the purpose of the <main> element, and how many can a document have?",
+    "answer": "<main> wraps the dominant, unique content of a document — excluding repeated elements like headers, footers, navigation, or sidebars — and helps assistive technology users skip directly to the primary content. There should be exactly one visible <main> per page, and it must not be nested inside <article>, <aside>, <header>, <footer>, or another <main>.",
+    "example": null,
+    "code": "<main>\n  <h1>Article Title</h1>\n  <p>Primary page content...</p>\n</main>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <nav> element used for, and should every group of links be wrapped in it?",
+    "answer": "<nav> identifies a block of major navigation links, like a site's primary menu, breadcrumb trail, or table of contents. Not every group of links needs <nav> — a footer's list of miscellaneous links doesn't require it — using it only for significant navigation blocks keeps the semantics meaningful for screen reader users who often jump between landmarks.",
+    "example": null,
+    "code": "<nav aria-label=\"Main\">\n  <ul>\n    <li><a href=\"/\">Home</a></li>\n    <li><a href=\"/about\">About</a></li>\n  </ul>\n</nav>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <aside> element used for?",
+    "answer": "<aside> represents content that's tangentially related to the surrounding content, such as a pull quote, a sidebar with related links, or an author bio, and could be removed without reducing the meaning of the main content. Its meaning is relative to its nesting context — inside an <article> it might represent related footnotes, while at the page level it might be a sidebar widget.",
+    "example": null,
+    "code": "<aside>\n  <h3>Related Articles</h3>\n  <ul>...</ul>\n</aside>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <footer> element, and can a page have more than one?",
+    "answer": "<footer> represents closing information for its nearest sectioning ancestor, typically containing things like copyright notices, author info, or related links. A page can have multiple footers — one for the whole document and separate ones nested inside individual <article> or <section> elements.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the HTML document outline algorithm, and is it still relevant in modern HTML5?",
+    "answer": "The document outline algorithm was meant to let sectioning elements (<article>, <section>, <aside>, <nav>) generate an implicit nested outline based on structure rather than heading levels alone. In practice no major browser or assistive technology ever fully implemented it, so it was removed from the HTML5.1+ spec — meaning heading levels (<h1>-<h6>) still need to be used correctly and hierarchically for real-world accessibility.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it generally discouraged to skip heading levels, like going from <h1> directly to <h3>?",
+    "answer": "Screen reader users frequently navigate a page by jumping between headings, and skipped levels make the hierarchy confusing since it implies a subsection exists at a level that was never introduced. Headings should reflect a logical, sequential outline of the content, even if the visual font size is adjusted separately with CSS.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <figure> and <figcaption> pairing used for?",
+    "answer": "<figure> wraps self-contained content like an image, diagram, code listing, or chart that could be moved away from the main flow without affecting the document's meaning, and <figcaption> provides its caption. This pairing lets you associate a caption with content in a semantically explicit way that a plain <img> plus adjacent <p> does not.",
+    "example": null,
+    "code": "<figure>\n  <img src=\"chart.png\" alt=\"Quarterly revenue chart\">\n  <figcaption>Fig 1. Revenue grew 20% QoQ.</figcaption>\n</figure>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <time> element and plain text representing a date?",
+    "answer": "<time> wraps a human-readable date or time and, via its datetime attribute, provides a machine-readable equivalent in a standardized format, which search engines and browser extensions (like calendar add-to-actions) can parse reliably. Plain text dates have no structured meaning a machine can extract, even if they read clearly to a human.",
+    "example": null,
+    "code": "<p>Published on <time datetime=\"2026-01-15\">January 15, 2026</time></p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <address> element?",
+    "answer": "<address> denotes contact information for the author or owner of the nearest <article> or the whole document — it can hold a physical address, email, phone number, or social link, but must not be used for arbitrary postal addresses unrelated to contact info (like an address inside an article about a historical event).",
+    "example": null,
+    "code": "<address>\n  Contact: <a href=\"mailto:hi@example.com\">hi@example.com</a>\n</address>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between <mark>, <strong>, and <em>?",
+    "answer": "<mark> highlights text as relevant in the current context, like search results matching a query, and is rendered with a yellow background by default. <strong> indicates strong importance or urgency (bold by default), and <em> indicates stressed emphasis that changes the meaning of a sentence when read aloud (italic by default) — all three carry distinct semantic meaning beyond their default visual styling.",
+    "example": null,
+    "code": "<p>Results for <mark>climate</mark> change policy.</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <details> and <summary> pairing, and what does it provide natively?",
+    "answer": "<details> creates a native, collapsible disclosure widget, and <summary> defines the always-visible label that toggles it open or closed when clicked. It provides expand/collapse behavior, keyboard support, and correct ARIA semantics entirely without JavaScript, making it a solid default for simple accordions or FAQ sections.",
+    "example": null,
+    "code": "<details>\n  <summary>What is your refund policy?</summary>\n  <p>Refunds are processed within 5 business days.</p>\n</details>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the hidden attribute do, and how does it differ from CSS display: none?",
+    "answer": "The hidden boolean attribute tells the browser to remove an element from the rendering tree entirely, similarly to display: none, but it's expressed directly in the markup as semantic intent rather than styling. It's still overridable by CSS (e.g. an author could set [hidden] { display: block }), and unlike display: none applied via a class, it clearly signals in the HTML itself that the content is intentionally not shown.",
+    "example": null,
+    "code": "<div hidden>This content is not rendered.</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why would a screen reader user rely on landmark elements like <header>, <nav>, <main>, and <footer>?",
+    "answer": "Landmark elements are automatically exposed to assistive technology as navigable regions, letting screen reader users jump directly between page landmarks (e.g. 'go to main content' or 'go to navigation') instead of tabbing through every element sequentially. This is one of the biggest practical accessibility wins semantic HTML provides essentially for free.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <b> element and semantic elements like <strong>, in terms of how they map to accessibility?",
+    "answer": "<b> has no semantic role and is announced by screen readers no differently from plain text — it's purely a stylistic hint for bold rendering. <strong> is exposed with an implicit ARIA role/emphasis that some screen readers announce with a change in tone or verbal cue, conveying that the content carries real importance.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you semantically mark up a blog post with an author bio and related-posts sidebar?",
+    "answer": "The post itself is an <article> containing its own <header> (title, date) and body content. The author bio, if tightly coupled to that post, can be an <aside> nested inside the <article>; a page-level related-posts widget not specific to this one post would be an <aside> outside the <article>, and the whole page would still have one <main> wrapping the primary content.",
+    "example": null,
+    "code": "<main>\n  <article>\n    <header><h1>Post Title</h1></header>\n    <p>...</p>\n    <aside>Written by Jane, a senior editor.</aside>\n  </article>\n  <aside>\n    <h2>Related Posts</h2>\n  </aside>\n</main>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between <ol> and <ul> from a semantic standpoint, beyond just numbering versus bullets?",
+    "answer": "<ol> semantically communicates that the sequence or order of items matters (like ranking, steps in a recipe, or a table of contents), while <ul> communicates that the items are a collection with no inherent order. Choosing the wrong one can mislead both sighted users relying on visual numbering and assistive technology that announces list type and item count.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can <section> elements be nested, and does each one require a heading?",
+    "answer": "Yes, sections can be nested to represent sub-themes within a broader theme, such as chapters containing sub-sections. Each section should generally have a heading to identify its content for the outline and for assistive technology, though a heading isn't strictly enforced by the parser — omitting one is a common accessibility mistake even though it validates.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common mistake developers make when overusing <div> instead of semantic elements, and why does it hurt SEO?",
+    "answer": "Wrapping everything in generic <div>s with class names like 'header' or 'nav' looks similar visually but gives search engine crawlers and screen readers no structural signal about content importance or relationships. Search engines use semantic cues (like <article> and heading hierarchy) to understand which content is primary, which can influence indexing and rich-result eligibility.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the <dialog> element provide natively, compared to a custom modal built with <div>s?",
+    "answer": "<dialog> is a native modal/non-modal dialog element that, when opened with showModal(), automatically traps focus, renders on the top layer above other content, supports the ::backdrop pseudo-element, and closes on the Escape key — all behaviors a hand-built <div> modal has to reimplement manually with JavaScript and ARIA.",
+    "example": null,
+    "code": "<dialog id=\"confirm\">\n  <p>Are you sure?</p>\n  <button onclick=\"confirm.close()\">Cancel</button>\n</dialog>\n<script>confirm.showModal();</script>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How should you semantically structure a page with a persistent site header, a hero section, several content sections, and a footer?",
+    "answer": "A typical structure wraps the logo and primary <nav> in a top-level <header>, places the unique page content (hero, feature sections) inside a single <main> using <section> for each thematic block, and closes with a <footer> for copyright/links — keeping <header> and <footer> outside <main> since they represent repeated, page-level chrome rather than unique content.",
+    "example": null,
+    "code": "<body>\n  <header><nav>...</nav></header>\n  <main>\n    <section>Hero</section>\n    <section>Features</section>\n  </main>\n  <footer>...</footer>\n</body>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "document-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the role of ARIA landmark roles in relation to native semantic HTML elements?",
+    "answer": "Native elements like <nav>, <main>, and <header> already have implicit ARIA landmark roles (navigation, main, banner) built in, so adding role=\"navigation\" to a <nav> is redundant. ARIA roles are meant to fill gaps where no native element exists or to override semantics on generic elements, following the general rule of using native HTML before reaching for ARIA.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might a <header> or <footer> nested inside an <article> have a different meaning than one at the top level of the page?",
+    "answer": "A sectioning element's <header>/<footer> is scoped to its nearest ancestor sectioning content — so a <header> inside an <article> represents that article's own intro (like its title and byline), not the whole page's banner. This context-dependent scoping is what lets the same tag names be reused meaningfully at multiple nesting levels.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <picture> element and how does it differ semantically from just using <img>?",
+    "answer": "<picture> wraps multiple <source> elements offering different image files or formats for different conditions (viewport width, pixel density, format support), with a fallback <img> required as the last child for browsers that don't support <picture> or when no source matches. It's about giving the browser a choice of resources for the same conceptual image, not about changing what the image semantically represents.",
+    "example": null,
+    "code": "<picture>\n  <source srcset=\"photo.avif\" type=\"image/avif\">\n  <source srcset=\"photo.webp\" type=\"image/webp\">\n  <img src=\"photo.jpg\" alt=\"Sunset over the bay\">\n</picture>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Should a company logo linking to the homepage be marked up with <h1> or plain text inside the link?",
+    "answer": "It depends on the page: on the homepage itself, wrapping the site name/logo in <h1> is reasonable since it is the page's primary heading. On interior pages, the actual page content's heading should be the <h1>, and the logo link is better left as plain text or an image with descriptive alt text inside <a>, to avoid having a misleading second, unrelated <h1>.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between <cite> and <blockquote> / <q>?",
+    "answer": "<blockquote> marks a longer, block-level quotation from another source, and <q> marks a short inline quotation (browsers add quotation marks automatically). <cite> specifically references the title of a creative work being cited (like a book or article title), not the person being quoted — a common mistake is using <cite> to wrap an author's name instead of the work's title.",
+    "example": null,
+    "code": "<blockquote cite=\"https://example.com/source\">\n  <p>The only way to do great work is to love what you do.</p>\n</blockquote>\n<p>— <cite>Steve Jobs, Stanford Commencement Address</cite></p>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does using semantic HTML reduce the amount of ARIA needed on a page?",
+    "answer": "Many semantic elements come with implicit ARIA roles, states, and keyboard behavior built in by the browser — a native <button> is focusable, announces as 'button', and responds to Space/Enter automatically, whereas a <div role=\"button\" tabindex=\"0\"> requires manually replicating all of that with JavaScript. This is summarized by the accessibility principle 'no ARIA is better than bad ARIA' — prefer native elements first.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "semantic-html", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the <output> element and a plain <span> for displaying a calculated result?",
+    "answer": "<output> is a semantic form-associated element specifically meant to display the result of a calculation or user action (like a slider total), and it associates with its triggering inputs via the `for` attribute while also being announced by assistive technology as a live result region when appropriately used. A plain <span> conveys no such relationship or semantic meaning.",
+    "example": null,
+    "code": "<form oninput=\"result.value = parseInt(a.value) + parseInt(b.value)\">\n  <input id=\"a\" type=\"number\" value=\"0\"> +\n  <input id=\"b\" type=\"number\" value=\"0\"> =\n  <output name=\"result\" for=\"a b\">0</output>\n</form>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "semantic-html", "forms"],
+    "isFrequentlyAsked": false
+  }
+]

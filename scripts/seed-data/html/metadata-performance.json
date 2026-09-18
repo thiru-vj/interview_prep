@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is the purpose of the <title> element, and where does it appear in the browser?",
+    "answer": "<title> defines the document's title, shown in the browser tab, bookmarks, and browser history, and it's typically what search engines display as the clickable headline in search results. Each page should have a unique, descriptive title, ideally under about 60 characters so it isn't truncated in search results.",
+    "example": null,
+    "code": "<head>\n  <title>Pricing Plans - Acme Inc.</title>\n</head>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the meta description tag do, and does it directly affect search ranking?",
+    "answer": "<meta name=\"description\" content=\"...\"> provides a short summary of the page that search engines often (but not always) display as the snippet text under the title in search results. It does not directly influence ranking algorithms, but a well-written description can improve click-through rate, which indirectly benefits SEO performance.",
+    "example": null,
+    "code": "<meta name=\"description\" content=\"Compare Acme's pricing plans and find the right fit for your team.\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the viewport meta tag and why is it essential for responsive design?",
+    "answer": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> tells mobile browsers to render the page at the device's actual width instead of a default desktop-width virtual viewport (typically 980px) that gets zoomed out. Without it, responsive CSS media queries won't behave as intended on mobile, since the browser would already be simulating a wide desktop layout.",
+    "example": null,
+    "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the defer and async attributes on <script> tags, and how does each affect page load performance?",
+    "answer": "Both let the script download without blocking HTML parsing. defer delays execution until after parsing completes and preserves the document order among multiple deferred scripts, making it predictable for scripts with dependencies. async executes the moment the script finishes downloading, potentially before parsing finishes and out of order relative to other scripts, which suits independent scripts like analytics that don't depend on DOM state or other scripts.",
+    "example": null,
+    "code": "<script src=\"vendor.js\" defer></script>\n<script src=\"app.js\" defer></script>\n<script src=\"ads.js\" async></script>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does <link rel=\"preload\"> do, and when should you use it?",
+    "answer": "preload tells the browser to fetch a critical resource (like a hero image, a web font, or a key script) with high priority early in the page load, before the browser would normally discover it via CSS or deep in the HTML. It's meant for resources the current page definitely needs soon — overusing preload on non-critical resources can actually hurt performance by competing for bandwidth with truly critical ones.",
+    "example": null,
+    "code": "<link rel=\"preload\" href=\"/fonts/inter-var.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between preload, prefetch, and preconnect resource hints?",
+    "answer": "preload fetches a resource the current page needs with high priority, immediately. prefetch fetches a resource at low priority that a future navigation (like the next likely page) will probably need, so it's ready in cache ahead of time. preconnect establishes an early network connection (DNS, TCP, TLS handshake) to another origin without fetching a specific resource yet, useful for third-party domains you know you'll request from soon.",
+    "example": null,
+    "code": "<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link rel=\"prefetch\" href=\"/next-page.html\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does placing <link rel=\"stylesheet\"> tags in the <head> (rather than at the end of <body>) matter for rendering?",
+    "answer": "Browsers block rendering until all CSS discovered so far is downloaded and parsed, to avoid a flash of unstyled content — this is why stylesheets belong in <head>, loaded as early as possible. If stylesheets were placed at the end of body, the page would render unstyled first and then suddenly restyle, producing a jarring flash.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is render-blocking CSS/JS, and how does it impact metrics like First Contentful Paint?",
+    "answer": "Render-blocking resources are ones the browser must download and process before it can paint any content, delaying First Contentful Paint. CSS in <head> without media query splitting, and synchronous <script> tags without async/defer, are the classic offenders — techniques like inlining critical CSS, deferring non-critical scripts, and splitting stylesheets by media type all reduce this blocking time.",
+    "example": null,
+    "code": "<link rel=\"stylesheet\" href=\"print.css\" media=\"print\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of Open Graph meta tags, and where are they used?",
+    "answer": "Open Graph tags (og:title, og:description, og:image, og:url, etc.) are a metadata protocol originally created by Facebook that let social platforms and chat apps render a rich preview card when a link is shared, instead of a bare URL. Twitter/X has its own overlapping but distinct set of twitter:* tags for the same purpose on its platform.",
+    "example": null,
+    "code": "<meta property=\"og:title\" content=\"Pricing Plans - Acme Inc.\">\n<meta property=\"og:description\" content=\"Find the right plan for your team.\">\n<meta property=\"og:image\" content=\"https://acme.com/og-image.png\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <link rel=\"canonical\"> tag?",
+    "answer": "A canonical tag tells search engines which URL is the authoritative version of a page when the same or very similar content is reachable via multiple URLs (e.g. with different query parameters, trailing slashes, or http vs https), consolidating ranking signals to one URL and avoiding duplicate-content penalties.",
+    "example": null,
+    "code": "<link rel=\"canonical\" href=\"https://example.com/products/shoes\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of a favicon and how do you declare multiple sizes/formats for different devices?",
+    "answer": "A favicon is the small icon shown in browser tabs, bookmarks, and history. Modern sites declare multiple <link rel=\"icon\"> entries with different sizes and formats (including an .ico fallback and various PNG sizes for different platforms), plus apple-touch-icon for iOS home screen bookmarks, since no single format/size satisfies every browser and OS combination.",
+    "example": null,
+    "code": "<link rel=\"icon\" href=\"/favicon.ico\" sizes=\"any\">\n<link rel=\"icon\" href=\"/icon.svg\" type=\"image/svg+xml\">\n<link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do structured data / JSON-LD in the <head> help search engines, and what does a basic example look like?",
+    "answer": "Structured data marks up a page's content using a standardized vocabulary (usually schema.org) so search engines can understand entities like products, articles, or recipes precisely enough to show rich results — star ratings, prices, breadcrumbs — directly in search listings. JSON-LD is the recommended format, embedded as a <script type=\"application/ld+json\"> block rather than mixed into visible HTML attributes.",
+    "example": null,
+    "code": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Product\",\n  \"name\": \"Running Shoes\",\n  \"offers\": { \"@type\": \"Offer\", \"price\": \"79.99\", \"priceCurrency\": \"USD\" }\n}\n</script>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the robots meta tag used for, and how does it differ from a robots.txt file?",
+    "answer": "<meta name=\"robots\" content=\"noindex, nofollow\"> is a per-page directive controlling whether search engines index that specific page and follow its links; robots.txt is a site-wide file that controls which URLs crawlers are even allowed to request in the first place. A page blocked entirely by robots.txt won't be crawled, so its meta robots tag (if any) is never even seen.",
+    "example": null,
+    "code": "<meta name=\"robots\" content=\"noindex, nofollow\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should the <meta charset> declaration be one of the very first elements in <head>?",
+    "answer": "The browser must know the character encoding before it can correctly parse any subsequent text, including other meta tags and the title — the HTML spec requires charset to be declared within the first 1024 bytes of the document to guarantee it's read before encoding-sensitive content, which is why it's conventionally placed as the first line inside <head>.",
+    "example": null,
+    "code": "<head>\n  <meta charset=\"UTF-8\">\n  <title>My Page</title>\n</head>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is font loading strategy, and why does the font-display CSS property matter for perceived performance?",
+    "answer": "By default, browsers may block text rendering (a 'flash of invisible text') while waiting for a custom @font-face to download. font-display: swap tells the browser to render text immediately with a fallback font and swap in the custom font once loaded, trading a brief font-swap flash for much faster perceived content availability — often paired with preloading the font file itself.",
+    "example": null,
+    "code": "@font-face {\n  font-family: 'Inter';\n  src: url('/fonts/inter.woff2') format('woff2');\n  font-display: swap;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between critical CSS inlining and linking an external stylesheet, from a performance standpoint?",
+    "answer": "Inlining the minimal CSS needed to render above-the-fold content directly in a <style> tag in <head> avoids an extra render-blocking network round trip for that critical portion, improving First Contentful Paint. The remaining non-critical CSS is still loaded externally (often asynchronously), trading a larger initial HTML payload for faster perceived rendering on the first visit.",
+    "example": null,
+    "code": "<style>\n  /* critical above-the-fold styles inlined here */\n  body { margin: 0; font-family: sans-serif; }\n</style>\n<link rel=\"stylesheet\" href=\"non-critical.css\" media=\"print\" onload=\"this.media='all'\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the type=\"module\" attribute on <script> do, and how does it affect loading behavior?",
+    "answer": "type=\"module\" marks a script as an ES module, enabling import/export syntax and running the script in strict mode with its own top-level scope. Module scripts are deferred by default (like the defer attribute), execute only once even if referenced multiple times, and are fetched with CORS, which matters when loading modules from a different origin.",
+    "example": null,
+    "code": "<script type=\"module\" src=\"main.js\"></script>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you provide a fallback script for browsers that don't support ES modules, using nomodule?",
+    "answer": "A <script nomodule src=\"legacy-bundle.js\"> tag is ignored entirely by browsers that understand type=\"module\", but executed by older browsers that don't recognize the module attribute at all — a common pattern (differential/module-nomodule serving) to ship modern, smaller ES module code to capable browsers while still supporting legacy ones with a transpiled bundle.",
+    "example": null,
+    "code": "<script type=\"module\" src=\"modern.js\"></script>\n<script nomodule src=\"legacy.js\"></script>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Core Web Vitals, and which of them is most directly influenced by HTML/markup decisions?",
+    "answer": "Core Web Vitals are Google's user-centric performance metrics: Largest Contentful Paint (LCP, loading speed of the main content), Interaction to Next Paint (INP, responsiveness), and Cumulative Layout Shift (CLS, visual stability). CLS is the one most directly shaped by HTML decisions — specifying image/iframe dimensions, reserving space for ads or embeds, and avoiding late-injected content above existing content all reduce it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does deferring non-critical third-party scripts (like analytics or chat widgets) improve page performance?",
+    "answer": "Third-party scripts often aren't needed for the initial render and can block the main thread or delay other resources if loaded eagerly. Loading them with defer/async, injecting them dynamically after the load event, or using a facade pattern (loading the real widget only on user interaction) keeps them from competing with critical rendering-path resources.",
+    "example": null,
+    "code": "window.addEventListener('load', () => {\n  const s = document.createElement('script');\n  s.src = 'https://widget.example.com/chat.js';\n  document.body.appendChild(s);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the theme-color meta tag used for?",
+    "answer": "<meta name=\"theme-color\" content=\"#0f172a\"> hints the browser to tint its UI chrome (like the mobile browser's address bar or the task-switcher card) to match the site's brand color, which is a small but common polish detail for mobile web apps and PWAs.",
+    "example": null,
+    "code": "<meta name=\"theme-color\" content=\"#0f172a\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a web app manifest, and how is it linked from an HTML document?",
+    "answer": "A manifest.json file describes a web application's name, icons, theme colors, and display mode (like standalone, to hide the browser chrome), enabling 'Add to Home Screen' installability as a Progressive Web App. It's linked from the document with <link rel=\"manifest\" href=\"/manifest.json\">.",
+    "example": null,
+    "code": "<link rel=\"manifest\" href=\"/manifest.json\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a hard page reload's parsing cost and how the browser's preload scanner helps mitigate it?",
+    "answer": "While the main HTML parser builds the DOM sequentially and can be blocked by synchronous scripts, browsers run a separate, speculative 'preload scanner' that scans ahead in the raw HTML to discover and start fetching resources (images, scripts, stylesheets) referenced further down the document, even before the main parser reaches them — this is why resources declared as plain HTML attributes (like <img src>) are typically discovered and fetched sooner than ones injected dynamically via JavaScript.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does specifying a fetchpriority attribute on an <img> or <link> help performance?",
+    "answer": "fetchpriority=\"high\" or \"low\" gives the browser an explicit hint to override its default resource-priority heuristics, useful for telling it that a specific hero image is more important than other same-type resources discovered around the same time (like carousel images below the fold), improving how quickly the most important content is prioritized during contention.",
+    "example": null,
+    "code": "<img src=\"hero.jpg\" alt=\"Hero banner\" fetchpriority=\"high\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <meta name=\"viewport\"> maximum-scale and user-scalable options, and why are they generally discouraged?",
+    "answer": "These options can restrict or disable pinch-to-zoom on mobile devices, which was once used to prevent unwanted zooming on form-heavy pages. It's now considered a serious accessibility anti-pattern since it prevents low-vision users from zooming in to read content, so modern guidance is to always allow user scaling and only rely on width=device-width, initial-scale=1.",
+    "example": null,
+    "code": "<!-- Avoid this -->\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do hreflang tags help with internationalized (multi-language) SEO?",
+    "answer": "<link rel=\"alternate\" hreflang=\"...\"> tags tell search engines which URL to serve for a given language/region so users see the appropriate localized version in search results, preventing duplicate-content issues between translated pages and improving relevance for international audiences.",
+    "example": null,
+    "code": "<link rel=\"alternate\" hreflang=\"en\" href=\"https://example.com/en/\">\n<link rel=\"alternate\" hreflang=\"fr\" href=\"https://example.com/fr/\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does minimizing the number of render-blocking <link rel=\"stylesheet\"> requests matter, and what's one common technique to reduce their impact?",
+    "answer": "Each render-blocking stylesheet adds a network round trip the browser must wait through before painting, so fewer, well-bundled stylesheets (or HTTP/2+ multiplexing) reduce that delay. A common technique is splitting stylesheets by media type (e.g. print.css with media=\"print\") so the browser only treats stylesheets relevant to the current rendering context as blocking.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the meta tag's name and property attributes, as seen in standard meta tags versus Open Graph tags?",
+    "answer": "name is used by the standard HTML meta tag vocabulary (description, viewport, robots, theme-color) and is what the HTML spec itself defines. property is technically an RDFa attribute co-opted by the Open Graph protocol (og:title, og:image) rather than a native HTML meta concept, which is why Open Graph tags look slightly different syntactically even though both ultimately populate the same <meta> element with a content value.",
+    "example": null,
+    "code": "<meta name=\"description\" content=\"Standard meta tag\">\n<meta property=\"og:title\" content=\"Open Graph tag\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance", "seo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the async, defer, and module loading orders when a page has several <script> tags mixing all three?",
+    "answer": "Deferred and module scripts (both default to deferred behavior) execute in document order, always after parsing completes and before DOMContentLoaded fires. Async scripts execute as soon as they've individually finished downloading, in whatever order that happens to be, potentially interleaved before or after parsing finishes and without respecting document order relative to other scripts — this unpredictability is why async is reserved for scripts with no dependencies on other scripts or DOM state.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <noscript> element, and where in the document can it be used?",
+    "answer": "<noscript> defines content that's only rendered when JavaScript is disabled or unsupported in the browser, commonly used to show a fallback message or a tracking pixel's non-JS equivalent. It can appear in both <head> (limited to metadata-like content such as <link> or <style>) and <body> (where it can contain regular visible markup).",
+    "example": null,
+    "code": "<noscript>\n  <p>This site requires JavaScript to function properly. Please enable it in your browser settings.</p>\n</noscript>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "metadata-performance"],
+    "isFrequentlyAsked": false
+  }
+]

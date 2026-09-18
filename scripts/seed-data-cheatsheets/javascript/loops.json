@@ -1,0 +1,74 @@
+[
+  {
+    "name": "for Loop",
+    "syntax": "for (initialization; condition; increment) { ... }",
+    "description": "Repeats a block of code a set number of times, controlled by an initializer, a condition, and an increment expression.",
+    "example": "for (let i = 0; i < 3; i++) { console.log(i); } // 0, 1, 2",
+    "codeLanguage": "javascript",
+    "notes": "Best suited when you need index access or a fixed iteration count.",
+    "tags": ["javascript", "loops", "iteration"]
+  },
+  {
+    "name": "for...in Loop",
+    "syntax": "for (const key in obj) { ... }",
+    "description": "Iterates over the enumerable property names (keys) of an object, including inherited enumerable properties.",
+    "example": "for (const key in { a: 1, b: 2 }) { console.log(key); } // 'a', 'b'",
+    "codeLanguage": "javascript",
+    "notes": "Intended for object keys, not arrays — for arrays use for...of or forEach() to avoid iterating inherited/indexed quirks.",
+    "tags": ["javascript", "loops", "object"]
+  },
+  {
+    "name": "for...of Loop",
+    "syntax": "for (const item of iterable) { ... }",
+    "description": "Iterates over the values of any iterable object, such as arrays, strings, Maps, and Sets.",
+    "example": "for (const value of [10, 20, 30]) { console.log(value); } // 10, 20, 30",
+    "codeLanguage": "javascript",
+    "notes": "Cannot be used directly on plain objects since they are not iterable — use Object.entries() with it instead.",
+    "tags": ["javascript", "loops", "iteration"]
+  },
+  {
+    "name": "while Loop",
+    "syntax": "while (condition) { ... }",
+    "description": "Repeats a block of code as long as a specified condition evaluates to true, checked before each iteration.",
+    "example": "let i = 0; while (i < 3) { console.log(i); i++; }",
+    "codeLanguage": "javascript",
+    "notes": "If the condition never becomes false, the loop runs forever — ensure the loop body updates the condition.",
+    "tags": ["javascript", "loops", "iteration"]
+  },
+  {
+    "name": "do...while Loop",
+    "syntax": "do { ... } while (condition);",
+    "description": "Repeats a block of code once before testing the condition, then continues while the condition remains true.",
+    "example": "let i = 0; do { console.log(i); i++; } while (i < 3);",
+    "codeLanguage": "javascript",
+    "notes": "Guarantees the loop body executes at least once, even if the condition is initially false.",
+    "tags": ["javascript", "loops", "iteration"]
+  },
+  {
+    "name": "break Statement",
+    "syntax": "break;",
+    "description": "Immediately terminates the nearest enclosing loop or switch statement, resuming execution after it.",
+    "example": "for (let i = 0; i < 10; i++) { if (i === 3) break; console.log(i); } // 0, 1, 2",
+    "codeLanguage": "javascript",
+    "notes": "Can also be combined with a label to break out of an outer loop from within a nested one.",
+    "tags": ["javascript", "loops", "control-flow"]
+  },
+  {
+    "name": "continue Statement",
+    "syntax": "continue;",
+    "description": "Skips the rest of the current loop iteration and proceeds to the next one.",
+    "example": "for (let i = 0; i < 5; i++) { if (i % 2 === 0) continue; console.log(i); } // 1, 3",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "loops", "control-flow"]
+  },
+  {
+    "name": "Labeled Statements",
+    "syntax": "outer: for (...) { for (...) { break outer; } }",
+    "description": "A label identifies a loop so that break or continue can target it directly, even from inside a nested loop.",
+    "example": "outer: for (let i = 0; i < 3; i++) { for (let j = 0; j < 3; j++) { if (j === 1) continue outer; console.log(i, j); } }",
+    "codeLanguage": "javascript",
+    "notes": "Useful for breaking or continuing an outer loop from deeply nested loops, but overuse can hurt readability.",
+    "tags": ["javascript", "loops", "control-flow"]
+  }
+]

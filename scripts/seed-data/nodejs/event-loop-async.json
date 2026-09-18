@@ -1,0 +1,332 @@
+[
+  {
+    "question": "What is the event loop in Node.js, and why is it central to how Node handles concurrency?",
+    "answer": "The event loop is the mechanism that lets Node perform non-blocking I/O despite JavaScript running on a single thread — it repeatedly checks whether there's pending work (timers, I/O callbacks, immediates) to process, executing callbacks as their associated operations complete rather than blocking the thread while waiting. It's what allows a single Node process to handle thousands of concurrent connections without spawning a thread per request.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "event-loop"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the main phases of the Node.js event loop, in order?",
+    "answer": "The libuv event loop cycles through: timers (expired setTimeout/setInterval callbacks), pending callbacks (certain deferred system-level callbacks), idle/prepare (internal use), poll (retrieving new I/O events and running their callbacks), check (setImmediate callbacks), and close callbacks (like socket.on('close')). Microtasks (process.nextTick and Promise callbacks) run between each of these phases, not as a phase themselves.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the call stack and the event loop?",
+    "answer": "The call stack is where JavaScript tracks function calls currently executing, following LIFO order — it's what the single JS thread is actively working through synchronously. The event loop is a separate mechanism that watches for the call stack to become empty and then pushes queued callbacks (from timers, I/O, microtasks) onto it, effectively scheduling asynchronous work to run once synchronous code has finished.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between microtasks and macrotasks in Node.js?",
+    "answer": "Macrotasks include timer callbacks, I/O callbacks, and setImmediate callbacks, each processed in a distinct event loop phase, with only one macrotask typically running per loop iteration per phase. Microtasks — process.nextTick callbacks and resolved Promise .then() callbacks — are drained completely (including any new microtasks they schedule) between every phase transition and even between individual macrotasks, so microtasks always run before the loop proceeds further.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop", "microtasks"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "In Node.js, does process.nextTick() or a resolved Promise's .then() callback run first?",
+    "answer": "process.nextTick() callbacks run before Promise microtask callbacks — Node maintains a separate nextTick queue that's fully drained first, and only then does it process the Promise microtask queue, both of which happen before the event loop advances to its next phase. This makes nextTick even higher priority than promise-based microtasks, which is why heavy recursive use of it can starve I/O.",
+    "example": null,
+    "code": "process.nextTick(() => console.log('nextTick'));\nPromise.resolve().then(() => console.log('promise'));\n// Output: nextTick, then promise",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "microtasks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Given setTimeout(fn, 0) and setImmediate(fn) both called from the main module, which runs first?",
+    "answer": "It's actually not guaranteed from the main module — timer precision means setTimeout(fn, 0) may fire before or after setImmediate depending on system performance and how long process startup took, since both compete near the start of the loop. However, when both are called from inside an I/O callback (e.g. within fs.readFile's callback), setImmediate is guaranteed to run first, since the poll phase transitions directly to the check phase before circling back to timers.",
+    "example": null,
+    "code": "const fs = require('fs');\nfs.readFile(__filename, () => {\n  setTimeout(() => console.log('timeout'), 0);\n  setImmediate(() => console.log('immediate')); // this runs first here\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can heavy use of process.nextTick() starve the event loop?",
+    "answer": "Because Node fully drains the nextTick queue before moving on, if a nextTick callback recursively schedules another nextTick callback, that queue can grow indefinitely and never let the event loop proceed to the timers, I/O, or check phases — effectively blocking all other operations even though each individual callback is fast. This is a well-known pitfall that led to changes/guidance discouraging deeply recursive nextTick usage in library code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Node.js handle a CPU-intensive synchronous operation, like a large JSON.parse or a tight loop?",
+    "answer": "Since JS execution is single-threaded, a long synchronous computation blocks the event loop entirely — no other callbacks, timers, or incoming requests can be processed until it finishes, which can make a server unresponsive under load. The usual fixes are breaking the work into smaller async chunks, offloading it to a worker thread, or moving it to a separate process/service if it's consistently expensive.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean for an operation to be 'non-blocking' in Node, and give an example of a blocking equivalent.",
+    "answer": "A non-blocking operation returns control to the caller immediately and delivers its result later via a callback, promise, or event, letting other code run in the meantime — e.g. fs.readFile(path, callback). Its blocking equivalent, fs.readFileSync(path), halts the entire thread until the file is fully read, which is fine for one-off CLI scripts but harmful in a server handling concurrent requests.",
+    "example": null,
+    "code": "// Blocking\nconst data = fs.readFileSync('file.txt');\n// Non-blocking\nfs.readFile('file.txt', (err, data) => { /* ... */ });",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "event-loop", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the libuv thread pool, and which Node operations use it?",
+    "answer": "The thread pool is a fixed-size pool of background worker threads (default size 4, configurable via UV_THREADPOOL_SIZE) that libuv uses to run operations the OS doesn't provide a truly async interface for. Examples include most fs module operations, some crypto functions (like pbkdf2 and scrypt), DNS lookups via dns.lookup, and zlib compression — the main thread stays free while these run in the background, with a callback fired on completion.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "libuv"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you convert a callback-based Node API into one that returns a Promise?",
+    "answer": "You can wrap the call manually in new Promise((resolve, reject) => {...}), calling reject on an error-first callback's err argument and resolve otherwise, or use Node's built-in util.promisify() utility, which does exactly that for any function following the standard (err, result) => callback convention.",
+    "example": null,
+    "code": "const util = require('util');\nconst fs = require('fs');\nconst readFile = util.promisify(fs.readFile);\nconst data = await readFile('file.txt', 'utf8');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "promises"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the 'error-first callback' convention mean in Node.js APIs, and why is it used?",
+    "answer": "By convention, Node-style callbacks take an error as their first argument (null/undefined if no error occurred), followed by the result: callback(err, result). This standardizes error handling across the entire core API and the broader ecosystem, since every callback consumer can check the same first argument rather than each API having its own ad hoc error-reporting mechanism.",
+    "example": null,
+    "code": "fs.readFile('file.txt', (err, data) => {\n  if (err) return console.error(err);\n  console.log(data.toString());\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "async", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does an error thrown inside a plain Node-style asynchronous callback not get caught by a surrounding try/catch?",
+    "answer": "By the time the callback actually runs, the original synchronous call (and its try/catch context) has already finished executing and been popped off the call stack — the callback runs later, in a fresh stack frame triggered by the event loop, so a try/catch wrapped around the original call can't intercept an exception thrown inside it. This is why the error-first callback pattern exists: errors must be explicitly passed as data instead of thrown.",
+    "example": null,
+    "code": "try {\n  fs.readFile('x', () => { throw new Error('boom'); }); // NOT caught here\n} catch (e) { /* never runs */ }",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "async", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does async/await work under the hood in Node.js, in terms of the event loop?",
+    "answer": "await pauses execution of the async function at that point without blocking the thread — control returns to the event loop, which continues processing other callbacks, and once the awaited promise settles, the rest of the async function resumes as a microtask. It's syntactic sugar over promise chaining, so it ultimately relies on the same microtask queue mechanics as .then().",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What keeps a Node.js process alive, and what causes it to exit on its own?",
+    "answer": "A Node process stays alive as long as there's at least one pending operation in the event loop's queue: an open server listening for connections, an active timer, a pending I/O callback, or an unresolved async operation registered with libuv. Once there's nothing left to process — no pending timers, no open handles, no queued callbacks — the event loop has nothing more to do and the process exits naturally with code 0.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "event-loop", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is server.unref() (or timer.unref()) used for?",
+    "answer": "unref() marks a handle (like a timer or an open socket) as not counting toward keeping the event loop alive, so if it's the only thing left pending, the process can still exit naturally instead of hanging. It's commonly used for background housekeeping timers that shouldn't prevent a script or CLI tool from exiting once its main work is done.",
+    "example": null,
+    "code": "const timer = setInterval(() => {}, 1000);\ntimer.unref(); // won't keep the process alive by itself",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you run multiple independent async database queries concurrently in a Node.js route handler?",
+    "answer": "Start all the query calls first (without awaiting each individually) so they all begin their async work in the same tick, collect their returned promises, and await them together with Promise.all — this runs them concurrently rather than serially, since each query's I/O wait time can overlap with the others'.",
+    "example": null,
+    "code": "const [user, orders] = await Promise.all([\n  db.query('SELECT * FROM users WHERE id = $1', [id]),\n  db.query('SELECT * FROM orders WHERE user_id = $1', [id]),\n]);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an unhandled promise rejection in Node.js, and what happens if you don't handle it?",
+    "answer": "It occurs when a promise rejects and no .catch() (or try/catch around an await) observes that rejection. In modern Node versions (since v15), an unhandled rejection crashes the process by default (previously it just logged a warning), which is meant to surface silent async failures early rather than let them go unnoticed in production.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "error-handling"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How can you implement a delay/sleep function in Node.js using promises?",
+    "answer": "Wrap setTimeout in a Promise that resolves once the timer fires, then await it — there's no native sleep() function in JS/Node, so this pattern is the idiomatic way to pause execution within an async function without blocking the event loop.",
+    "example": null,
+    "code": "const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\nawait sleep(1000);\nconsole.log('1 second later');",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "async", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the risk of using a synchronous method like fs.readFileSync inside an Express route handler?",
+    "answer": "Since Node handles many concurrent requests on a single thread, a synchronous call blocks that thread entirely for its duration — every other in-flight request (and the ability to accept new ones) is frozen until it completes, which can badly degrade throughput and latency under load, especially for larger files. The async fs.readFile (or fs.promises.readFile) equivalent avoids this by not blocking the event loop.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "express"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'callback hell' and how does Node's ecosystem typically address it today?",
+    "answer": "Callback hell refers to deeply nested, hard-to-read callback-based async code, historically common in Node due to its error-first callback convention for I/O. Modern Node code largely avoids it by using Promise-returning APIs (fs.promises, util.promisify) combined with async/await, which lets sequential asynchronous logic read like ordinary synchronous code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Node.js decide when a setInterval callback should be paused or cleared to avoid memory/resource leaks?",
+    "answer": "Node itself doesn't decide this automatically — an interval keeps running (and keeps the process alive) until explicitly cleared with clearInterval(id) or its handle is unref()'d, so developers must track the returned interval ID and clear it when the associated work is no longer needed, such as on server shutdown or when a connection closes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "timers", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between setImmediate() and process.nextTick() in terms of intended use?",
+    "answer": "process.nextTick() is meant for very high-priority work that should happen before the event loop continues at all, often used internally by APIs to ensure a callback isn't called synchronously (maintaining consistent async behavior). setImmediate() is meant to defer work until after the current poll phase's I/O callbacks finish but still within the current loop cycle, useful for breaking up CPU-heavy work into chunks without starving I/O the way recursive nextTick calls can.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you measure how 'busy' or blocked the Node.js event loop is?",
+    "answer": "You can measure event loop lag/delay by scheduling a callback (e.g. with setImmediate or a timer) and measuring how much longer it took to fire than expected — a growing gap indicates the loop is busy with synchronous work. Node also exposes perf_hooks.monitorEventLoopDelay() for this, and APM tools/libraries like clinic.js or blocked-at build on similar techniques to flag blocking code in production.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might async/await make debugging stack traces easier compared to raw callback-based code?",
+    "answer": "Because async/await code is structured to look synchronous, an uncaught error's stack trace tends to reflect the logical call sequence of the async function, whereas deeply nested or chained callbacks often produce stack traces that only show the immediate callback context, losing the surrounding call history. Modern V8 also improves 'async stack traces' specifically to stitch together the awaited call chain for clearer debugging.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if you call an async function without awaiting or handling its returned promise?",
+    "answer": "The function still executes, but the caller has no way to know when it finishes or whether it threw — this is sometimes intentional 'fire and forget', but if the promise rejects and nothing else attaches a .catch() to it, it becomes an unhandled rejection, which in modern Node can crash the process.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the 'poll' phase of the Node event loop work?",
+    "answer": "The poll phase calculates how long it should block and wait for new I/O events (network connections, file reads, etc.), then processes events in its queue, executing their callbacks. If the poll queue is empty and there are setImmediate callbacks scheduled, it moves on to the check phase immediately rather than waiting; if there are pending timers whose thresholds have been reached, it also wraps up early so they can be processed on the next loop iteration.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you run several async tasks with a concurrency limit in Node.js (e.g., processing 1000 files but only 10 at a time)?",
+    "answer": "A common approach is to maintain a pool of 'worker' promises equal to the concurrency limit, each pulling the next item from a shared queue and processing it, then repeating until the queue is empty — effectively a manual worker-pool pattern. Libraries like p-limit or p-queue implement this pattern so you don't have to hand-roll it, wrapping each task call to enforce the limit transparently.",
+    "example": null,
+    "code": "async function processWithLimit(items, limit, fn) {\n  const queue = [...items];\n  const workers = Array.from({ length: limit }, async () => {\n    while (queue.length) await fn(queue.shift());\n  });\n  await Promise.all(workers);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "async", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between fs.readFile, fs.readFileSync, and fs.promises.readFile?",
+    "answer": "fs.readFile is the classic callback-based async API. fs.readFileSync blocks the thread until the read completes, returning the result directly. fs.promises.readFile (or the newer fs/promises module) is the promise-based async variant, letting you use await instead of a callback while remaining non-blocking — generally the preferred style in modern async/await codebases.",
+    "example": null,
+    "code": "import { readFile } from 'node:fs/promises';\nconst data = await readFile('file.txt', 'utf8');",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "async", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it recommended to avoid mixing callback-style and promise-style async code within the same function?",
+    "answer": "Mixing styles makes error handling inconsistent — errors from a callback path need an if (err) check while errors from a promise path need a .catch() or try/catch, and it's easy to forget one, letting an error silently disappear. It also makes control flow harder to reason about, since the two styles resume execution differently (callback invocation vs. microtask scheduling), so consistently picking one style (usually async/await) per function keeps the logic predictable.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common cause of an Express (or generic Node) server hanging and never responding to a request?",
+    "answer": "A frequent cause is an async route handler whose promise never settles — e.g. a database call awaiting a connection that never resolves, or a middleware that calls next() conditionally but misses a branch, leaving the response never sent and the connection open until a client-side timeout. Adding explicit request timeouts and ensuring every code path either responds or explicitly errors out helps prevent this.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "async", "express"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Node's event loop handle multiple timers scheduled with different delays?",
+    "answer": "Node maintains timers in a way that lets it process them in order of when they're due to fire; during the timers phase, it executes callbacks for any timer whose threshold has elapsed, in the order they expire. Because JS is single-threaded, if a callback earlier in the phase takes a long time, later timers due around the same moment will fire late, since the loop can't run two callbacks simultaneously.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "event-loop", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'async context' or AsyncLocalStorage used for in Node.js?",
+    "answer": "AsyncLocalStorage (from the 'async_hooks' module) lets you store and retrieve request-scoped data — like a request ID or authenticated user — that stays associated with a chain of asynchronous calls without having to explicitly pass it as a parameter through every function. It's commonly used for logging/tracing context in web servers, similar to thread-local storage in multi-threaded languages.",
+    "example": null,
+    "code": "const { AsyncLocalStorage } = require('async_hooks');\nconst als = new AsyncLocalStorage();\nals.run({ requestId: '123' }, () => {\n  // any async code here can call als.getStore() to read { requestId: '123' }\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "async", "async-hooks"],
+    "isFrequentlyAsked": false
+  }
+]

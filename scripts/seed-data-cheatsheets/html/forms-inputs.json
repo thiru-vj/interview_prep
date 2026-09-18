@@ -1,0 +1,222 @@
+[
+  {
+    "name": "<form>",
+    "syntax": "<form action=\"/submit\" method=\"post\">...</form>",
+    "description": "Groups related form controls and defines how their data is submitted to a server.",
+    "parameters": "action — URL to submit to. method — GET or POST. enctype — encoding, e.g. multipart/form-data for file uploads.",
+    "returns": null,
+    "example": "<form action=\"/login\" method=\"post\">\n  <input type=\"email\" name=\"email\" />\n  <button type=\"submit\">Log in</button>\n</form>",
+    "codeLanguage": "html",
+    "notes": "Pressing Enter in a text field submits the form even without clicking the submit button.",
+    "tags": ["html", "forms", "block"]
+  },
+  {
+    "name": "<input type=\"text\">",
+    "syntax": "<input type=\"text\" name=\"username\" />",
+    "description": "A single-line free text input field, the default input type when type is omitted.",
+    "parameters": "name — key used when submitting. value — initial/current text. maxlength — max character count.",
+    "returns": null,
+    "example": "<input type=\"text\" name=\"username\" maxlength=\"20\" />",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"email\">",
+    "syntax": "<input type=\"email\" name=\"email\" />",
+    "description": "A text input specialized for email addresses, with built-in format validation and an email-optimized mobile keyboard.",
+    "parameters": "multiple — allows a comma-separated list of addresses.",
+    "returns": null,
+    "example": "<input type=\"email\" name=\"email\" required />",
+    "codeLanguage": "html",
+    "notes": "Browser validation only checks for a basic name@domain shape, not that the address actually exists.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"password\">",
+    "syntax": "<input type=\"password\" name=\"pwd\" />",
+    "description": "A single-line text input that masks entered characters, used for sensitive values like passwords.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"password\" name=\"pwd\" minlength=\"8\" required />",
+    "codeLanguage": "html",
+    "notes": "Masking is visual only — always transmit and store the value securely (HTTPS, hashed on the server).",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"number\">",
+    "syntax": "<input type=\"number\" min=\"0\" max=\"10\" />",
+    "description": "A numeric input with increment/decrement controls and built-in min/max/step validation.",
+    "parameters": "min, max — allowed range. step — increment size.",
+    "returns": null,
+    "example": "<input type=\"number\" min=\"1\" max=\"5\" step=\"1\" value=\"1\" />",
+    "codeLanguage": "html",
+    "notes": "The value is always returned as a string in JS — convert with Number() before doing math.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"checkbox\">",
+    "syntax": "<input type=\"checkbox\" name=\"agree\" />",
+    "description": "A toggle control representing a boolean on/off choice, or one option among several independent selections.",
+    "parameters": "checked — sets it as pre-selected.",
+    "returns": null,
+    "example": "<label>\n  <input type=\"checkbox\" name=\"agree\" checked /> I agree\n</label>",
+    "codeLanguage": "html",
+    "notes": "Unchecked checkboxes aren't included in form submission data at all.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"radio\">",
+    "syntax": "<input type=\"radio\" name=\"plan\" value=\"pro\" />",
+    "description": "A mutually exclusive option button; only one radio with the same name can be selected at a time.",
+    "parameters": "name — groups radios together. value — value submitted when selected.",
+    "returns": null,
+    "example": "<input type=\"radio\" name=\"plan\" value=\"free\" checked /> Free\n<input type=\"radio\" name=\"plan\" value=\"pro\" /> Pro",
+    "codeLanguage": "html",
+    "notes": "All radios in a mutually exclusive group must share the same name.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"file\">",
+    "syntax": "<input type=\"file\" accept=\"image/*\" />",
+    "description": "Lets the user select one or more files from their device to upload.",
+    "parameters": "accept — allowed file types/extensions. multiple — allows selecting several files.",
+    "returns": null,
+    "example": "<input type=\"file\" accept=\".pdf,.docx\" multiple />",
+    "codeLanguage": "html",
+    "notes": "The enclosing <form> needs enctype=\"multipart/form-data\" for uploaded files to actually be sent.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"date\">",
+    "syntax": "<input type=\"date\" name=\"dob\" />",
+    "description": "Displays a native date picker and stores the value in ISO format (YYYY-MM-DD).",
+    "parameters": "min, max — allowed date range.",
+    "returns": null,
+    "example": "<input type=\"date\" name=\"dob\" min=\"1900-01-01\" max=\"2020-01-01\" />",
+    "codeLanguage": "html",
+    "notes": "Picker appearance is controlled entirely by the browser/OS and can't be styled beyond basic CSS.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"range\">",
+    "syntax": "<input type=\"range\" min=\"0\" max=\"100\" />",
+    "description": "A slider control for picking a numeric value within a range, when the exact number matters less than a rough position.",
+    "parameters": "min, max — range bounds. step — increment size.",
+    "returns": null,
+    "example": "<input type=\"range\" min=\"0\" max=\"100\" step=\"10\" value=\"50\" />",
+    "codeLanguage": "html",
+    "notes": "Doesn't show its current value visually — pair it with an output element or JS listener to display it.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<input type=\"color\">",
+    "syntax": "<input type=\"color\" value=\"#ff0000\" />",
+    "description": "Opens a native color picker and returns the selected color as a hex string.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"color\" name=\"theme\" value=\"#3366ff\" />",
+    "codeLanguage": "html",
+    "notes": "Always returns a 6-digit hex value, never supports alpha transparency.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<label>",
+    "syntax": "<label for=\"id\">Text</label>",
+    "description": "Provides a caption for a form control, improving accessibility and letting a click on the label focus the associated control.",
+    "parameters": "for — id of the associated form control (or wrap the control directly inside the label instead).",
+    "returns": null,
+    "example": "<label for=\"email\">Email</label>\n<input id=\"email\" type=\"email\" />",
+    "codeLanguage": "html",
+    "notes": "Every form control should have an associated label — placeholder text alone isn't accessible enough.",
+    "tags": ["html", "forms", "accessibility"]
+  },
+  {
+    "name": "<select>",
+    "syntax": "<select name=\"...\"><option>...</option></select>",
+    "description": "A dropdown control for choosing one (or, with multiple, several) values from a predefined list of <option> elements.",
+    "parameters": "multiple — allows selecting more than one option. size — number of visible rows.",
+    "returns": null,
+    "example": "<select name=\"country\">\n  <option value=\"us\">United States</option>\n  <option value=\"in\">India</option>\n</select>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<option>",
+    "syntax": "<option value=\"val\">Label</option>",
+    "description": "Defines a single choice within a <select> dropdown or a <datalist>.",
+    "parameters": "value — value submitted when selected. selected — pre-selects this option.",
+    "returns": null,
+    "example": "<option value=\"in\" selected>India</option>",
+    "codeLanguage": "html",
+    "notes": "If value is omitted, the option's text content is used as the submitted value.",
+    "tags": ["html", "forms"]
+  },
+  {
+    "name": "<textarea>",
+    "syntax": "<textarea rows=\"4\" cols=\"30\">text</textarea>",
+    "description": "A multi-line, resizable free text input field.",
+    "parameters": "rows/cols — visible size. maxlength — max character count.",
+    "returns": null,
+    "example": "<textarea name=\"bio\" rows=\"4\" placeholder=\"Tell us about yourself\"></textarea>",
+    "codeLanguage": "html",
+    "notes": "Unlike <input>, its default value is set via inner text content, not a value attribute.",
+    "tags": ["html", "forms", "input"]
+  },
+  {
+    "name": "<button>",
+    "syntax": "<button type=\"submit\">Save</button>",
+    "description": "A clickable control that can submit a form, reset it, or trigger custom JavaScript, depending on its type.",
+    "parameters": "type — submit (default inside a form), reset, or button (no default action).",
+    "returns": null,
+    "example": "<button type=\"button\" onclick=\"doThing()\">Click me</button>",
+    "codeLanguage": "html",
+    "notes": "Inside a <form>, a button defaults to type=\"submit\" — set type=\"button\" explicitly to avoid accidental submits.",
+    "tags": ["html", "forms", "javascript"]
+  },
+  {
+    "name": "<fieldset>",
+    "syntax": "<fieldset>...</fieldset>",
+    "description": "Groups a set of related form controls together, typically rendered with a surrounding border.",
+    "parameters": "disabled — disables every control nested inside it at once.",
+    "returns": null,
+    "example": "<fieldset>\n  <legend>Shipping address</legend>\n  <input type=\"text\" name=\"street\" />\n</fieldset>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "forms", "accessibility"]
+  },
+  {
+    "name": "<legend>",
+    "syntax": "<fieldset><legend>Title</legend>...</fieldset>",
+    "description": "Provides a caption for the contents of an enclosing <fieldset>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<legend>Payment details</legend>",
+    "codeLanguage": "html",
+    "notes": "Must be the first child of <fieldset>.",
+    "tags": ["html", "forms", "accessibility"]
+  },
+  {
+    "name": "required",
+    "syntax": "<input required />",
+    "description": "Marks a form control as mandatory, blocking form submission and showing a browser validation message until it's filled in.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"text\" name=\"name\" required />",
+    "codeLanguage": "html",
+    "notes": "Client-side only — always re-validate required fields on the server too.",
+    "tags": ["html", "forms", "validation"]
+  },
+  {
+    "name": "pattern",
+    "syntax": "<input pattern=\"[0-9]{5}\" />",
+    "description": "Restricts a text-like input's valid value to one matching a given regular expression.",
+    "parameters": "A JavaScript-flavored regex, without surrounding slashes.",
+    "returns": null,
+    "example": "<input type=\"text\" pattern=\"[0-9]{5}\" title=\"5-digit ZIP code\" />",
+    "codeLanguage": "html",
+    "notes": "Pair it with title so the browser's default validation message explains the expected format.",
+    "tags": ["html", "forms", "validation"]
+  }
+]

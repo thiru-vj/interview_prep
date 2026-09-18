@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Action object shape",
+    "syntax": "{ type: 'domain/eventName', payload?: any }",
+    "description": "A Redux action is a plain JavaScript object that describes 'what happened'. It must have a `type` field, typically a string, and may carry additional data needed to update state.",
+    "example": "{ type: 'todos/added', payload: { id: 1, text: 'Buy milk' } }",
+    "codeLanguage": "javascript",
+    "notes": "Actions are the only way to send data into the store — they must be dispatched, never applied directly.",
+    "tags": ["redux", "actions", "concepts"]
+  },
+  {
+    "name": "Action creator",
+    "syntax": "const actionCreator = (payload) => ({ type: 'todos/added', payload })",
+    "description": "A function that constructs and returns an action object, avoiding the need to hand-write the object literal at every dispatch call site.",
+    "returns": "A plain action object ready to be passed to dispatch().",
+    "example": "const addTodo = (text) => ({ type: 'todos/added', payload: text });\nstore.dispatch(addTodo('Buy milk'));",
+    "codeLanguage": "javascript",
+    "notes": "With Redux Toolkit's createSlice, action creators are generated automatically for each reducer you define.",
+    "tags": ["redux", "actions"]
+  },
+  {
+    "name": "Action types",
+    "syntax": "const TODO_ADDED = 'todos/added';",
+    "description": "String constants used as the `type` field of actions, conventionally namespaced as 'feature/event' (e.g. 'todos/added') to avoid collisions between reducers.",
+    "example": "export const TODO_ADDED = 'todos/added';\n// used as: { type: TODO_ADDED, payload: 'Buy milk' }",
+    "codeLanguage": "javascript",
+    "notes": "Defining types as constants avoids typos between where an action is dispatched and where it's handled in a reducer.",
+    "tags": ["redux", "actions"]
+  },
+  {
+    "name": "Flux Standard Action (FSA)",
+    "syntax": "{ type: string, payload?: any, error?: boolean, meta?: any }",
+    "description": "A convention for shaping action objects consistently: a required `type`, an optional `payload` for the data, an optional `error` boolean, and an optional `meta` for extra context that isn't part of the payload.",
+    "example": "{ type: 'todos/addFailed', payload: new Error('Network error'), error: true }",
+    "codeLanguage": "javascript",
+    "notes": "Redux Toolkit's createAction/createSlice generate FSA-compliant actions by default.",
+    "tags": ["redux", "actions", "conventions"]
+  },
+  {
+    "name": "Dispatching actions",
+    "syntax": "dispatch(actionCreator(args))",
+    "description": "The process of sending an action to the store via store.dispatch (or the useDispatch hook in React) so the reducer can compute new state.",
+    "example": "import { useDispatch } from 'react-redux';\nconst dispatch = useDispatch();\ndispatch(addTodo('Buy milk'));",
+    "codeLanguage": "javascript",
+    "notes": "With thunk middleware installed, dispatch can also accept a function (a thunk) instead of a plain action object, enabling async logic.",
+    "tags": ["redux", "actions", "dispatch"]
+  },
+  {
+    "name": "createAction()",
+    "syntax": "createAction(type, prepareCallback?)",
+    "description": "A Redux Toolkit utility that generates an FSA-compliant action creator for a given action type string, optionally using a 'prepare' callback to customize the payload.",
+    "parameters": "type — the action type string. prepareCallback — optional function that returns the { payload, meta } shape.",
+    "returns": "An action creator function with a `.type` property and a `.match()` type-guard method.",
+    "example": "import { createAction } from '@reduxjs/toolkit';\nconst todoAdded = createAction('todos/added');\ntodoAdded('Buy milk'); // { type: 'todos/added', payload: 'Buy milk' }",
+    "codeLanguage": "javascript",
+    "notes": "createSlice generates these for you automatically, so createAction is mostly used standalone outside of slices.",
+    "tags": ["redux", "actions", "redux-toolkit"]
+  }
+]

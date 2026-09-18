@@ -1,0 +1,156 @@
+[
+  {
+    "name": "--custom-property (CSS variable)",
+    "syntax": "--name: value;",
+    "description": "Declares a reusable custom value that can be referenced anywhere in the stylesheet via var(), and can be scoped or overridden per element.",
+    "parameters": null,
+    "returns": null,
+    "example": ":root {\n  --brand-color: #6366f1;\n}",
+    "codeLanguage": "css",
+    "notes": "Unlike Sass variables, CSS custom properties are live in the DOM and can be read/changed with JavaScript or media queries.",
+    "tags": ["css", "custom-properties", "variables"]
+  },
+  {
+    "name": "var()",
+    "syntax": "var(--name, fallback)",
+    "description": "Reads the value of a CSS custom property, optionally falling back to a default if the property isn't defined.",
+    "parameters": "--name — the custom property to read. fallback — optional value used if the property is unset.",
+    "returns": null,
+    "example": ".button {\n  color: var(--brand-color, blue);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "custom-properties", "variables"]
+  },
+  {
+    "name": "calc()",
+    "syntax": "calc(expression)",
+    "description": "Performs arithmetic (+, -, *, /) between mixed units directly inside a CSS value.",
+    "parameters": null,
+    "returns": null,
+    "example": ".sidebar {\n  width: calc(100% - 250px);\n}",
+    "codeLanguage": "css",
+    "notes": "Whitespace is required around + and - operators inside calc(), or the expression is invalid.",
+    "tags": ["css", "functions", "calc"]
+  },
+  {
+    "name": ":root",
+    "syntax": ":root { }",
+    "description": "Matches the document's root element (html), typically used as the conventional place to declare global custom properties.",
+    "parameters": null,
+    "returns": null,
+    "example": ":root {\n  --spacing-unit: 8px;\n}",
+    "codeLanguage": "css",
+    "notes": "Behaves like the html selector but with higher specificity.",
+    "tags": ["css", "selectors", "custom-properties"]
+  },
+  {
+    "name": "Specificity",
+    "syntax": null,
+    "description": "The algorithm browsers use to decide which CSS rule wins when multiple rules target the same element, ranked roughly as inline styles > IDs > classes/attributes/pseudo-classes > element type selectors.",
+    "parameters": null,
+    "returns": null,
+    "example": "#nav .link { color: red; } /* wins over */ .link { color: blue; }",
+    "codeLanguage": "css",
+    "notes": "!important and inline styles override normal specificity rules entirely, which is why overusing them makes CSS hard to maintain.",
+    "tags": ["css", "concepts", "specificity"]
+  },
+  {
+    "name": "Cascade",
+    "syntax": null,
+    "description": "The process by which browsers combine multiple CSS sources — origin (browser/author/user), specificity, and source order — to determine the final value of each property.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": null,
+    "notes": "When specificity is equal, the rule declared later in the source order wins.",
+    "tags": ["css", "concepts", "cascade"]
+  },
+  {
+    "name": "Inheritance",
+    "syntax": null,
+    "description": "Certain CSS properties, mostly text-related ones like color and font-family, are automatically passed down from a parent element to its children unless explicitly overridden.",
+    "parameters": null,
+    "returns": null,
+    "example": "body {\n  font-family: sans-serif;\n} /* inherited by all descendant text */",
+    "codeLanguage": "css",
+    "notes": "Layout properties like margin, padding, and border do not inherit by default; the inherit keyword can force any property to inherit explicitly.",
+    "tags": ["css", "concepts", "inheritance"]
+  },
+  {
+    "name": "Box model",
+    "syntax": null,
+    "description": "The model describing how an element's total rendered size is composed of its content, padding, border, and margin layers.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": null,
+    "notes": "By default (content-box), width/height apply only to the content area — box-sizing: border-box makes them include padding and border instead.",
+    "tags": ["css", "concepts", "box-model"]
+  },
+  {
+    "name": "CSS units (absolute vs relative)",
+    "syntax": null,
+    "description": "CSS supports absolute units like px, which are fixed regardless of context, and relative units like %, em, rem, vw, and vh, which scale based on another value such as the parent, root, or viewport.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": null,
+    "notes": "Relative units are generally preferred for responsive, accessible layouts since they scale with user font-size preferences and viewport changes.",
+    "tags": ["css", "concepts", "units"]
+  },
+  {
+    "name": "!important",
+    "syntax": "property: value !important;",
+    "description": "Forces a declaration to override any other declaration for the same property, regardless of normal specificity rules.",
+    "parameters": null,
+    "returns": null,
+    "example": ".alert {\n  color: red !important;\n}",
+    "codeLanguage": "css",
+    "notes": "Generally considered a last resort — overusing it makes styles hard to override and debug later.",
+    "tags": ["css", "concepts", "specificity"]
+  },
+  {
+    "name": "CSS reset / normalize",
+    "syntax": null,
+    "description": "A base stylesheet applied first that removes or normalizes inconsistent default browser styling (margins, list bullets, font sizing) so components render predictably across browsers.",
+    "parameters": null,
+    "returns": null,
+    "example": "* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "concepts", "reset"]
+  },
+  {
+    "name": "Shorthand properties",
+    "syntax": null,
+    "description": "Properties like margin, background, font, and border that let you set several related longhand properties in a single declaration.",
+    "parameters": null,
+    "returns": null,
+    "example": "margin: 10px 20px; /* top/bottom: 10px, left/right: 20px */",
+    "codeLanguage": "css",
+    "notes": "Omitted values in a shorthand reset to their initial value, which can accidentally undo an earlier longhand declaration.",
+    "tags": ["css", "concepts", "shorthand"]
+  },
+  {
+    "name": "currentColor",
+    "syntax": "property: currentColor;",
+    "description": "A keyword that resolves to the element's own computed color value, useful for keeping borders, shadows, or fills in sync with text color.",
+    "parameters": null,
+    "returns": null,
+    "example": ".icon {\n  color: blue;\n  border: 1px solid currentColor;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "color", "keyword"]
+  },
+  {
+    "name": "Comments (/* */)",
+    "syntax": "/* comment text */",
+    "description": "Marks text as a comment that is ignored by the browser, used to document or temporarily disable CSS rules.",
+    "parameters": null,
+    "returns": null,
+    "example": "/* TODO: replace with design tokens */\n.button {\n  color: blue;\n}",
+    "codeLanguage": "css",
+    "notes": "CSS has no single-line // comment syntax — only the /* */ block form.",
+    "tags": ["css", "syntax", "comments"]
+  }
+]

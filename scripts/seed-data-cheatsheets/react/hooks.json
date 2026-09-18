@@ -1,0 +1,167 @@
+[
+  {
+    "name": "useState()",
+    "syntax": "const [state, setState] = useState(initialValue);",
+    "description": "A Hook that adds local state to a function component, returning the current value and a setter function to update it and trigger a re-render.",
+    "parameters": "initialValue — the state's value on first render, or a function returning it (lazy initialization).",
+    "returns": "A [state, setState] tuple.",
+    "example": "const [count, setCount] = useState(0);\n<button onClick={() => setCount(count + 1)}>{count}</button>;",
+    "codeLanguage": "jsx",
+    "notes": "setState triggers a re-render even if given the same primitive value; use the functional form `setCount(c => c + 1)` when updating based on the previous value.",
+    "tags": ["react", "hooks", "state"]
+  },
+  {
+    "name": "useEffect()",
+    "syntax": "useEffect(() => { /* effect */ return cleanup; }, [deps]);",
+    "description": "A Hook for running side effects (data fetching, subscriptions, manually changing the DOM) after render, optionally cleaning up before the next run or on unmount.",
+    "parameters": "effect — function to run after commit. deps — optional array controlling when the effect re-runs.",
+    "returns": "undefined.",
+    "example": "useEffect(() => {\n  const id = setInterval(tick, 1000);\n  return () => clearInterval(id);\n}, []);",
+    "codeLanguage": "jsx",
+    "notes": "Omitting the dependency array runs the effect after every render; an empty array `[]` runs it once on mount.",
+    "tags": ["react", "hooks", "side-effects"]
+  },
+  {
+    "name": "useContext()",
+    "syntax": "const value = useContext(MyContext);",
+    "description": "A Hook that reads and subscribes to a Context's current value from the nearest matching Provider above the component in the tree.",
+    "parameters": "MyContext — a context object created with createContext().",
+    "returns": "The current context value.",
+    "example": "const ThemeContext = createContext('light');\n\nfunction Toolbar() {\n  const theme = useContext(ThemeContext);\n  return <div className={theme}>...</div>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "The component re-renders whenever the Provider's value changes, even if the component only uses part of that value.",
+    "tags": ["react", "hooks", "context"]
+  },
+  {
+    "name": "useRef()",
+    "syntax": "const ref = useRef(initialValue);",
+    "description": "A Hook that returns a mutable object with a `.current` property, persisting across renders without causing a re-render when it changes. Commonly used to access DOM nodes or store mutable values.",
+    "parameters": "initialValue — the starting value of ref.current.",
+    "returns": "A mutable ref object: { current: initialValue }.",
+    "example": "function TextInput() {\n  const inputRef = useRef(null);\n  const focus = () => inputRef.current.focus();\n  return <input ref={inputRef} />;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Updating ref.current does not trigger a re-render, unlike state — use it for values that shouldn't affect rendering.",
+    "tags": ["react", "hooks", "refs"]
+  },
+  {
+    "name": "useMemo()",
+    "syntax": "const memoized = useMemo(() => computeExpensive(a, b), [a, b]);",
+    "description": "A Hook that memoizes the result of an expensive calculation, only recomputing it when one of the listed dependencies changes.",
+    "parameters": "factory — function that computes the value. deps — array of values the calculation depends on.",
+    "returns": "The memoized value.",
+    "example": "const sorted = useMemo(() => [...items].sort(compare), [items]);",
+    "codeLanguage": "jsx",
+    "notes": "Only use it for genuinely expensive computations or to preserve referential equality — overusing useMemo adds overhead without benefit.",
+    "tags": ["react", "hooks", "performance"]
+  },
+  {
+    "name": "useCallback()",
+    "syntax": "const memoizedFn = useCallback(() => doSomething(a), [a]);",
+    "description": "A Hook that returns a memoized version of a callback function, keeping the same function reference across renders as long as its dependencies don't change.",
+    "parameters": "callback — the function to memoize. deps — array of values the callback depends on.",
+    "returns": "The memoized function.",
+    "example": "const handleClick = useCallback(() => {\n  onSelect(id);\n}, [onSelect, id]);",
+    "codeLanguage": "jsx",
+    "notes": "Mainly useful when passing callbacks to memoized children (React.memo) to avoid unnecessary re-renders, or as a dependency of another Hook.",
+    "tags": ["react", "hooks", "performance"]
+  },
+  {
+    "name": "useReducer()",
+    "syntax": "const [state, dispatch] = useReducer(reducer, initialState);",
+    "description": "A Hook for managing more complex state logic via a reducer function, similar to Redux, dispatching actions instead of setting state directly.",
+    "parameters": "reducer — (state, action) => newState. initialState — the starting state, or an init function's result.",
+    "returns": "A [state, dispatch] tuple.",
+    "example": "function reducer(state, action) {\n  switch (action.type) {\n    case 'increment': return { count: state.count + 1 };\n    default: return state;\n  }\n}\n\nconst [state, dispatch] = useReducer(reducer, { count: 0 });\ndispatch({ type: 'increment' });",
+    "codeLanguage": "jsx",
+    "notes": "Preferred over useState when state has multiple sub-values or the next state depends on complex logic involving the previous one.",
+    "tags": ["react", "hooks", "state"]
+  },
+  {
+    "name": "useLayoutEffect()",
+    "syntax": "useLayoutEffect(() => { /* effect */ }, [deps]);",
+    "description": "Identical to useEffect, but fires synchronously after DOM mutations and before the browser paints, letting you measure or adjust layout without a visible flicker.",
+    "parameters": "effect — function to run synchronously after DOM updates. deps — optional dependency array.",
+    "returns": "undefined.",
+    "example": "useLayoutEffect(() => {\n  const { height } = ref.current.getBoundingClientRect();\n  setHeight(height);\n}, []);",
+    "codeLanguage": "jsx",
+    "notes": "Blocks the browser paint until it finishes, so overusing it can hurt performance — prefer useEffect unless you specifically need to avoid a visual flash.",
+    "tags": ["react", "hooks", "dom"]
+  },
+  {
+    "name": "Custom Hooks",
+    "syntax": "function useCustomThing() { /* uses other hooks */ return value; }",
+    "description": "A JavaScript function whose name starts with `use` and that calls other Hooks internally, letting you extract and reuse stateful logic across components.",
+    "parameters": null,
+    "returns": "Whatever the custom hook chooses to return — state, functions, derived values, etc.",
+    "example": "function useWindowWidth() {\n  const [width, setWidth] = useState(window.innerWidth);\n  useEffect(() => {\n    const onResize = () => setWidth(window.innerWidth);\n    window.addEventListener('resize', onResize);\n    return () => window.removeEventListener('resize', onResize);\n  }, []);\n  return width;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Custom hooks share logic, not state — each component calling the hook gets its own independent state instance.",
+    "tags": ["react", "hooks", "reuse"]
+  },
+  {
+    "name": "Rules of Hooks",
+    "syntax": null,
+    "description": "Hooks must only be called at the top level of a function component or another Hook — never inside loops, conditions, or nested functions — so React can reliably match hook calls to state across renders.",
+    "parameters": null,
+    "returns": null,
+    "example": "// wrong: conditional hook call\nif (isLoggedIn) {\n  useEffect(() => {...});\n}",
+    "codeLanguage": "jsx",
+    "notes": "The `eslint-plugin-react-hooks` package's `rules-of-hooks` rule catches most violations automatically.",
+    "tags": ["react", "hooks", "best-practices"]
+  },
+  {
+    "name": "useId()",
+    "syntax": "const id = useId();",
+    "description": "A Hook that generates a unique, stable ID string, useful for associating labels/inputs or other accessibility attributes, and safe for server-side rendering.",
+    "parameters": null,
+    "returns": "A unique string ID stable across re-renders.",
+    "example": "function EmailField() {\n  const id = useId();\n  return (\n    <>\n      <label htmlFor={id}>Email</label>\n      <input id={id} type=\"email\" />\n    </>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Don't use useId to generate keys for list items — use data-derived keys instead.",
+    "tags": ["react", "hooks", "accessibility"]
+  },
+  {
+    "name": "useTransition()",
+    "syntax": "const [isPending, startTransition] = useTransition();",
+    "description": "A Hook that marks a state update as a non-urgent 'transition', letting React keep the UI responsive by deprioritizing that update behind more urgent ones.",
+    "parameters": null,
+    "returns": "A [isPending, startTransition] tuple, where isPending is true while the transition is in progress.",
+    "example": "const [isPending, startTransition] = useTransition();\n\nfunction handleChange(value) {\n  startTransition(() => setFilteredList(filter(value)));\n}",
+    "codeLanguage": "jsx",
+    "notes": "Useful for expensive re-renders (like filtering a large list) triggered by fast user input, so typing itself stays smooth.",
+    "tags": ["react", "hooks", "performance"]
+  },
+  {
+    "name": "useDeferredValue()",
+    "syntax": "const deferredValue = useDeferredValue(value);",
+    "description": "A Hook that returns a lagging copy of a value, letting React defer re-rendering parts of the UI that depend on it until more urgent updates finish.",
+    "parameters": "value — the value to defer.",
+    "returns": "A deferred version of the value that updates after urgent renders complete.",
+    "example": "const deferredQuery = useDeferredValue(query);\nreturn <SearchResults query={deferredQuery} />;",
+    "codeLanguage": "jsx",
+    "notes": "Similar in spirit to useTransition, but used when you don't control the state update itself (e.g. a value coming from a parent or library).",
+    "tags": ["react", "hooks", "performance"]
+  },
+  {
+    "name": "useImperativeHandle()",
+    "syntax": "useImperativeHandle(ref, () => ({ focus, reset }), [deps]);",
+    "description": "A Hook used with forwardRef to customize the instance value exposed to a parent's ref, exposing only specific imperative methods instead of the raw DOM node.",
+    "parameters": "ref — the ref forwarded from the parent. createHandle — function returning the object to expose. deps — dependency array.",
+    "returns": "undefined.",
+    "example": "const FancyInput = forwardRef((props, ref) => {\n  const inputRef = useRef(null);\n  useImperativeHandle(ref, () => ({\n    focus: () => inputRef.current.focus(),\n  }));\n  return <input ref={inputRef} />;\n});",
+    "codeLanguage": "jsx",
+    "notes": "Use sparingly — imperative APIs go against React's declarative model and should be reserved for cases like focus management or animations.",
+    "tags": ["react", "hooks", "refs"]
+  },
+  {
+    "name": "useSyncExternalStore()",
+    "syntax": "const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);",
+    "description": "A Hook for safely reading and subscribing to state held in a store outside React (e.g. browser APIs or third-party state libraries), avoiding tearing during concurrent rendering.",
+    "parameters": "subscribe — function to register a callback for store changes. getSnapshot — returns the current value. getServerSnapshot — optional snapshot for SSR.",
+    "returns": "The current snapshot value from the external store.",
+    "example": "function useOnlineStatus() {\n  return useSyncExternalStore(\n    cb => { window.addEventListener('online', cb); window.addEventListener('offline', cb); return () => { window.removeEventListener('online', cb); window.removeEventListener('offline', cb); }; },\n    () => navigator.onLine\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Most state management libraries (Redux, Zustand) use this internally so their hooks work correctly with concurrent React features.",
+    "tags": ["react", "hooks", "external-store"]
+  }
+]

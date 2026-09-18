@@ -54,3 +54,51 @@ export interface TopicWithCount extends Topic {
 export interface LanguageWithCount extends Language {
   question_count: number
 }
+
+export interface CheatsheetTechnology {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  icon: string | null
+  display_order: number
+  created_at: string
+}
+
+export interface CheatsheetCategory {
+  id: string
+  technology_id: string
+  name: string
+  slug: string
+  description: string | null
+  display_order: number
+  created_at: string
+}
+
+export interface CheatsheetItem {
+  id: string
+  category_id: string
+  technology_id: string
+  name: string
+  slug: string
+  syntax: string | null
+  description: string
+  parameters: string | null
+  returns: string | null
+  example: string | null
+  code_language: string | null
+  notes: string | null
+  tags: string[] | null
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface CheatsheetTechnologyWithCount extends CheatsheetTechnology {
+  item_count: number
+}
+
+/** A category joined with the items that belong to it, used to render a technology's full cheatsheet in one page. */
+export interface CheatsheetCategoryWithItems extends CheatsheetCategory {
+  items: CheatsheetItem[]
+}

@@ -12,6 +12,7 @@ No login. No signup. No user accounts. Just browse a language, pick a topic (or 
 - Difficulty filter (`All` / `Easy` / `Medium` / `Hard`) reflected in the URL, so filtered/paginated views are shareable
 - Question detail pages with Markdown-rendered answers, optional example, optional syntax-highlighted code (with a copy button), and tags
 - **Frequently Asked** flag — a curated/toggleable subset of "classic" questions, filterable in the URL (`?faq=true`) and shown with a badge on cards and detail pages
+- **Cheatsheets** — quick-reference methods/tags/concepts per technology (JavaScript, HTML, CSS, React, Redux, Zustand, DOM), separate from the Q&A content. Toggle between a compact **Normal** mode (names only) and an **Explanation** mode (description, syntax, parameters, return value, example, notes), filter by category, and search — all client-side once a technology's cheatsheet loads
 - **Previous / Next** navigation that stays within the user's current browsing context (a topic, or the whole language)
 - Breadcrumb navigation on every page
 - Light/dark theme, remembered in `localStorage`
@@ -45,24 +46,31 @@ src/
 │   ├── question/      QuestionCard, QuestionList, QuestionDetail, QuestionCode, QuestionNavigation, DifficultyFilter
 │   ├── search/         SearchBar
 │   ├── pagination/    Pagination
+│   ├── cheatsheet/    CheatsheetTechnologyCard/Grid, CheatsheetItemCard, CheatsheetModeToggle,
+│   │                   CheatsheetCategoryFilter, CheatsheetSearchInput
 │   └── common/        LoadingState, ErrorState, EmptyState, NotFoundState, ThemeToggle, DifficultyBadge,
 │                       Breadcrumbs, Seo, Markdown, ScrollToTop
-├── pages/              Home, Languages, Language, Topic, Question, Search, NotFound
+├── pages/              Home, Languages, Language, Topic, Question, Cheatsheets, CheatsheetTechnology, Search, NotFound
 ├── hooks/               useLanguages, useLanguage, useTopics, useTopic, useQuestions (by language/topic),
-│                        useQuestion, useAdjacentQuestions, useSearchQuestions, useTheme, useAsync
-├── services/            languageService, topicService, questionService — the only files that talk to Supabase
+│                        useQuestion, useAdjacentQuestions, useSearchQuestions, useCheatsheetTechnologies,
+│                        useCheatsheetTechnology, useTheme, useAsync
+├── services/            languageService, topicService, questionService, cheatsheetService — the only files that talk to Supabase
 ├── lib/supabase.ts      Supabase client (anon key only)
 ├── types/database.ts    Database row types
 └── utils/                pagination helpers, icon lookup
 
 supabase/
-├── schema.sql            Tables, constraints, indexes, RLS policies
-├── seed.sql              Languages, topics, and the original 120 hand-written questions (idempotent)
-└── seed-frontend.sql     Generated: ~300 more JavaScript + ~300 more React questions (see below)
+├── schema.sql                  Tables, constraints, indexes, RLS policies (Q&A + cheatsheets)
+├── seed.sql                    Languages, topics, and the original 120 hand-written questions (idempotent)
+├── seed-frontend.sql           Generated: bulk questions for JavaScript/React/HTML/CSS/Tailwind/Next.js/Node.js (see below)
+├── seed-cheatsheets.sql        Cheatsheet technologies + categories (idempotent, hand-written)
+└── seed-cheatsheets-items.sql  Generated: cheatsheet items (see below)
 
 scripts/
-├── generate-seed.mjs     Reads scripts/seed-data/**/*.json → writes supabase/seed-frontend.sql
-└── seed-data/            JSON question banks, one file per language/topic — edit these, not the generated SQL
+├── generate-seed.mjs             Reads scripts/seed-data/**/*.json → writes supabase/seed-frontend.sql
+├── seed-data/                    JSON question banks, one file per language/topic — edit these, not the generated SQL
+├── generate-cheatsheet-seed.mjs  Reads scripts/seed-data-cheatsheets/**/*.json → writes supabase/seed-cheatsheets-items.sql
+└── seed-data-cheatsheets/        JSON cheatsheet banks, one file per technology/category — edit these, not the generated SQL
 ```
 
 Components never call Supabase directly — they call hooks, which call the `services/` layer. This keeps the data-access logic in one place, and makes it easy to swap or extend later.
@@ -100,16 +108,18 @@ Only the **anon/public** key is ever used in the frontend. Row Level Security (s
 
 1. Create a new project at [supabase.com](https://supabase.com).
 2. Open the **SQL Editor** in your project.
-3. Run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `languages`, `topics` and `questions` tables, indexes, a full-text search column, and Row Level Security policies that allow public `SELECT` only.
-4. Run the contents of [`supabase/seed.sql`](supabase/seed.sql). This seeds 4 languages, their topics, and the original 120 interview questions, and marks a curated set of them as "Frequently Asked". The script upserts by slug (`on conflict ... do update`), so it's safe to re-run any time you edit it during development.
-5. Run the contents of [`supabase/seed-frontend.sql`](supabase/seed-frontend.sql). This adds ~300 more JavaScript questions and ~300 more React questions on top of step 4 (generated from `scripts/seed-data/` — see [Generating More Seed Data](#generating-more-seed-data) below). Also idempotent; safe to re-run.
-6. In your Supabase project settings, copy the **Project URL** and the **anon public** API key.
-7. Paste them into your local `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-8. Run `npm run dev` and open the printed local URL.
+3. Run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `languages`, `topics`, `questions`, `cheatsheet_technologies`, `cheatsheet_categories` and `cheatsheet_items` tables, indexes, a full-text search column, and Row Level Security policies that allow public `SELECT` only.
+4. Run the contents of [`supabase/seed.sql`](supabase/seed.sql). This seeds the languages, their topics, and the original hand-written interview questions, and marks a curated set of them as "Frequently Asked". The script upserts by slug (`on conflict ... do update`), so it's safe to re-run any time you edit it during development.
+5. Run the contents of [`supabase/seed-frontend.sql`](supabase/seed-frontend.sql). This adds bulk-generated questions on top of step 4 (generated from `scripts/seed-data/` — see [Generating More Seed Data](#generating-more-seed-data) below). Also idempotent; safe to re-run.
+6. Run the contents of [`supabase/seed-cheatsheets.sql`](supabase/seed-cheatsheets.sql). This seeds the cheatsheet technologies and their categories. Idempotent; safe to re-run.
+7. Run the contents of [`supabase/seed-cheatsheets-items.sql`](supabase/seed-cheatsheets-items.sql). This adds the cheatsheet entries themselves (generated from `scripts/seed-data-cheatsheets/` — same generator pattern as step 5). Also idempotent; safe to re-run.
+8. In your Supabase project settings, copy the **Project URL** and the **anon public** API key.
+9. Paste them into your local `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+10. Run `npm run dev` and open the printed local URL.
 
 ### Row Level Security
 
-RLS is enabled on all three tables. There is a `SELECT` policy for the `anon` and `authenticated` roles on each table, and no `INSERT`/`UPDATE`/`DELETE` policies — so those operations are denied by default for anyone using the anon key. Content is managed exclusively through the Supabase SQL Editor (or, in a future version, an admin app using the service-role key server-side).
+RLS is enabled on all six tables. There is a `SELECT` policy for the `anon` and `authenticated` roles on each table, and no `INSERT`/`UPDATE`/`DELETE` policies — so those operations are denied by default for anyone using the anon key. Content is managed exclusively through the Supabase SQL Editor (or, in a future version, an admin app using the service-role key server-side).
 
 ## Adding a New Language
 
@@ -175,7 +185,7 @@ Notes:
 - `difficulty` must be `easy`, `medium`, or `hard` (enforced by a check constraint).
 - `example` and `code` are optional — leave them `null` if not needed; the UI only renders sections that have content.
 - `answer` and `example` support Markdown (rendered safely via `rehype-sanitize` — never `dangerouslySetInnerHTML`).
-- `code_language` drives syntax highlighting; the registered languages are `java`, `javascript`, `typescript`, `jsx`, `tsx`, and `sql` (see `src/components/question/QuestionCode.tsx` to register more).
+- `code_language` drives syntax highlighting; the registered languages are `java`, `javascript`, `typescript`, `jsx`, `tsx`, `sql`, `html` and `css` (see `src/components/question/QuestionCode.tsx` to register more).
 - `is_frequently_asked` (`boolean`, defaults `false`) drives the "Frequently Asked" badge and `?faq=true` filter — set it `true` for genuinely common/classic questions only.
 - **Watch out for `\n` in string literals:** plain `'...'` strings in Postgres do **not** interpret backslash escapes (`standard_conforming_strings` is on by default), so a literal `\n` inside a `'...'`-quoted `code`/`example` value is stored as the two characters `\` and `n`, not a line break. Either put a real newline directly inside the quoted string (spanning multiple physical lines, as `supabase/seed.sql` and the generated `seed-frontend.sql` both do), or use Postgres's `E'...'` escape-string syntax if you want literal `\n` sequences interpreted.
 
@@ -188,6 +198,31 @@ For bulk additions (e.g. expanding a language by dozens/hundreds of questions), 
 3. Run the regenerated `supabase/seed-frontend.sql` in the Supabase SQL Editor. It upserts by slug, so it's safe to re-run any time you regenerate it.
 
 Currently this powers the JavaScript and React question banks (~300 questions each, on top of the original 5-per-topic hand-written set), but the same mechanism works for any language/topic — just point it at a new `scripts/seed-data/<language-slug>/` directory.
+
+## Cheatsheets
+
+The Cheatsheets feature (`/cheatsheets`) is a separate content type from the Q&A above — quick-reference methods/tags/concepts per technology, not questions and answers — backed by its own tables (`cheatsheet_technologies`, `cheatsheet_categories`, `cheatsheet_items`) so libraries like Redux/Zustand/DOM don't need to be (and shouldn't be) `languages` rows.
+
+**Adding a technology or category** — same idempotent-SQL pattern as languages/topics:
+
+```sql
+insert into public.cheatsheet_technologies (name, slug, description, icon, display_order)
+values ('Python', 'python', 'Quick-reference Python built-ins and standard library.', 'file-code-2', 8)
+on conflict (slug) do nothing;
+
+insert into public.cheatsheet_categories (technology_id, name, slug, description, display_order)
+select id, 'Built-in Functions', 'builtins', 'Commonly used built-in functions.', 1
+from public.cheatsheet_technologies where slug = 'python'
+on conflict (technology_id, slug) do nothing;
+```
+
+**Adding items in bulk** — same JSON + generator workflow as questions:
+
+1. Add or edit a file at `scripts/seed-data-cheatsheets/<technology-slug>/<category-slug>.json` — a plain JSON array of item objects. See [`scripts/seed-data-cheatsheets/README.md`](scripts/seed-data-cheatsheets/README.md) for the exact schema and content guidelines.
+2. Run `npm run seed:cheatsheet:generate`. This validates every entry and writes `supabase/seed-cheatsheets-items.sql`.
+3. Run the regenerated `supabase/seed-cheatsheets-items.sql` in the Supabase SQL Editor. It upserts by slug, so it's safe to re-run any time you regenerate it.
+
+`code_language` on a cheatsheet item's `example` uses the same registered set as questions (see above). Both `syntax`, `parameters`, `returns`, `example` and `notes` are optional — a conceptual entry (e.g. "Closures") may only need a `description`.
 
 ## Deployment
 

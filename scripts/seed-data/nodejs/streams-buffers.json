@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is a Stream in Node.js, and why are they used instead of loading a whole file into memory?",
+    "answer": "A Stream is an abstraction for handling data that arrives incrementally, in chunks, rather than all at once — used for reading/writing files, HTTP request/response bodies, and more. Streams let you start processing data before the entire source has been read and keep memory usage bounded, which matters a lot for large files or long-lived connections where loading everything into memory at once would be wasteful or impossible.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the four fundamental types of streams in Node.js?",
+    "answer": "Readable streams produce data you can consume (e.g. fs.createReadStream). Writable streams accept data you write to them (e.g. fs.createWriteStream). Duplex streams are both readable and writable, treated as independent channels (e.g. a TCP socket). Transform streams are a special kind of Duplex where the output is computed from the input as it passes through (e.g. a gzip compressor).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the purpose of the .pipe() method on a Readable stream?",
+    "answer": ".pipe() connects a readable stream's output directly to a writable stream's input, automatically handling the reading, writing, and — critically — backpressure (pausing the source when the destination is overwhelmed) without you needing to manually manage 'data' events and write() calls. It's the idiomatic way to move data between streams, such as piping a file read stream into an HTTP response.",
+    "example": null,
+    "code": "const fs = require('fs');\nfs.createReadStream('input.txt').pipe(fs.createWriteStream('output.txt'));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is backpressure in the context of Node.js streams, and why does it matter?",
+    "answer": "Backpressure is what happens when a writable destination can't consume data as fast as a readable source produces it — without handling it, the source would keep pushing data into memory faster than it can be written out, causing unbounded memory growth. Streams handle this by having write() return false when the internal buffer is full, signaling the source to pause until a 'drain' event fires; .pipe() manages this automatically.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "backpressure"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between 'flowing' and 'paused' mode for a Readable stream?",
+    "answer": "In flowing mode, data is read from the underlying source and pushed to consumers as fast as possible, typically triggered by attaching a 'data' event listener or calling .pipe(). In paused mode (the default), data must be explicitly pulled by calling .read(), giving the consumer manual control over the pace of consumption — streams start paused and switch to flowing when a 'data' listener is added, .resume() is called, or .pipe() is used.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you create a custom Transform stream, and what's a typical use case?",
+    "answer": "You extend the Transform class (or use the transform constructor option) and implement a _transform(chunk, encoding, callback) method that processes each incoming chunk and calls callback(null, transformedChunk) to push output downstream. A typical use case is a line-by-line text processor, a CSV parser, or a stream that uppercases/encrypts/compresses data as it flows through.",
+    "example": null,
+    "code": "const { Transform } = require('stream');\nconst upper = new Transform({\n  transform(chunk, encoding, callback) {\n    callback(null, chunk.toString().toUpperCase());\n  },\n});\nprocess.stdin.pipe(upper).pipe(process.stdout);",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "transform"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a Buffer in Node.js, and how does it relate to TypedArrays like Uint8Array?",
+    "answer": "A Buffer represents a fixed-length sequence of raw bytes in memory, outside V8's usual JS-string encoding, used for handling binary data such as file contents or network payloads. Modern Node implements Buffer as a subclass of JavaScript's built-in Uint8Array, adding Node-specific convenience methods (like .toString(encoding) and Buffer.concat()) on top of the standard typed array behavior.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "buffer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the different ways to create a Buffer, and which is generally recommended?",
+    "answer": "Buffer.from(data) creates a buffer from a string, array, or existing buffer (and is the recommended, safe approach). Buffer.alloc(size) creates a zero-filled buffer of a given size, safe by default but slightly slower. Buffer.allocUnsafe(size) creates an uninitialized buffer faster, but its contents are leftover memory that must be fully overwritten before use, since it could otherwise expose old, potentially sensitive data.",
+    "example": null,
+    "code": "const a = Buffer.from('hello');\nconst b = Buffer.alloc(10);\nconst c = Buffer.allocUnsafe(10); // must overwrite fully",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "buffer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you convert a Buffer to a string and back, and why does encoding matter?",
+    "answer": "buffer.toString(encoding) decodes the raw bytes into a string using a given encoding (defaulting to 'utf8'), while Buffer.from(string, encoding) does the reverse. Encoding matters because multi-byte characters (like emoji or non-ASCII text) can be split across chunk boundaries in a stream, or misinterpreted entirely if you decode with the wrong encoding, producing garbled ('mojibake') output.",
+    "example": null,
+    "code": "const buf = Buffer.from('café', 'utf8');\nconsole.log(buf.toString('utf8')); // 'café'\nconsole.log(buf.toString('hex')); // raw byte representation",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "buffer", "encoding"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between fs.createReadStream() and fs.readFile() for reading a large file?",
+    "answer": "fs.readFile() reads the entire file into memory before invoking its callback with the complete contents, which is simple but can consume large amounts of memory for big files and delays any processing until the whole read completes. fs.createReadStream() reads the file incrementally in chunks, letting you start processing (or piping elsewhere) data as it arrives, with much lower peak memory usage for large files.",
+    "example": null,
+    "code": "const stream = fs.createReadStream('large-file.txt', { encoding: 'utf8' });\nstream.on('data', (chunk) => process(chunk));\nstream.on('end', () => console.log('done'));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "fs"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you use streams to process a large CSV file line by line without loading it fully into memory?",
+    "answer": "Pipe a fs.createReadStream through a line-splitting mechanism — either the built-in readline module's createInterface() wrapping the stream, or a Transform stream that buffers partial lines and emits complete ones — so each line can be processed and discarded as it arrives instead of retaining the whole file in memory.",
+    "example": null,
+    "code": "const readline = require('readline');\nconst rl = readline.createInterface({ input: fs.createReadStream('data.csv') });\nrl.on('line', (line) => processRow(line));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What events does a Readable stream emit, and what does each signal?",
+    "answer": "'data' fires whenever a chunk of data is available (only in flowing mode). 'end' fires once all data has been consumed with no more to come. 'error' fires if something goes wrong during reading. 'close' fires when the underlying resource has been fully released. Listening for 'error' is essential — an unhandled stream error event throws and can crash the process.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it important to always attach an 'error' event listener to a stream?",
+    "answer": "Streams are EventEmitters, and by default, an 'error' event with no registered listener throws inside Node's internals and crashes the process — unlike other events, which are simply ignored if unlistened. Since I/O is inherently failure-prone (missing files, network drops, disk errors), omitting an error handler on a stream is a common and dangerous oversight in production code.",
+    "example": null,
+    "code": "stream.on('error', (err) => console.error('Stream failed:', err));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "error-handling"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you copy a large file efficiently in Node.js using streams?",
+    "answer": "Pipe a read stream of the source directly into a write stream of the destination, which handles chunked reading, writing, and backpressure without loading the whole file into memory; alternatively fs.promises.copyFile() offers a simpler, often OS-optimized, one-line alternative for the common case.",
+    "example": null,
+    "code": "fs.createReadStream('source.dat').pipe(fs.createWriteStream('dest.dat'));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "streams", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is stream.pipeline(), and why is it preferred over chaining multiple .pipe() calls manually?",
+    "answer": "stream.pipeline() (from the 'stream' module) connects a series of streams together like chained .pipe() calls, but additionally forwards errors from any stream in the chain to a single callback (or rejects a returned promise with stream/promises), and automatically cleans up/destroys all streams if any of them errors or the pipeline is aborted. Manually chained .pipe() calls don't propagate errors between streams or reliably clean up on failure, which can leak file descriptors or leave dangling streams.",
+    "example": null,
+    "code": "const { pipeline } = require('stream/promises');\nawait pipeline(\n  fs.createReadStream('in.txt'),\n  zlib.createGzip(),\n  fs.createWriteStream('in.txt.gz')\n);",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you compress a file using gzip while streaming, without buffering the whole thing in memory?",
+    "answer": "Pipe a read stream through zlib.createGzip() (a Transform stream) and into a write stream — each chunk is compressed as it passes through, so peak memory usage stays proportional to the chunk size rather than the whole file.",
+    "example": null,
+    "code": "const zlib = require('zlib');\nfs.createReadStream('file.txt')\n  .pipe(zlib.createGzip())\n  .pipe(fs.createWriteStream('file.txt.gz'));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "zlib"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between an HTTP request/response object in Node's http module and a generic stream?",
+    "answer": "Node's http.IncomingMessage (the request object) is a Readable stream, and the http.ServerResponse (the response object) is a Writable stream — you consume the request body by reading from it like any other readable stream, and send a response by writing to it, including support for .pipe(). This is why you can, for example, pipe a file directly into a response object to serve it efficiently.",
+    "example": null,
+    "code": "http.createServer((req, res) => {\n  fs.createReadStream('index.html').pipe(res);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "http"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the highWaterMark option control when creating a stream?",
+    "answer": "highWaterMark sets the size (in bytes, or number of objects in object mode) of the internal buffer a stream uses before it stops reading more data (or before write() starts returning false, signaling backpressure). It's a tuning knob for the tradeoff between memory usage and throughput — a larger highWaterMark buffers more data ahead of time, potentially improving throughput at the cost of memory.",
+    "example": null,
+    "code": "fs.createReadStream('file.txt', { highWaterMark: 64 * 1024 }); // 64KB chunks",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "backpressure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Node's async iterators for streams, and how do they relate to for await...of?",
+    "answer": "Since Node 10+, Readable streams implement the async iterator protocol (Symbol.asyncIterator), letting you consume them with for await...of instead of manually attaching 'data'/'end' listeners — each iteration yields the next chunk and automatically respects backpressure by pausing internal reads between iterations.",
+    "example": null,
+    "code": "for await (const chunk of fs.createReadStream('file.txt')) {\n  console.log(chunk.length);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read and write JSON files synchronously and asynchronously in Node.js?",
+    "answer": "Synchronously: fs.readFileSync(path, 'utf8') followed by JSON.parse(), and JSON.stringify() followed by fs.writeFileSync(). Asynchronously, the same pattern applies but using fs.promises.readFile / fs.promises.writeFile (or their callback equivalents) so the I/O doesn't block the event loop — generally preferred in server code, reserving the sync versions for startup scripts or CLI tools.",
+    "example": null,
+    "code": "const data = JSON.parse(await fs.promises.readFile('config.json', 'utf8'));\nawait fs.promises.writeFile('out.json', JSON.stringify(data, null, 2));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between fs.watch() and fs.watchFile() for monitoring file changes?",
+    "answer": "fs.watch() uses the operating system's native file-system notification APIs, so it's more efficient and near-instant, but its behavior (like whether renames trigger events) can vary between platforms. fs.watchFile() works by polling the file's stats at an interval, which is more consistent across platforms but less efficient and slower to detect changes, and is generally considered legacy in favor of fs.watch() or third-party libraries like chokidar.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you check whether a file or directory exists before performing an operation on it in Node.js?",
+    "answer": "The recommended approach is to attempt the operation directly (e.g. fs.promises.readFile) and handle the ENOENT error if it doesn't exist, since checking existence first (with fs.existsSync or fs.access) and then acting on it separately introduces a race condition (the file could be deleted between the check and the actual operation) known as a TOCTOU bug. fs.existsSync is still fine for simple, non-concurrent scripts.",
+    "example": null,
+    "code": "try {\n  await fs.promises.access('file.txt');\n} catch {\n  console.log('does not exist');\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between appending to a file with fs.appendFile() versus opening a write stream in append mode?",
+    "answer": "fs.appendFile() opens the file, writes the data, and closes it again for each call — simple for occasional appends but relatively expensive if called very frequently (e.g. logging every request). A write stream opened with { flags: 'a' } keeps the file descriptor open across many writes, amortizing the open/close overhead, which is more efficient for high-frequency append workloads like log files.",
+    "example": null,
+    "code": "const logStream = fs.createWriteStream('app.log', { flags: 'a' });\nlogStream.write('log entry\\n');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "fs", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you handle a Buffer that contains a multi-byte UTF-8 character split across two separate stream chunks?",
+    "answer": "Naively calling chunk.toString('utf8') on each raw chunk independently can produce garbled output where a multi-byte character is split mid-sequence. Node's StringDecoder class (from the 'string_decoder' module) is designed for exactly this — it buffers incomplete byte sequences internally and only emits fully-decoded characters, correctly handling characters split across chunk boundaries.",
+    "example": null,
+    "code": "const { StringDecoder } = require('string_decoder');\nconst decoder = new StringDecoder('utf8');\nlet result = '';\nstream.on('data', (chunk) => { result += decoder.write(chunk); });",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "buffer", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'object mode' mean for a Node.js stream, and when would you use it?",
+    "answer": "By default, streams operate on Buffers or strings. In object mode (set via { objectMode: true }), a stream can instead push and consume arbitrary JavaScript objects, one at a time, rather than raw bytes — useful for building processing pipelines over structured data, like a stream of parsed database rows or JSON records, rather than raw text or binary content.",
+    "example": null,
+    "code": "const { Transform } = require('stream');\nconst toUpperName = new Transform({\n  objectMode: true,\n  transform(obj, enc, cb) { cb(null, { ...obj, name: obj.name.toUpperCase() }); },\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a memory-related pitfall of using Buffer.concat() repeatedly inside a loop to accumulate stream data?",
+    "answer": "Each call to Buffer.concat() allocates a brand-new buffer and copies all the existing bytes into it, so accumulating data by calling concat() on every chunk in a loop is O(n²) in total copying work as the accumulated size grows. It's much more efficient to collect chunks in an array and call Buffer.concat(chunksArray) once at the end, after all chunks have arrived.",
+    "example": null,
+    "code": "// Inefficient\nlet buf = Buffer.alloc(0);\nstream.on('data', (chunk) => { buf = Buffer.concat([buf, chunk]); });\n// Efficient\nconst chunks = [];\nstream.on('data', (chunk) => chunks.push(chunk));\nstream.on('end', () => { const buf = Buffer.concat(chunks); });",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "buffer", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you limit how much of an uploaded file a server reads, to prevent a client from sending an excessively large payload?",
+    "answer": "Track the total bytes received as chunks arrive on the request stream, and if the running total exceeds a configured limit, destroy the stream and respond with an error (e.g. HTTP 413 Payload Too Large) instead of continuing to buffer or write the rest — this prevents a malicious or buggy client from exhausting server memory or disk space. Frameworks and body-parsing middleware (like Express's built-in json/urlencoded parsers) typically expose a configurable size limit that does this for you.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between fs.rm() and fs.unlink() in Node.js?",
+    "answer": "fs.unlink() removes a single file (and errors if given a directory). fs.rm() is a more general removal function that can also delete directories, especially with the { recursive: true } option (replacing the older, now-deprecated fs.rmdir({ recursive: true })), giving it functionality closer to a Unix `rm -rf`.",
+    "example": null,
+    "code": "await fs.promises.rm('some-dir', { recursive: true, force: true });",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "fs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you stream a large database query result set to an HTTP response without loading all rows into memory first?",
+    "answer": "Many database drivers expose a streaming/cursor-based query API that returns a Readable stream of rows instead of a single resolved array; piping that (often through a Transform to serialize each row, e.g. as newline-delimited JSON) directly into the HTTP response lets rows be sent to the client as they're fetched from the database, keeping memory bounded regardless of result set size.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "streams", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does stream.destroy() do, and when should you call it explicitly?",
+    "answer": "destroy() immediately terminates a stream, releasing any underlying resources (like an open file descriptor or socket), emitting a 'close' event and optionally an 'error' if given an error argument, without waiting for buffered data to finish flushing. You call it explicitly when you need to abort a stream early — for example, cancelling a file read because the client disconnected, or stopping processing once you've found what you needed partway through the data.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can working directly with Buffers be more efficient than working with strings when processing binary protocols or file formats?",
+    "answer": "Strings in JS are immutable and Unicode-aware, so operations on them (especially converting to/from an encoding, or slicing) involve overhead that's unnecessary for raw binary data that has no meaningful character encoding. Buffers let you read and manipulate specific byte offsets directly (e.g. parsing a binary file header with buf.readUInt32BE(offset)), avoiding repeated encode/decode overhead and letting you interpret bytes with their true binary meaning.",
+    "example": null,
+    "code": "const value = buf.readUInt32BE(0); // read 4 bytes as a big-endian unsigned int",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "buffer", "performance"],
+    "isFrequentlyAsked": false
+  }
+]

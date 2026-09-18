@@ -1,0 +1,156 @@
+[
+  {
+    "name": "display: flex",
+    "syntax": "display: flex | inline-flex;",
+    "description": "Turns an element into a flex container, laying its direct children out along a single row or column axis.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  display: flex;\n}",
+    "codeLanguage": "css",
+    "notes": "inline-flex behaves the same but the container itself participates in layout as an inline element.",
+    "tags": ["css", "flexbox", "layout"]
+  },
+  {
+    "name": "flex-direction",
+    "syntax": "flex-direction: row | row-reverse | column | column-reverse;",
+    "description": "Sets the main axis along which flex items are laid out inside a flex container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  flex-direction: column;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "axis"]
+  },
+  {
+    "name": "justify-content",
+    "syntax": "justify-content: flex-start | flex-end | center | space-between | space-around | space-evenly;",
+    "description": "Aligns flex items along the main axis of the flex container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  justify-content: space-between;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "alignment"]
+  },
+  {
+    "name": "align-items",
+    "syntax": "align-items: stretch | flex-start | flex-end | center | baseline;",
+    "description": "Aligns flex items along the cross axis of the flex container, for a single line of items.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  align-items: center;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "alignment"]
+  },
+  {
+    "name": "align-content",
+    "syntax": "align-content: flex-start | flex-end | center | space-between | space-around | stretch;",
+    "description": "Aligns multiple lines of flex items along the cross axis when the container has extra space and flex-wrap is enabled.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  flex-wrap: wrap;\n  align-content: space-between;\n}",
+    "codeLanguage": "css",
+    "notes": "Has no visible effect unless there is more than one flex line (e.g. flex-wrap: wrap with items that wrap).",
+    "tags": ["css", "flexbox", "alignment"]
+  },
+  {
+    "name": "flex-wrap",
+    "syntax": "flex-wrap: nowrap | wrap | wrap-reverse;",
+    "description": "Controls whether flex items are forced onto one line or can wrap onto multiple lines.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  flex-wrap: wrap;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "wrap"]
+  },
+  {
+    "name": "flex-grow",
+    "syntax": "flex-grow: <number>;",
+    "description": "Sets how much a flex item grows relative to its siblings to fill available extra space along the main axis.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item {\n  flex-grow: 1;\n}",
+    "codeLanguage": "css",
+    "notes": "Default is 0, meaning items don't grow past their base size unless explicitly told to.",
+    "tags": ["css", "flexbox", "sizing"]
+  },
+  {
+    "name": "flex-shrink",
+    "syntax": "flex-shrink: <number>;",
+    "description": "Sets how much a flex item shrinks relative to its siblings when there isn't enough room on the main axis.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item {\n  flex-shrink: 0;\n}",
+    "codeLanguage": "css",
+    "notes": "Default is 1, so items shrink by default — set to 0 to prevent an item from shrinking below its basis.",
+    "tags": ["css", "flexbox", "sizing"]
+  },
+  {
+    "name": "flex-basis",
+    "syntax": "flex-basis: auto | <length> | <percentage>;",
+    "description": "Sets the initial main-axis size of a flex item before flex-grow/flex-shrink are applied.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item {\n  flex-basis: 200px;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "sizing"]
+  },
+  {
+    "name": "flex",
+    "syntax": "flex: grow shrink basis;",
+    "description": "Shorthand for flex-grow, flex-shrink, and flex-basis in one declaration.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item {\n  flex: 1 1 200px;\n}",
+    "codeLanguage": "css",
+    "notes": "flex: 1 is a common shorthand for flex: 1 1 0%, making items grow and shrink equally.",
+    "tags": ["css", "flexbox", "sizing"]
+  },
+  {
+    "name": "align-self",
+    "syntax": "align-self: auto | flex-start | flex-end | center | baseline | stretch;",
+    "description": "Overrides align-items for a single flex item, aligning it individually on the cross axis.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item--highlight {\n  align-self: flex-end;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "alignment"]
+  },
+  {
+    "name": "order",
+    "syntax": "order: <integer>;",
+    "description": "Changes the visual order in which a flex item appears, independent of its position in the source markup.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item--first {\n  order: -1;\n}",
+    "codeLanguage": "css",
+    "notes": "Default order is 0; items are laid out from lowest to highest order value.",
+    "tags": ["css", "flexbox", "ordering"]
+  },
+  {
+    "name": "gap",
+    "syntax": "gap: row-gap column-gap;",
+    "description": "Sets spacing between flex items without adding margin to the items themselves.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  display: flex;\n  gap: 12px;\n}",
+    "codeLanguage": "css",
+    "notes": "Also works in grid containers — a single gap value applies to both rows and columns.",
+    "tags": ["css", "flexbox", "spacing"]
+  },
+  {
+    "name": "flex-flow",
+    "syntax": "flex-flow: <flex-direction> <flex-wrap>;",
+    "description": "Shorthand for setting flex-direction and flex-wrap in a single declaration.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  flex-flow: row wrap;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "flexbox", "shorthand"]
+  }
+]

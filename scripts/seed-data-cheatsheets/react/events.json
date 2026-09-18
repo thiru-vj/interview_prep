@@ -1,0 +1,112 @@
+[
+  {
+    "name": "SyntheticEvent",
+    "syntax": "function handleClick(event) { ... } // event is a SyntheticEvent",
+    "description": "React wraps native DOM events in a cross-browser wrapper object called SyntheticEvent, normalizing behavior across browsers while mirroring the native event API.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Button() {\n  return <button onClick={(e) => console.log(e.type)}>Click</button>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Since React 17+, synthetic events are attached at the root DOM container rather than document, but the wrapper API itself is unchanged. Access the underlying native event via `event.nativeEvent` if needed.",
+    "tags": ["react", "events", "fundamentals"]
+  },
+  {
+    "name": "onClick",
+    "syntax": "<button onClick={handleClick}>Click me</button>",
+    "description": "The event handler prop for click events on an element, called with a SyntheticEvent when the user clicks it.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Pass a function reference (or arrow function), not the result of calling it — `onClick={handleClick()}` would invoke it immediately on every render.",
+    "tags": ["react", "events", "dom"]
+  },
+  {
+    "name": "onChange",
+    "syntax": "<input onChange={(e) => setValue(e.target.value)} />",
+    "description": "The event handler prop fired when a form element's value changes, used to keep controlled inputs in sync with state as the user types or selects.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input value={query} onChange={(e) => setQuery(e.target.value)} />",
+    "codeLanguage": "jsx",
+    "notes": "Unlike plain HTML, React's onChange fires on every keystroke (similar to the native `input` event), not just on blur.",
+    "tags": ["react", "events", "forms"]
+  },
+  {
+    "name": "onSubmit",
+    "syntax": "<form onSubmit={handleSubmit}>...</form>",
+    "description": "The event handler prop fired when a form is submitted (via a submit button or pressing Enter), commonly paired with preventDefault to stop the native page reload.",
+    "parameters": null,
+    "returns": null,
+    "example": "function handleSubmit(e) {\n  e.preventDefault();\n  submitForm(formData);\n}\n\n<form onSubmit={handleSubmit}>\n  <button type=\"submit\">Send</button>\n</form>",
+    "codeLanguage": "jsx",
+    "notes": null,
+    "tags": ["react", "events", "forms"]
+  },
+  {
+    "name": "event.preventDefault()",
+    "syntax": "event.preventDefault();",
+    "description": "Stops the browser's default action for an event, such as a form submit reloading the page or a link navigating.",
+    "parameters": null,
+    "returns": "undefined.",
+    "example": "function handleSubmit(e) {\n  e.preventDefault();\n  // custom submit logic\n}",
+    "codeLanguage": "jsx",
+    "notes": "Works the same on React's SyntheticEvent as on native events.",
+    "tags": ["react", "events", "forms"]
+  },
+  {
+    "name": "event.target",
+    "syntax": "const value = event.target.value;",
+    "description": "A property on the event object referencing the DOM element the event actually occurred on, commonly used to read an input's current value.",
+    "parameters": null,
+    "returns": "The DOM element that dispatched the event.",
+    "example": "<input onChange={(e) => console.log(e.target.value)} />",
+    "codeLanguage": "jsx",
+    "notes": "Distinguish from `event.currentTarget`, which is the element the handler is actually attached to (useful when the handler is on a parent).",
+    "tags": ["react", "events", "dom"]
+  },
+  {
+    "name": "Passing Arguments to Event Handlers",
+    "syntax": "<button onClick={() => handleDelete(id)}>Delete</button>",
+    "description": "Wrapping a handler in an inline arrow function so extra arguments (like an item's id) can be passed along with the event.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Row({ id, onDelete }) {\n  return <button onClick={() => onDelete(id)}>Remove</button>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Creates a new function on every render; for hot paths combine with useCallback if that matters for a memoized child.",
+    "tags": ["react", "events", "handlers"]
+  },
+  {
+    "name": "Event Delegation in React",
+    "syntax": null,
+    "description": "React attaches a single listener per event type at the root container (or document, pre-React 17) and dispatches events to the right component via its virtual DOM tree, rather than attaching a native listener per element.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "This is why `event.stopPropagation()` on a SyntheticEvent doesn't stop a native listener registered outside React from also seeing the event.",
+    "tags": ["react", "events", "internals"]
+  },
+  {
+    "name": "Inline vs Defined Handlers",
+    "syntax": "onClick={() => doThing(id)}  //  vs  //  onClick={handleClick}",
+    "description": "Handlers can be written inline as arrow functions in JSX, or defined once and referenced by name; the choice affects readability and whether a new function is created each render.",
+    "parameters": null,
+    "returns": null,
+    "example": "// inline\n<button onClick={() => setOpen(true)}>Open</button>\n\n// defined\nconst handleOpen = () => setOpen(true);\n<button onClick={handleOpen}>Open</button>",
+    "codeLanguage": "jsx",
+    "notes": "The performance difference is negligible for most components; prioritize readability unless profiling shows re-creating the function actually matters.",
+    "tags": ["react", "events", "patterns"]
+  },
+  {
+    "name": "event.stopPropagation()",
+    "syntax": "event.stopPropagation();",
+    "description": "Prevents an event from continuing to bubble up to ancestor elements' event handlers within React's synthetic event system.",
+    "parameters": null,
+    "returns": "undefined.",
+    "example": "function Modal({ onClose }) {\n  return (\n    <div className=\"overlay\" onClick={onClose}>\n      <div className=\"content\" onClick={(e) => e.stopPropagation()}>\n        ...\n      </div>\n    </div>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Common pattern for preventing a click inside a modal from also triggering an overlay's 'close on click' handler.",
+    "tags": ["react", "events", "dom"]
+  }
+]

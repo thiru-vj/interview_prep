@@ -1,0 +1,156 @@
+[
+  {
+    "name": "transition",
+    "syntax": "transition: property duration timing-function delay;",
+    "description": "Shorthand that animates a CSS property smoothly from its old value to its new value over a given duration.",
+    "parameters": null,
+    "returns": null,
+    "example": "button {\n  transition: background-color 0.2s ease-in-out;\n}",
+    "codeLanguage": "css",
+    "notes": "The animated property must change value (e.g. via :hover or a class toggle) for the transition to run.",
+    "tags": ["css", "animations", "transition"]
+  },
+  {
+    "name": "transition-property",
+    "syntax": "transition-property: all | none | <property-name>;",
+    "description": "Specifies which CSS property (or properties) a transition applies to.",
+    "parameters": null,
+    "returns": null,
+    "example": "button {\n  transition-property: transform, box-shadow;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transition"]
+  },
+  {
+    "name": "transition-duration",
+    "syntax": "transition-duration: <time>;",
+    "description": "Sets how long a transition takes to complete.",
+    "parameters": null,
+    "returns": null,
+    "example": "button {\n  transition-duration: 0.3s;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transition"]
+  },
+  {
+    "name": "transition-timing-function",
+    "syntax": "transition-timing-function: ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier(...);",
+    "description": "Sets the acceleration curve of a transition over its duration.",
+    "parameters": null,
+    "returns": null,
+    "example": "button {\n  transition-timing-function: ease-in-out;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transition"]
+  },
+  {
+    "name": "transition-delay",
+    "syntax": "transition-delay: <time>;",
+    "description": "Sets how long to wait before a transition starts after the property change is triggered.",
+    "parameters": null,
+    "returns": null,
+    "example": ".tooltip {\n  transition-delay: 0.1s;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transition"]
+  },
+  {
+    "name": "@keyframes",
+    "syntax": "@keyframes name { from { } to { } } | @keyframes name { 0% { } 50% { } 100% { } }",
+    "description": "Defines a named sequence of style states an element passes through during an animation.",
+    "parameters": null,
+    "returns": null,
+    "example": "@keyframes fade-in {\n  from { opacity: 0; }\n  to { opacity: 1; }\n}",
+    "codeLanguage": "css",
+    "notes": "A defined @keyframes rule does nothing on its own — it must be referenced by the animation-name/animation property.",
+    "tags": ["css", "animations", "keyframes"]
+  },
+  {
+    "name": "animation",
+    "syntax": "animation: name duration timing-function delay iteration-count direction fill-mode;",
+    "description": "Shorthand for applying a @keyframes animation to an element, combining its timing, iteration, and fill behavior.",
+    "parameters": null,
+    "returns": null,
+    "example": ".spinner {\n  animation: spin 1s linear infinite;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "animation"]
+  },
+  {
+    "name": "animation-iteration-count",
+    "syntax": "animation-iteration-count: <number> | infinite;",
+    "description": "Sets how many times an animation cycle repeats before stopping.",
+    "parameters": null,
+    "returns": null,
+    "example": ".spinner {\n  animation-iteration-count: infinite;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "animation"]
+  },
+  {
+    "name": "animation-fill-mode",
+    "syntax": "animation-fill-mode: none | forwards | backwards | both;",
+    "description": "Determines what styles apply to an element before the animation starts and after it ends.",
+    "parameters": null,
+    "returns": null,
+    "example": ".fade-in {\n  animation: fade-in 0.5s forwards;\n}",
+    "codeLanguage": "css",
+    "notes": "forwards keeps the last keyframe's styles applied after the animation finishes — otherwise it reverts to the original styles.",
+    "tags": ["css", "animations", "animation"]
+  },
+  {
+    "name": "animation-play-state",
+    "syntax": "animation-play-state: running | paused;",
+    "description": "Pauses or resumes a running animation without removing it.",
+    "parameters": null,
+    "returns": null,
+    "example": ".spinner:hover {\n  animation-play-state: paused;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "animation"]
+  },
+  {
+    "name": "transform",
+    "syntax": "transform: <function>(...);",
+    "description": "Applies 2D or 3D transformations, such as moving, rotating, scaling, or skewing, to an element without affecting document flow.",
+    "parameters": null,
+    "returns": null,
+    "example": ".card:hover {\n  transform: scale(1.05);\n}",
+    "codeLanguage": "css",
+    "notes": "transform is a common property to animate because browsers can render it efficiently on the GPU, unlike top/left.",
+    "tags": ["css", "animations", "transform"]
+  },
+  {
+    "name": "translate()",
+    "syntax": "translate(x, y) | translateX(x) | translateY(y)",
+    "description": "Moves an element along the X and/or Y axis relative to its current position, without affecting layout flow.",
+    "parameters": null,
+    "returns": null,
+    "example": ".modal {\n  transform: translate(-50%, -50%);\n}",
+    "codeLanguage": "css",
+    "notes": "Commonly combined with position: absolute and top/left: 50% to perfectly center an element.",
+    "tags": ["css", "animations", "transform"]
+  },
+  {
+    "name": "rotate()",
+    "syntax": "rotate(<angle>)",
+    "description": "Rotates an element around a fixed point (its transform-origin) by a given angle.",
+    "parameters": null,
+    "returns": null,
+    "example": ".icon--open {\n  transform: rotate(180deg);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transform"]
+  },
+  {
+    "name": "scale()",
+    "syntax": "scale(x, y) | scale(factor)",
+    "description": "Resizes an element along the X and/or Y axis by a given multiplier.",
+    "parameters": null,
+    "returns": null,
+    "example": "button:active {\n  transform: scale(0.95);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "animations", "transform"]
+  }
+]

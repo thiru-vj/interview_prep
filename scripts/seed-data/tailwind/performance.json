@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is \"purging\" in the context of Tailwind CSS, and why does it matter for production bundle size?",
+    "answer": "Purging refers to removing every utility class Tailwind doesn't detect being used in your project's templates, so the shipped CSS file only contains the small subset of classes your app actually references instead of the full utility set (which would be several megabytes uncompressed). Modern Tailwind (v3+) doesn't generate the full set at all and purge afterward — it generates on-demand via the JIT engine — but the practical effect is the same: only used classes ship to production.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "purging"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is JIT (Just-In-Time) mode in Tailwind, and how did it change the build workflow compared to earlier versions?",
+    "answer": "Earlier Tailwind versions generated the entire possible utility stylesheet ahead of time and relied on a separate purge step (often PurgeCSS) to strip unused classes afterward, which was slow and sometimes fragile. JIT mode, made the default in Tailwind v3, generates CSS on-demand by scanning your source files directly and compiling only the classes actually found, making both dev and production builds dramatically faster and eliminating the need for a separate purge tool.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "jit"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the `content` array in `tailwind.config.js` affect the accuracy of what gets included in the final CSS?",
+    "answer": "The `content` globs are the *only* source Tailwind's scanner reads to determine which classes exist in your project, so any file containing class names that isn't covered by these globs will have those classes silently missing from the compiled output — this makes `content` both a performance lever (narrower globs scan faster) and a correctness requirement (too narrow, and real classes get dropped).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "content-scanning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does constructing class names dynamically with string concatenation, like `` `text-${color}-500` ``, break Tailwind's optimization and require a workaround?",
+    "answer": "Tailwind's scanner looks for complete, literal class name strings in your source files — it doesn't execute your JavaScript, so it can't resolve a template literal at build time and never sees the actual class names like `text-red-500` that would exist at runtime, meaning those styles simply won't be generated. The fix is either writing out the full class names as literal strings (even in a lookup object) or explicitly adding them to `safelist` in the config.",
+    "example": null,
+    "code": "// Broken: scanner can't see the final class name\nconst cls = `text-${color}-500`;\n\n// Works: full class names are literal and detectable\nconst colorMap = { red: 'text-red-500', blue: 'text-blue-500' };\nconst cls = colorMap[color];",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "content-scanning"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Does adding more utility classes to a component increase the runtime rendering cost in the browser?",
+    "answer": "No — once compiled, utility classes are ordinary CSS class selectors applied by the browser's existing style engine, so having ten classes on an element costs essentially the same as one at runtime; the browser's selector matching is highly optimized regardless of class count. The only real cost is the size of the stylesheet the browser has to parse once and the length of the `class` attribute string itself, both of which are negligible in practice.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "runtime"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why doesn't Tailwind's compiled CSS grow linearly as a codebase grows larger?",
+    "answer": "Because CSS output is driven by the *distinct* set of utility classes actually used, not by the number of components or files, and most projects reuse the same handful of spacing, color, and layout utilities repeatedly across many components — after an initial ramp-up, adding more components tends to reuse existing classes far more often than it introduces brand-new ones, so CSS size growth flattens out over time rather than scaling with lines of code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "bundle-size"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does a minifier like `cssnano` play in the Tailwind build pipeline?",
+    "answer": "After Tailwind generates the utility CSS for the classes it detected, a minifier like `cssnano` (commonly run automatically in production mode by frameworks like Next.js, or added manually to the PostCSS pipeline) strips whitespace, shortens color values, merges duplicate rules, and otherwise compresses the stylesheet, reducing the already-small JIT output even further before it's shipped.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "minification"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does a single shared utility stylesheet from Tailwind tend to cache and compress better than per-component CSS-in-JS output?",
+    "answer": "A single global CSS file only needs to be downloaded and parsed once per page load (and cached across navigations if unchanged), whereas some CSS-in-JS solutions inject styles per component at runtime, which adds JS execution overhead and can duplicate similar styles across bundles. Tailwind's highly repetitive class names (many components repeating `flex`, `p-4`, `text-sm`, etc.) also compress extremely well with gzip/brotli, since repeated tokens compress far better than unique, per-component generated class names.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "caching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Before JIT mode existed, why did teams need a separate tool like PurgeCSS alongside Tailwind, and what problem did that introduce?",
+    "answer": "Early Tailwind versions pre-generated the full utility stylesheet (megabytes of CSS covering every possible class), and PurgeCSS was run as a separate post-processing step to scan templates and strip anything unused before shipping to production. This added build complexity and a real risk of PurgeCSS misconfiguration silently stripping classes that were actually used (e.g. ones built dynamically), a class of bugs that JIT's scan-based generation model avoids by never generating the unused classes in the first place.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "purgecss"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "If you add custom CSS via `@layer utilities` or `@layer components`, does it still benefit from Tailwind's unused-class removal?",
+    "answer": "Only indirectly — Tailwind's JIT scanner detects usage of *class names*, so a custom class you define with `@layer` will only be included in the output if that exact class name is found in your `content` files, just like a built-in utility. However, if you write raw CSS outside of `@layer` (plain selectors not gated by class detection), it's included unconditionally regardless of whether it's actually used anywhere.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do helper libraries like `clsx` and `tailwind-merge` affect the performance and correctness of dynamically composed class strings?",
+    "answer": "`clsx` efficiently joins conditional class name fragments into one string at a negligible runtime cost (a simple string-building function), while `tailwind-merge` additionally deduplicates conflicting Tailwind utilities (e.g. a default `px-2` overridden by a passed-in `px-4`) so the final DOM class attribute doesn't contain contradictory classes that could otherwise create unpredictable CSS specificity/order bugs in the browser.",
+    "example": null,
+    "code": "import { twMerge } from 'tailwind-merge';\n\ntwMerge('px-2 py-1 bg-red-500', 'px-4 bg-blue-500'); // 'py-1 px-4 bg-blue-500'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "class-merging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the breadth of your `content` globs affect Tailwind's dev-server rebuild speed, separate from production output size?",
+    "answer": "During development, every file save triggers Tailwind to re-scan the files matched by `content` for class names, so extremely broad globs (like accidentally including `node_modules` or generated build output) slow down every incremental rebuild, not just the final production bundle — keeping globs scoped tightly to actual source/template directories keeps hot-reload feedback fast.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "dev-server"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does relying heavily on arbitrary values (e.g. `w-[137px]`) hurt Tailwind's output size compared to using the theme's spacing scale?",
+    "answer": "Somewhat, in aggregate — a value pulled from the theme scale (like `w-8`) is highly likely to be reused across many components since it's a shared, finite set, while a one-off arbitrary value like `w-[137px]` is far less likely to be reused elsewhere, so heavy reliance on arbitrary values tends to produce more distinct, non-reused class rules over a large codebase. The effect on total bytes is usually small, but it's a reason to prefer the design-token scale for values that recur.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the Oxide engine in Tailwind CSS v4, and what performance improvement does it bring?",
+    "answer": "Oxide is Tailwind v4's new engine, with performance-critical parts (like the class scanner and CSS generator) rewritten in Rust instead of pure JavaScript, resulting in dramatically faster full and incremental builds — Tailwind's own benchmarks report full rebuilds over 10x faster and incremental rebuilds measured in microseconds rather than milliseconds compared to the v3 JIT engine.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "tailwind-v4"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do modern build tools like Vite integrate with Tailwind to keep dev-server rebuilds fast?",
+    "answer": "Vite (and similar tools) run Tailwind as a PostCSS plugin inside their own fast, native-code-powered dev pipeline and combine it with hot module replacement, so only the CSS actually affected by a change needs recompiling and re-injecting into the page — this incremental approach, paired with Tailwind's own fast class-scanning, is what makes utility class edits feel instantaneous during local development compared to full production builds.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "build-tools"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why do repetitive utility class names compress especially well with gzip or brotli compared to more varied hand-written CSS?",
+    "answer": "Both algorithms work by finding and referencing repeated byte sequences, and Tailwind's generated CSS is full of highly repetitive patterns — identical property/value pairs reused across many selectors, plus predictable class-name patterns — which compress extremely efficiently, often resulting in a final gzipped/brotli size much smaller than the already-small raw CSS output.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "compression"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is critical/above-the-fold CSS extraction still a meaningful optimization when using Tailwind?",
+    "answer": "It's less impactful than with traditional large stylesheets, because Tailwind's total compiled CSS for a typical app is already small (often tens of KB before compression), so the render-blocking cost of loading the full stylesheet up front is usually negligible compared to sites shipping hundreds of KB of legacy or framework CSS — most teams don't bother with critical CSS splitting specifically because of this.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "critical-css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does defining a large number of unused colors or spacing values in `tailwind.config.js` bloat the final CSS output?",
+    "answer": "No — theme configuration only defines what values are *available* for utilities to reference; actual output size is determined purely by which specific classes are found during content scanning, so a project can define dozens of unused custom colors in `theme.extend.colors` and it will have zero effect on the compiled CSS size as long as no class referencing them appears in the scanned source files.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does using the same utility class in hundreds of different components result in duplicate CSS rules in the output?",
+    "answer": "No — Tailwind deduplicates generated CSS automatically; a class like `flex` is compiled into exactly one rule in the stylesheet no matter how many thousands of times it's referenced across the codebase, which is precisely why utility reuse (rather than writing new custom classes per component) is what keeps Tailwind's output small at scale.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "deduplication"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you check the actual size of your final compiled Tailwind CSS in a project?",
+    "answer": "Run your project's production build command and inspect the generated CSS asset's file size in the build output directory (or your bundler's build report), then compare the raw size against the gzipped/brotli size for a realistic sense of what's actually transferred over the network — most well-scoped Tailwind projects end up with a final compiled stylesheet in the tens of kilobytes before compression.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "build-analysis"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is the Tailwind \"Play CDN\" script (`<script src=\"https://cdn.tailwindcss.com\">`) explicitly not recommended for production use?",
+    "answer": "The Play CDN compiles Tailwind's CSS live in the browser using JavaScript on every page load, which means shipping the entire compiler to the client, scanning the DOM at runtime, and generating styles on the fly — dramatically slower and heavier than a small, pre-built static stylesheet from a proper build step. It's intended purely for quick prototypes, demos, or documentation examples, not real applications.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "play-cdn"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does Tailwind's content scanning behave in a monorepo with a shared component library used by multiple apps?",
+    "answer": "Each app's `content` config needs to include the glob paths of the shared component library's source files (not just its own app-specific files), otherwise classes used only inside shared components won't be detected and will be missing from that app's generated CSS — a common gotcha is scanning the library's compiled `dist` output instead of (or in addition to) its source, which can miss classes if the build process transforms or strips them.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "monorepo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does extracting utility combinations into `@apply`-based classes meaningfully reduce the final compiled CSS size?",
+    "answer": "Not meaningfully in most cases — because Tailwind already deduplicates identical utility rules regardless of how many elements reference them, wrapping a set of utilities in a named `@apply` class doesn't reduce the number of underlying CSS declarations generated; the main benefit of `@apply` is reducing repetition in your *markup/JS source*, not shrinking the compiled CSS output.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can having multiple `@tailwind` or `@import \"tailwindcss\"` directives across different CSS files in a project cause build performance issues?",
+    "answer": "Yes — each import triggers Tailwind to run its full scanning and generation pipeline again, so duplicating the directive across multiple entry stylesheets (rather than importing Tailwind once from a single root stylesheet and importing that root everywhere else) can meaningfully slow down both dev rebuilds and production builds, and often causes duplicate CSS output as an added downside.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "build-tools"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Do responsive (`md:`) and state (`hover:`) variants multiply the size of the generated CSS significantly?",
+    "answer": "Each distinct variant+utility combination you actually use generates its own rule, so heavy use of many different variant combinations does add some CSS, but only for combinations that are genuinely referenced in your source — Tailwind never pre-generates the full cartesian product of every utility against every variant, which is exactly why JIT mode keeps output proportional to real usage rather than growing combinatorially.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "variants"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a practical checklist for keeping a Tailwind project's production CSS lean over time?",
+    "answer": "Keep `content` globs accurate and scoped to real template/component files (including any shared package sources), avoid dynamically constructing class name strings without a lookup map or safelist, favor the theme's spacing/color scale over arbitrary one-off values where a value recurs, avoid the Play CDN in production, and periodically check the built CSS asset size to catch regressions like an accidentally over-broad `content` path or an unintended global scan of `node_modules`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "performance", "best-practices"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the `safelist` config option affect final CSS size, and what's the tradeoff of over-using it?",
+    "answer": "Every entry (or regex pattern) in `safelist` forces Tailwind to generate that class unconditionally, bypassing content scanning entirely, so overusing broad safelist patterns (like a wide regex matching many color/shade combinations \"just in case\") can quietly reintroduce a large amount of unused CSS that JIT mode was specifically designed to avoid — it should be reserved for the minimum set of genuinely dynamic classes that can't be expressed as literal strings.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "safelist"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it recommended to avoid loading Tailwind's full default color palette or icon-heavy plugins in a project that only ever uses a handful of them?",
+    "answer": "Since unused theme values never make it into the output regardless of how large the theme object is, this isn't actually a real CSS-size concern — the only place it matters is config/IDE performance (a very large theme can slightly slow down editor autocomplete and config resolution) and conceptual clarity for the team, not the shipped bundle, which stays driven purely by what's detected in `content`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "theme"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does enabling the global `important: true` config option have any effect on CSS output size or generation performance?",
+    "answer": "It has a negligible effect on file size — it just appends `!important` to each already-generated declaration — but it doesn't change how many classes get generated or how they're detected, so it has essentially no measurable impact on build performance or final bundle size; its cost is more about specificity predictability and cascade debuggability than performance.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "performance", "important"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "In Tailwind v4's CSS-first `@theme` configuration, do unused custom properties still get shipped in the final CSS?",
+    "answer": "By default, `@theme` tokens are exposed as real CSS custom properties (`:root` variables) so they're available for runtime use (e.g. in arbitrary values or plain CSS), which means, unlike JS-config theme values, they are emitted regardless of whether every single one is referenced by a utility class — though this is typically a small, fixed cost since it's one variable declaration per token rather than per usage, and can be scoped down further with `@theme inline` if needed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "performance", "tailwind-v4"],
+    "isFrequentlyAsked": false
+  }
+]

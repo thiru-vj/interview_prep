@@ -1,0 +1,155 @@
+[
+  {
+    "name": "Promise Constructor",
+    "syntax": "new Promise((resolve, reject) => { ... })",
+    "description": "Creates a new Promise representing the eventual completion (or failure) of an asynchronous operation.",
+    "parameters": "executor — function receiving resolve and reject callbacks, invoked immediately.",
+    "returns": "A new Promise object.",
+    "example": "const p = new Promise((resolve, reject) => { setTimeout(() => resolve('done'), 1000); });",
+    "codeLanguage": "javascript",
+    "notes": "The executor function runs synchronously as soon as the Promise is constructed.",
+    "tags": ["javascript", "promises", "async"]
+  },
+  {
+    "name": ".then()",
+    "syntax": "promise.then(onFulfilled, onRejected)",
+    "description": "Registers callbacks to run when a Promise settles — one for fulfillment, an optional one for rejection.",
+    "parameters": "onFulfilled — called with the resolved value. onRejected — optional, called with the rejection reason.",
+    "returns": "A new Promise, allowing .then() calls to be chained.",
+    "example": "fetch(url).then(res => res.json()).then(data => console.log(data));",
+    "codeLanguage": "javascript",
+    "notes": "Each .then() returns a new Promise, so returning a value (or Promise) inside it flows into the next .then().",
+    "tags": ["javascript", "promises", "async"]
+  },
+  {
+    "name": ".catch()",
+    "syntax": "promise.catch(onRejected)",
+    "description": "Registers a callback to handle rejection anywhere earlier in the Promise chain — shorthand for .then(undefined, onRejected).",
+    "parameters": "onRejected — function called with the rejection reason.",
+    "returns": "A new Promise.",
+    "example": "fetch(url).then(res => res.json()).catch(err => console.error(err));",
+    "codeLanguage": "javascript",
+    "notes": "A single .catch() at the end of a chain will catch errors from any preceding .then() in that chain.",
+    "tags": ["javascript", "promises", "error-handling"]
+  },
+  {
+    "name": ".finally()",
+    "syntax": "promise.finally(onFinally)",
+    "description": "Registers a callback that runs when the Promise settles, regardless of whether it was fulfilled or rejected.",
+    "parameters": "onFinally — function called with no arguments once the promise settles.",
+    "returns": "A new Promise that resolves/rejects with the same outcome as the original.",
+    "example": "fetchData().finally(() => setLoading(false));",
+    "codeLanguage": "javascript",
+    "notes": "Commonly used to stop loading spinners or clean up resources regardless of success or failure.",
+    "tags": ["javascript", "promises", "async"]
+  },
+  {
+    "name": "async Function",
+    "syntax": "async function fn() { ... }",
+    "description": "Declares a function that implicitly returns a Promise and allows the use of await inside its body.",
+    "example": "async function getData() { return 42; } getData().then(v => console.log(v)); // 42",
+    "codeLanguage": "javascript",
+    "notes": "Any value returned from an async function is automatically wrapped in a resolved Promise; thrown errors become rejected Promises.",
+    "tags": ["javascript", "async-await", "async"]
+  },
+  {
+    "name": "await Keyword",
+    "syntax": "const result = await promise;",
+    "description": "Pauses execution of an async function until the given Promise settles, then returns its resolved value or throws its rejection.",
+    "example": "async function load() { const res = await fetch(url); const data = await res.json(); return data; }",
+    "codeLanguage": "javascript",
+    "notes": "Can only be used inside an async function (or at the top level of a module).",
+    "tags": ["javascript", "async-await", "async"]
+  },
+  {
+    "name": "Promise.all()",
+    "syntax": "Promise.all([p1, p2, p3])",
+    "description": "Runs multiple Promises concurrently and resolves once all of them fulfill, or rejects immediately if any one rejects.",
+    "parameters": "An iterable of Promises.",
+    "returns": "A Promise that resolves to an array of results, in the same order as the input.",
+    "example": "const [users, posts] = await Promise.all([fetchUsers(), fetchPosts()]);",
+    "codeLanguage": "javascript",
+    "notes": "Fails fast — one rejected Promise causes the entire Promise.all() to reject, even if others would have succeeded.",
+    "tags": ["javascript", "promises", "concurrency"]
+  },
+  {
+    "name": "Promise.race()",
+    "syntax": "Promise.race([p1, p2, p3])",
+    "description": "Returns a Promise that settles as soon as the first of the given Promises settles, whether fulfilled or rejected.",
+    "parameters": "An iterable of Promises.",
+    "returns": "A Promise matching the outcome of whichever input settles first.",
+    "example": "Promise.race([fetchData(), timeout(5000)]); // whichever finishes first wins",
+    "codeLanguage": "javascript",
+    "notes": "Commonly used to implement request timeouts by racing a fetch against a rejecting timer Promise.",
+    "tags": ["javascript", "promises", "concurrency"]
+  },
+  {
+    "name": "Promise.allSettled()",
+    "syntax": "Promise.allSettled([p1, p2, p3])",
+    "description": "Runs multiple Promises concurrently and waits for all of them to settle, regardless of whether they fulfill or reject.",
+    "parameters": "An iterable of Promises.",
+    "returns": "A Promise resolving to an array of { status, value } or { status, reason } objects for each input.",
+    "example": "const results = await Promise.allSettled([ok(), fail()]); // [{status:'fulfilled',...}, {status:'rejected',...}]",
+    "codeLanguage": "javascript",
+    "notes": "Unlike Promise.all(), it never short-circuits on rejection — useful when you need every result regardless of failures.",
+    "tags": ["javascript", "promises", "concurrency"]
+  },
+  {
+    "name": "Promise.any()",
+    "syntax": "Promise.any([p1, p2, p3])",
+    "description": "Resolves as soon as any one of the given Promises fulfills; only rejects if all of them reject.",
+    "parameters": "An iterable of Promises.",
+    "returns": "A Promise that resolves with the first fulfilled value, or rejects with an AggregateError if all reject.",
+    "example": "const first = await Promise.any([mirrorA(), mirrorB(), mirrorC()]);",
+    "codeLanguage": "javascript",
+    "notes": "Useful for querying redundant sources and using whichever responds successfully first.",
+    "tags": ["javascript", "promises", "concurrency"]
+  },
+  {
+    "name": "Promise.resolve()",
+    "syntax": "Promise.resolve(value)",
+    "description": "Returns a Promise that is already resolved with the given value.",
+    "parameters": "value — the value (or thenable) to resolve with.",
+    "returns": "A resolved Promise.",
+    "example": "Promise.resolve(5).then(v => console.log(v)); // 5",
+    "codeLanguage": "javascript",
+    "notes": "Useful for normalizing a value that might or might not already be a Promise.",
+    "tags": ["javascript", "promises", "async"]
+  },
+  {
+    "name": "Promise.reject()",
+    "syntax": "Promise.reject(reason)",
+    "description": "Returns a Promise that is already rejected with the given reason.",
+    "parameters": "reason — the value (typically an Error) used as the rejection reason.",
+    "returns": "A rejected Promise.",
+    "example": "Promise.reject(new Error('failed')).catch(err => console.log(err.message));",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "promises", "async"]
+  },
+  {
+    "name": "try...catch with async/await",
+    "syntax": "try { await fn(); } catch (err) { ... }",
+    "description": "Wraps awaited code in a try...catch block to handle rejected Promises with the same syntax used for synchronous errors.",
+    "example": "async function load() { try { const data = await fetchData(); return data; } catch (err) { console.error(err); } }",
+    "codeLanguage": "javascript",
+    "notes": "Without a try...catch (or a .catch() on the call site), a rejected awaited Promise throws an unhandled rejection.",
+    "tags": ["javascript", "async-await", "error-handling"]
+  },
+  {
+    "name": "Error Handling in Promise Chains",
+    "description": "Errors thrown anywhere inside a .then() callback, or a rejected Promise anywhere upstream, propagate down the chain to the nearest .catch().",
+    "example": "doStep1().then(doStep2).then(doStep3).catch(err => console.error('chain failed:', err));",
+    "codeLanguage": "javascript",
+    "notes": "A single .catch() at the end is usually sufficient — no need to add one after every .then().",
+    "tags": ["javascript", "promises", "error-handling"]
+  },
+  {
+    "name": "Promise States (pending/fulfilled/rejected)",
+    "description": "A Promise is always in one of three states: pending (initial, not yet settled), fulfilled (operation succeeded), or rejected (operation failed). Once settled, its state and value never change.",
+    "example": "const p = new Promise(resolve => resolve(1)); // fulfilled with value 1",
+    "codeLanguage": "javascript",
+    "notes": "A settled Promise's outcome is immutable — calling resolve() or reject() again after settling has no effect.",
+    "tags": ["javascript", "promises", "concepts"]
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "name": "configureStore()",
+    "syntax": "configureStore({ reducer, middleware, devTools, preloadedState, enhancers })",
+    "description": "The Redux Toolkit function for creating a Redux store. It wraps createStore with good defaults — Redux DevTools support, redux-thunk middleware, and dev-mode checks for mutations and non-serializable values.",
+    "parameters": "reducer — root reducer function or an object of slice reducers (combined automatically). middleware — optional callback to customize the default middleware array. preloadedState — optional initial state.",
+    "returns": "A configured Redux store instance with dispatch, getState, subscribe, and replaceReducer.",
+    "example": "import { configureStore } from '@reduxjs/toolkit';\nconst store = configureStore({ reducer: { todos: todosReducer } });",
+    "codeLanguage": "javascript",
+    "notes": "Use configureStore instead of the legacy createStore in all new Redux code — it is the standard approach recommended by the Redux team.",
+    "tags": ["redux", "store", "redux-toolkit"]
+  },
+  {
+    "name": "createStore() (legacy)",
+    "syntax": "createStore(reducer, preloadedState, enhancer)",
+    "description": "The original, low-level Redux API for creating a store from a root reducer. Superseded by configureStore, which sets up sensible defaults automatically.",
+    "parameters": "reducer — root reducer function. preloadedState — optional initial state. enhancer — optional store enhancer such as applyMiddleware.",
+    "returns": "A Redux store instance.",
+    "example": "import { createStore } from 'redux';\nconst store = createStore(rootReducer);",
+    "codeLanguage": "javascript",
+    "notes": "Deprecated in favor of configureStore; still shows up in legacy codebases and interview questions about 'classic' Redux.",
+    "tags": ["redux", "store", "legacy"]
+  },
+  {
+    "name": "store.getState()",
+    "syntax": "store.getState()",
+    "description": "Returns the current state tree of the Redux store.",
+    "returns": "The current state value, exactly as computed by the root reducer.",
+    "example": "const state = store.getState();\nconsole.log(state.todos.length);",
+    "codeLanguage": "javascript",
+    "notes": "Treat the returned state as read-only — never mutate it directly; dispatch an action instead.",
+    "tags": ["redux", "store"]
+  },
+  {
+    "name": "store.dispatch()",
+    "syntax": "store.dispatch(action)",
+    "description": "Sends an action to the store, triggering the root reducer to compute the next state.",
+    "parameters": "action — a plain object with a `type` field (or a thunk/function when thunk middleware is installed).",
+    "returns": "The dispatched action, for convenience (unless middleware changes this, as with thunks).",
+    "example": "store.dispatch({ type: 'todos/added', payload: 'Buy milk' });",
+    "codeLanguage": "javascript",
+    "notes": "dispatch() is the only way to trigger a state change in Redux — components never modify state directly.",
+    "tags": ["redux", "store"]
+  },
+  {
+    "name": "store.subscribe()",
+    "syntax": "store.subscribe(listener)",
+    "description": "Registers a callback that runs every time an action is dispatched and the state tree may have changed.",
+    "parameters": "listener — function called with no arguments after each dispatch.",
+    "returns": "An unsubscribe function that removes the listener when called.",
+    "example": "const unsubscribe = store.subscribe(() => console.log(store.getState()));\nunsubscribe(); // stop listening",
+    "codeLanguage": "javascript",
+    "notes": "In React apps, react-redux's useSelector/Provider handle subscriptions for you — manual subscribe() is rarely needed.",
+    "tags": ["redux", "store"]
+  },
+  {
+    "name": "Single store principle",
+    "description": "A Redux application uses exactly one store holding the entire application state tree, rather than multiple stores per feature. Different pieces of state are organized by combining reducers, not by creating separate stores.",
+    "notes": "This is one of Redux's three core principles, alongside 'state is read-only' and 'changes are made with pure functions'. It keeps debugging, persistence, and DevTools time-travel simple.",
+    "tags": ["redux", "store", "concepts"]
+  },
+  {
+    "name": "Store enhancers",
+    "syntax": "createStore(reducer, enhancer) / configureStore({ enhancers })",
+    "description": "A store enhancer is a higher-order function that composes over the store creator to add capabilities, such as middleware support (applyMiddleware) or persistence.",
+    "example": "import { applyMiddleware, createStore } from 'redux';\nconst store = createStore(rootReducer, applyMiddleware(logger));",
+    "codeLanguage": "javascript",
+    "notes": "configureStore applies the middleware enhancer for you automatically, so manual applyMiddleware is mostly a legacy pattern now.",
+    "tags": ["redux", "store", "middleware"]
+  }
+]

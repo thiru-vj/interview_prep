@@ -1,0 +1,514 @@
+[
+  {
+    "question": "What is a Route Handler in the App Router, and how do you create one?",
+    "answer": "A Route Handler is a server-side function that handles raw HTTP requests for a given route, defined by adding a `route.js`/`route.ts` file inside an `app/` folder and exporting async functions named after HTTP methods like `GET`, `POST`, `PUT`, `DELETE`, or `PATCH`. Unlike a page, it returns a `Response` object directly instead of rendering React UI, making it the App Router's equivalent of an API endpoint.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// app/api/hello/route.js\nexport async function GET() {\n  return Response.json({ message: 'Hello' });\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How did API routes work in the Pages Router, before Route Handlers existed?",
+    "answer": "Any file placed under `pages/api/` became an API endpoint automatically, exporting a single default handler function that received Node-style `req` and `res` objects and was responsible for branching on `req.method` itself and calling `res.status(...).json(...)` to respond, rather than exporting separate functions per HTTP method.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// pages/api/hello.js\nexport default function handler(req, res) {\n  if (req.method === 'GET') {\n    res.status(200).json({ message: 'Hello' });\n  }\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read the request body (e.g. JSON) inside a Route Handler?",
+    "answer": "The handler receives a standard Web `Request` object, so you call its built-in methods to read the body: `await request.json()` for JSON payloads, `await request.formData()` for form submissions, or `await request.text()` for raw text — the same API you'd use with `fetch` on the client, rather than a Node-specific stream API.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function POST(request) {\n  const body = await request.json();\n  return Response.json({ received: body });\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you access dynamic route segments (like an `[id]` param) inside a Route Handler?",
+    "answer": "Route Handlers receive a second argument, commonly destructured as `{ params }`, containing the values matched by dynamic segments in the route's folder path — the same way `params` is passed to `page.js` components.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// app/api/users/[id]/route.js\nexport async function GET(request, { params }) {\n  const user = await getUser(params.id);\n  return Response.json(user);\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read query string parameters inside a Route Handler?",
+    "answer": "Construct a `URL` object from `request.url` and use its `searchParams` property, since the Route Handler's `request` argument is a standard Web `Request` with just the raw URL string, not a pre-parsed query object like the Pages Router's `req.query`.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function GET(request) {\n  const { searchParams } = new URL(request.url);\n  const query = searchParams.get('q');\n  return Response.json({ query });\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can a Route Handler and a `page.js` file coexist in the same route segment?",
+    "answer": "No — a folder can define either a `page.js` (rendering a UI page) or a `route.js` (handling raw requests) at the same route path, but not both, since Next.js needs an unambiguous single handler for a given URL and HTTP method combination.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do Route Handlers handle GET request caching by default, and how is this different from POST/PUT/DELETE?",
+    "answer": "In earlier Next.js versions, `GET` Route Handlers were cached by default similar to static fetches unless they used dynamic APIs; in current versions, Route Handlers are not cached by default and are treated as dynamic. Handlers for `POST`, `PUT`, `PATCH`, and `DELETE` are never cached in any version, since they represent mutations rather than idempotent reads.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you set custom response headers or a specific status code from a Route Handler?",
+    "answer": "Pass a second argument to `Response.json()` (or construct a plain `new Response(...)`) with `status` and `headers` fields, since Route Handlers work with the standard Web `Response` constructor rather than an Express-style `res` object with chained methods.",
+    "example": null,
+    "code": "return Response.json({ error: 'Not found' }, { status: 404, headers: { 'X-Custom': 'value' } });",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Next.js Middleware, and where does it run relative to a request?",
+    "answer": "Middleware is code defined in a `middleware.js`/`middleware.ts` file at the project root that runs before a request completes, intercepting requests matched by its `config.matcher` before they reach a route, Route Handler, or static asset. It runs in the lightweight Edge Runtime, letting you rewrite, redirect, modify headers, or respond early based on things like cookies or geolocation, without touching the destination route's own code.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// middleware.js\nexport function middleware(request) {\n  if (!request.cookies.get('session')) {\n    return Response.redirect(new URL('/login', request.url));\n  }\n}\n\nexport const config = { matcher: '/dashboard/:path*' };",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a common real-world use case for Middleware, such as authentication gating?",
+    "answer": "A typical pattern is checking for a valid session cookie or auth token in Middleware before allowing access to protected routes (like `/dashboard/*`), redirecting unauthenticated users to a login page before any page or Route Handler code even runs — centralizing that check in one place instead of repeating it in every protected route.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware",
+      "authentication"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does Middleware run in the Edge Runtime rather than the standard Node.js runtime, and what limitation does that impose?",
+    "answer": "Middleware needs to run extremely fast on every matched request, often before the actual route even executes, so it uses the lightweight Edge Runtime for low cold-start latency at globally distributed locations. This means Middleware can't use full Node.js APIs (like the `fs` module or many npm packages that depend on Node internals), limiting it mostly to logic based on headers, cookies, and simple redirects/rewrites.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware",
+      "edge"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you scope Middleware to only run on specific paths?",
+    "answer": "Export a `config` object with a `matcher` property from `middleware.js` — it accepts a path string, an array of path patterns (supporting basic wildcards), or a more detailed matcher object, restricting which requests trigger the middleware instead of running it on literally every request including static assets.",
+    "example": null,
+    "code": "export const config = {\n  matcher: ['/dashboard/:path*', '/settings/:path*'],\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a redirect and a rewrite performed from Middleware?",
+    "answer": "`NextResponse.redirect(url)` sends the browser a redirect response, changing the URL the user sees. `NextResponse.rewrite(url)` serves content from a different internal path while keeping the original URL displayed in the browser unchanged — useful for things like A/B testing or serving different content based on a cookie without altering the visible URL.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "import { NextResponse } from 'next/server';\n\nexport function middleware(request) {\n  return NextResponse.rewrite(new URL('/variant-b', request.url));\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you handle CORS for a Route Handler that needs to be called from a different origin?",
+    "answer": "Set the appropriate `Access-Control-Allow-Origin` (and related) headers on the `Response` you return from your `GET`/`POST` handlers, and additionally export an `OPTIONS` handler to respond to the browser's CORS preflight request, since Next.js doesn't apply CORS headers automatically.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function GET() {\n  return Response.json({ ok: true }, {\n    headers: { 'Access-Control-Allow-Origin': 'https://example.com' },\n  });\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "cors"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can Route Handlers use the full Node.js runtime instead of the Edge Runtime, and how do you choose?",
+    "answer": "Yes — Route Handlers default to the Node.js runtime unless you explicitly export `export const runtime = 'edge'`, which gives access to full Node APIs (file system, many npm packages) at the cost of higher cold-start latency and no global edge distribution. Choose Edge for latency-sensitive, lightweight logic and Node.js for anything needing broader library compatibility.",
+    "example": null,
+    "code": "export const runtime = 'edge'; // or 'nodejs' (default)",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "edge"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you validate and parse incoming request data safely in a Route Handler?",
+    "answer": "A common pattern is to parse the JSON body and then run it through a schema validation library like Zod, returning a 400 response with validation errors if it fails, rather than trusting the shape of `request.json()` directly, which is untyped and could be malformed or malicious.",
+    "example": null,
+    "codeLanguage": "typescript",
+    "code": "import { z } from 'zod';\n\nconst schema = z.object({ email: z.string().email() });\n\nexport async function POST(request) {\n  const result = schema.safeParse(await request.json());\n  if (!result.success) return Response.json({ error: 'Invalid' }, { status: 400 });\n  // proceed with result.data\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "validation"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement rate limiting for a Next.js API endpoint?",
+    "answer": "Common approaches include using Middleware (or the Route Handler itself) to check a request counter stored in an external store like Redis, keyed by IP address or user ID, rejecting requests once a threshold is exceeded within a time window — Next.js has no built-in rate limiting, so it's typically implemented with a library (e.g. Upstash's rate limit SDK) or a reverse proxy/CDN feature in front of the app.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware",
+      "security"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between calling a Server Action and calling a Route Handler from a form submission?",
+    "answer": "A Server Action can be wired directly to a form's `action` prop and invoked without you writing any client-side fetch code or manually managing an endpoint URL, with Next.js handling the request/response plumbing. A Route Handler requires you to manually `fetch()` it from client code (or point a plain HTML form's `action`/`method` at its URL) and handle the response yourself, which is more explicit but also more boilerplate.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "server-actions",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you stream a response from a Route Handler, such as for a chat completion API?",
+    "answer": "Return a `Response` constructed with a `ReadableStream` as its body, writing chunks to the stream's controller as data becomes available; libraries like the Vercel AI SDK wrap this pattern for streaming LLM responses so you don't have to hand-write the stream plumbing yourself.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function POST() {\n  const stream = new ReadableStream({\n    async start(controller) {\n      controller.enqueue(new TextEncoder().encode('chunk'));\n      controller.close();\n    },\n  });\n  return new Response(stream);\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "streaming"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you access and set cookies from within a Route Handler?",
+    "answer": "Call `cookies()` from `next/headers` inside the handler to read incoming cookies with `.get()`, or to set a cookie on the response with `.set()`; alternatively, you can build a `Response` and set the `Set-Cookie` header manually if you need finer control.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "import { cookies } from 'next/headers';\n\nexport async function POST() {\n  cookies().set('session', 'abc123', { httpOnly: true });\n  return Response.json({ ok: true });\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "cookies"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What HTTP methods can a single `route.js` file export handlers for, and what happens for an unsupported method?",
+    "answer": "A `route.js` can export any combination of `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, and `OPTIONS`. If a request arrives using a method with no corresponding exported function, Next.js automatically responds with a `405 Method Not Allowed`, without you having to write that branching logic yourself.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you protect a Route Handler so only authenticated requests can access it?",
+    "answer": "Inside the handler, read the session/token (from cookies via `cookies()`, or an `Authorization` header via `request.headers.get(...)`), verify it against your auth system, and return a `401` response early if it's missing or invalid — or handle this more globally by gating the route's path pattern in Middleware before the handler even runs.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function GET(request) {\n  const auth = request.headers.get('authorization');\n  if (!isValidToken(auth)) return Response.json({ error: 'Unauthorized' }, { status: 401 });\n  // proceed\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "authentication"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can Middleware read or modify the request body?",
+    "answer": "No — Middleware runs before the request body is available to be read in a meaningful way for most use cases, and it's designed around lightweight decisions based on the URL, headers, and cookies rather than body inspection; body parsing and validation should happen in the destination Route Handler or Server Action instead.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do dynamic segments interact with catch-all routes inside `app/api`, for example to build a proxy endpoint?",
+    "answer": "A folder like `app/api/proxy/[...path]/route.js` captures the remainder of the URL path as an array in `params.path`, letting a single handler forward arbitrary nested paths to another service — for example, reconstructing the target URL by joining `params.path` and forwarding the incoming request to it.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// app/api/proxy/[...path]/route.js\nexport async function GET(request, { params }) {\n  const target = `https://upstream.example.com/${params.path.join('/')}`;\n  const res = await fetch(target);\n  return new Response(res.body, { status: res.status });\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between throwing an error in a Route Handler versus in a page's server component, in terms of what the client receives?",
+    "answer": "An uncaught error in a page's server component is caught by the nearest `error.js` boundary and rendered as an error UI page. An uncaught error in a Route Handler results in a generic 500 response with no HTML error boundary involved, since the handler's job is to return a raw response — so Route Handlers typically wrap logic in try/catch and return explicit error responses rather than relying on error boundaries.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "error-handling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement a webhook endpoint (e.g. for Stripe) as a Next.js Route Handler, and what's a key security consideration?",
+    "answer": "Create a `route.js` exporting a `POST` handler that reads the raw request body and the signature header the provider sends, then verifies the payload's signature using the provider's SDK before trusting the data — this is critical because webhook endpoints are publicly reachable URLs, so signature verification prevents forged requests from triggering your business logic.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function POST(request) {\n  const sig = request.headers.get('stripe-signature');\n  const body = await request.text();\n  const event = stripe.webhooks.constructEvent(body, sig, webhookSecret);\n  // handle event\n  return Response.json({ received: true });\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "webhooks"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you chain multiple pieces of logic in Middleware, such as auth checking and locale detection, since only one `middleware.js` file is allowed per project?",
+    "answer": "Since Next.js only runs a single Middleware function per matched request, you compose multiple concerns inside that one function (or factor them into helper functions called in sequence) — checking auth first, then locale, then any other logic — rather than declaring multiple separate middleware files as you might in an Express app.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What status code and response shape conventions are commonly followed when building a REST-style API with Route Handlers?",
+    "answer": "Common conventions include returning `200` for successful reads, `201` for successful creation, `204` (no body) for successful deletion, `400` for invalid input, `401`/`403` for auth failures, and `404` for missing resources — with a consistent JSON error shape like `{ error: 'message' }` so client code can handle failures uniformly across endpoints.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "rest"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How is `NextRequest` different from the standard `Request` object in a Route Handler or Middleware?",
+    "answer": "`NextRequest` (from `next/server`) extends the standard Web `Request` with Next.js-specific conveniences, such as a parsed `.cookies` accessor and `.nextUrl`, a pre-parsed URL object with easy access to `pathname` and `searchParams` without manually constructing a `new URL(...)`. Route Handlers can type their argument as either, but Middleware always receives a `NextRequest`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why would you choose a Route Handler over a Server Action for a form submission that only your own app's frontend will ever call?",
+    "answer": "Server Actions are usually simpler for this case since they avoid manually wiring a fetch call and endpoint, but a Route Handler might still be preferred if you need precise control over the HTTP response (custom headers, non-JSON content types, streaming), want the endpoint to also be callable by external clients later, or are integrating with tooling that expects a conventional REST endpoint.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "server-actions",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you export a default handler from a `route.js` file the way you could in `pages/api`?",
+    "answer": "No — `route.js` requires named exports matching HTTP method names (`GET`, `POST`, etc.); a default export has no meaning in this file and won't be treated as a catch-all handler, unlike the single default-exported handler function convention used in the Pages Router's `pages/api` files.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you upload and handle a file via a Route Handler?",
+    "answer": "Read the incoming request with `await request.formData()`, extract the file entry (which comes back as a `File`/`Blob`-like object), and then write it to storage — either streaming it to disk in a Node.js runtime or, more commonly in production, forwarding it to an object storage service like S3 or Vercel Blob rather than the app server's local filesystem, which isn't durable across deployments.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "export async function POST(request) {\n  const formData = await request.formData();\n  const file = formData.get('file');\n  const buffer = Buffer.from(await file.arrayBuffer());\n  // upload buffer to storage\n  return Response.json({ ok: true });\n}",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "file-upload"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the `OPTIONS` export on a Route Handler, and when is it invoked automatically?",
+    "answer": "Browsers send an `OPTIONS` preflight request automatically before certain cross-origin requests (like ones with custom headers or non-simple methods) to check whether the actual request is allowed. Exporting an `OPTIONS` handler lets you respond to this preflight with the appropriate CORS headers; if you don't export one and CORS is needed, the preflight will fail and the browser will block the real request.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "cors"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you test a Route Handler locally without deploying, and what tools are commonly used?",
+    "answer": "Run `next dev` and hit the endpoint directly with a tool like `curl`, Postman, or Thunder Client against `http://localhost:3000/api/...`, or write integration tests with a library like Vitest/Jest that imports the exported `GET`/`POST` functions directly and calls them with a constructed `Request` object, bypassing the need for a running server for pure unit-style tests.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "route-handlers",
+      "testing"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js Middleware differ conceptually from a traditional Express middleware chain?",
+    "answer": "Express middleware forms an ordered chain of functions per request, each calling `next()` to pass control along, and you can register many of them per route. Next.js Middleware is a single function per project (scoped by a matcher) that runs once before routing, closer to a gatekeeper/interceptor pattern than a composable pipeline, and it can't directly modify the destination route's rendering logic — only redirect, rewrite, or pass the request through with modified headers/cookies.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "api-routes",
+      "middleware",
+      "comparison"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is the purpose of the alt attribute on an <img> tag, and what happens if it's omitted entirely versus left empty?",
+    "answer": "alt provides a text alternative for an image, shown if the image fails to load and read aloud by screen readers. Leaving it empty (alt=\"\") marks the image as decorative and tells assistive technology to skip it. Omitting the attribute entirely is invalid and worse — screen readers may fall back to announcing the full image filename or URL, which is rarely useful.",
+    "example": null,
+    "code": "<img src=\"team-photo.jpg\" alt=\"Our five-person engineering team at the 2025 offsite\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "media", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the width/height attributes on <img> and setting width/height in CSS?",
+    "answer": "Setting width and height as HTML attributes lets the browser reserve the correct aspect-ratio space in the layout before the image finishes downloading, preventing content from jumping around (cumulative layout shift) as images load. CSS width/height can still be used to control the final rendered size responsively, but the HTML attributes should reflect the image's intrinsic aspect ratio so the browser can compute the right placeholder box.",
+    "example": null,
+    "code": "<img src=\"hero.jpg\" width=\"1200\" height=\"600\" alt=\"Hero banner\" style=\"max-width: 100%; height: auto;\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the srcset attribute on <img> and what problem does it solve?",
+    "answer": "srcset lets you provide multiple versions of an image at different resolutions along with a width or pixel-density descriptor, so the browser can pick the most appropriate one based on the device's screen size and pixel density, saving bandwidth on smaller or lower-DPI screens instead of always downloading one large image.",
+    "example": null,
+    "code": "<img\n  src=\"photo-800.jpg\"\n  srcset=\"photo-400.jpg 400w, photo-800.jpg 800w, photo-1600.jpg 1600w\"\n  sizes=\"(max-width: 600px) 100vw, 800px\"\n  alt=\"Mountain landscape\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between srcset with width descriptors (w) and pixel density descriptors (x)?",
+    "answer": "Width descriptors (e.g. 400w) tell the browser the actual pixel width of each image file, and are used together with the sizes attribute so the browser can calculate which file best fits the image's rendered display size across different viewports. Density descriptors (e.g. 2x) instead directly map images to a device pixel ratio, simpler to use but only appropriate when the image is always displayed at a fixed CSS size regardless of viewport.",
+    "example": null,
+    "code": "<img src=\"icon.png\" srcset=\"icon.png 1x, icon@2x.png 2x\" alt=\"Settings icon\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <picture> element used for, and how does it differ from srcset on a plain <img>?",
+    "answer": "<picture> lets you specify entirely different image sources for different conditions using multiple <source> elements — different art direction (cropping) per breakpoint via media queries, or different file formats (AVIF, WebP, JPEG fallback) via the type attribute — with a required <img> as the final fallback. Plain srcset on <img> only swaps resolution/density of the same image, not the image content or format selection logic.",
+    "example": null,
+    "code": "<picture>\n  <source media=\"(max-width: 600px)\" srcset=\"cropped-mobile.jpg\">\n  <source srcset=\"full-desktop.jpg\">\n  <img src=\"full-desktop.jpg\" alt=\"Product hero shot\">\n</picture>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the loading=\"lazy\" attribute do on an <img> or <iframe>, and when should you avoid it?",
+    "answer": "loading=\"lazy\" tells the browser to defer loading the resource until it's about to enter the viewport, saving bandwidth and speeding up initial page load for offscreen content. It should be avoided on above-the-fold images (especially a Largest Contentful Paint candidate), since deferring a visible image actually hurts perceived load performance — those should load eagerly, or even be preloaded.",
+    "example": null,
+    "code": "<img src=\"below-fold.jpg\" alt=\"Product detail\" loading=\"lazy\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you embed a video in HTML using the <video> element, and what are its key attributes?",
+    "answer": "<video> embeds a video with native browser controls when the controls attribute is present. Common attributes include autoplay (starts playback automatically, generally requires muted to work in most browsers), loop, muted, poster (a placeholder image shown before playback), and preload (hints how much to buffer ahead of time).",
+    "example": null,
+    "code": "<video controls width=\"640\" poster=\"thumb.jpg\">\n  <source src=\"movie.mp4\" type=\"video/mp4\">\n  <source src=\"movie.webm\" type=\"video/webm\">\n  Your browser doesn't support video playback.\n</video>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why do most browsers require the muted attribute alongside autoplay on <video>?",
+    "answer": "Browsers enforce an autoplay policy that blocks audible autoplaying media by default to prevent an intrusive experience for users, since unexpected sound is one of the most common complaints about the web. Muted autoplay is allowed because it has no audio impact, which is why background/hero videos almost always combine autoplay muted loop playsinline.",
+    "example": null,
+    "code": "<video autoplay muted loop playsinline src=\"background.mp4\"></video>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <track> element inside a <video>, and why does it matter for accessibility?",
+    "answer": "<track> attaches supplementary timed text to a video, most commonly WebVTT captions (kind=\"captions\") or subtitles (kind=\"subtitles\"), letting deaf or hard-of-hearing users, non-native speakers, or muted-autoplay viewers follow along. kind=\"descriptions\" can also provide audio-description text tracks for blind users.",
+    "example": null,
+    "code": "<video controls>\n  <source src=\"talk.mp4\" type=\"video/mp4\">\n  <track kind=\"captions\" src=\"captions-en.vtt\" srclang=\"en\" label=\"English\" default>\n</video>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the <audio> element differ from <video> in terms of markup and default behavior?",
+    "answer": "<audio> shares nearly the same attribute set as <video> (controls, autoplay, loop, muted, preload, multiple <source> children for format fallback) but plays only sound and has no visual frame or poster image. Its default native controls render as a minimal playback bar rather than a video canvas with overlay controls.",
+    "example": null,
+    "code": "<audio controls>\n  <source src=\"podcast.mp3\" type=\"audio/mpeg\">\n  <source src=\"podcast.ogg\" type=\"audio/ogg\">\n</audio>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of providing multiple <source> elements inside <video> or <audio>?",
+    "answer": "Different browsers historically support different codecs and container formats due to licensing (e.g. some browsers don't support certain MP4 codecs, others prefer WebM). Listing multiple <source> elements with different type attributes lets the browser pick the first format it can play, falling back gracefully instead of failing to load the media at all.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the <canvas> element used for, and how do you draw on it?",
+    "answer": "<canvas> provides a blank, scriptable bitmap surface for drawing graphics, charts, or animations pixel by pixel via JavaScript, using either the 2D rendering context (CanvasRenderingContext2D) or WebGL for hardware-accelerated 3D. Unlike SVG, canvas content is immediate-mode (drawn imperatively, with no retained DOM representation of individual shapes), so redrawing is needed whenever content changes.",
+    "example": null,
+    "code": "<canvas id=\"chart\" width=\"300\" height=\"150\"></canvas>\n<script>\n  const ctx = document.getElementById('chart').getContext('2d');\n  ctx.fillStyle = 'blue';\n  ctx.fillRect(10, 10, 100, 50);\n</script>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "canvas"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the key architectural difference between <canvas> and inline SVG for rendering graphics?",
+    "answer": "Canvas is a pixel-based, immediate-mode API — once something is drawn, the canvas has no memory of it as a distinct object, so hit-testing, accessibility, and updates require the developer to redraw and track state manually. SVG is a vector-based, retained-mode format where each shape is a real DOM node that can be styled with CSS, targeted with event listeners individually, and is naturally accessible and resolution-independent.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "media", "canvas"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How can you make canvas content accessible, given it has no inherent DOM representation of what's drawn?",
+    "answer": "Fallback content placed between the opening and closing <canvas> tags is rendered by browsers that don't support canvas and can also be used by assistive technology in some cases; more robustly, you can mirror important information in an accessible off-canvas summary, or use ARIA attributes on the canvas element itself (like role and aria-label) combined with a text description of dynamic changes.",
+    "example": null,
+    "code": "<canvas width=\"400\" height=\"200\" role=\"img\" aria-label=\"Bar chart showing sales by quarter\">\n  Your browser doesn't support canvas. Sales: Q1 $10k, Q2 $15k.\n</canvas>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "canvas", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an <iframe> and what are common use cases for it?",
+    "answer": "<iframe> embeds another HTML document inline within the current page, rendered in its own independent browsing context with its own DOM, scripts, and (by default) origin isolation. Common use cases include embedding YouTube videos, maps, payment widgets, ads, or third-party embeddable content that must stay sandboxed from the host page.",
+    "example": null,
+    "code": "<iframe src=\"https://www.youtube.com/embed/dQw4w9WgXcQ\" title=\"Embedded video player\" width=\"560\" height=\"315\"></iframe>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "media", "iframe"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does every <iframe> need a title attribute?",
+    "answer": "The title attribute gives an iframe an accessible name, which screen readers announce so users understand what the embedded content is before deciding whether to enter it. Without a title, assistive technology may announce something unhelpful like the raw source URL or just 'iframe', giving no context about the embedded content's purpose.",
+    "example": null,
+    "code": "<iframe src=\"map.html\" title=\"Interactive store locator map\"></iframe>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "iframe", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What security risks does embedding third-party content in an <iframe> introduce, and how does the sandbox attribute help?",
+    "answer": "An unrestricted iframe can run scripts, submit forms, open popups, or navigate the top-level page, which is risky when embedding untrusted third-party content. The sandbox attribute applies a set of restrictions by default (disabling scripts, forms, popups, and more), and individual capabilities can be selectively re-enabled with tokens like allow-scripts or allow-same-origin as needed.",
+    "example": null,
+    "code": "<iframe src=\"https://third-party.example\" sandbox=\"allow-scripts allow-same-origin\" title=\"Widget\"></iframe>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "iframe"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the referrerpolicy attribute on an <iframe> or <img> control?",
+    "answer": "referrerpolicy controls how much information is included in the Referer header when the browser requests the embedded resource — options range from no-referrer (sends nothing) to unsafe-url (always sends the full URL including query params), letting you balance the embedded content's need for referrer context against leaking potentially sensitive URL data to third parties.",
+    "example": null,
+    "code": "<iframe src=\"https://example.com/widget\" referrerpolicy=\"no-referrer\" title=\"Widget\"></iframe>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "iframe"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an SVG embedded inline in HTML and one referenced via <img src=\"icon.svg\">?",
+    "answer": "Inline SVG (written directly as <svg> markup in the HTML) becomes part of the page's DOM, so it can be styled and animated with CSS, targeted with JavaScript, and its individual elements can respond to events. An SVG loaded via <img> (or as a CSS background) is treated as an opaque, static image resource — it can't be styled from the parent document's CSS and its internal elements aren't scriptable.",
+    "example": null,
+    "code": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">\n  <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"currentColor\"/>\n</svg>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "svg"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the object-fit CSS property and why is it commonly paired with responsive images or video?",
+    "answer": "object-fit controls how a replaced element's content (like an <img> or <video>) is resized to fit its box when the box's aspect ratio doesn't match the media's intrinsic aspect ratio — cover crops to fill the box, contain scales to fit entirely within it, and fill stretches to match exactly. It's essential for responsive galleries or thumbnails where images of varying aspect ratios need to fit uniform-sized containers without distortion.",
+    "example": null,
+    "code": "img.thumbnail { width: 200px; height: 200px; object-fit: cover; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["html", "media", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you provide a fallback for browsers that don't support a modern image format like WebP or AVIF?",
+    "answer": "Use <picture> with multiple <source> elements ordered from most to least modern format, each with a type attribute the browser checks for support, and a plain <img> as the mandatory last child that serves as the universal fallback (e.g. a JPEG) for any browser that doesn't match any source.",
+    "example": null,
+    "code": "<picture>\n  <source srcset=\"photo.avif\" type=\"image/avif\">\n  <source srcset=\"photo.webp\" type=\"image/webp\">\n  <img src=\"photo.jpg\" alt=\"Description\">\n</picture>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the crossorigin attribute on media elements like <img>, <video>, or <audio>?",
+    "answer": "crossorigin enables CORS-mode fetching of the resource, which is required if you need to read the media's pixel data (e.g. via canvas.getImageData or drawing it into a WebGL texture) when it's hosted on a different origin — without it, the browser 'taints' the canvas and blocks pixel-level access even though the media still displays normally.",
+    "example": null,
+    "code": "<img src=\"https://cdn.example.com/photo.jpg\" crossorigin=\"anonymous\" alt=\"Photo\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "canvas"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might you use the preload attribute on <video>, and what are its possible values?",
+    "answer": "preload hints how eagerly the browser should buffer the media before playback begins: \"none\" avoids downloading anything until the user interacts (good for pages with many videos), \"metadata\" fetches only duration/dimensions, and \"auto\" lets the browser buffer as much as it deems appropriate — the browser can still choose to ignore the hint based on factors like data-saving settings.",
+    "example": null,
+    "code": "<video preload=\"metadata\" controls src=\"lecture.mp4\"></video>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you make an embedded YouTube or Vimeo iframe responsive so it scales with its container's width?",
+    "answer": "Since <iframe> has fixed width/height attributes, a common CSS technique wraps it in a container with a fixed aspect-ratio (or the older padding-bottom percentage trick) and positions the iframe to fill that container absolutely — modern CSS can do this more directly with the aspect-ratio property applied straight to the iframe.",
+    "example": null,
+    "code": ".video-wrapper {\n  aspect-ratio: 16 / 9;\n}\n.video-wrapper iframe {\n  width: 100%;\n  height: 100%;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["html", "media", "iframe", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <embed> and <object> elements, and are they still commonly used?",
+    "answer": "Both can embed external resources like PDFs or plugin-driven content (<embed> is simpler and self-closing; <object> supports fallback content between its tags and a more structured param-based configuration). Both are largely legacy today since the plugin technologies they were designed for (Flash, Java applets) are obsolete; modern use cases like embedding a PDF are more often handled with an <iframe> or a dedicated viewer library.",
+    "example": null,
+    "code": "<object data=\"report.pdf\" type=\"application/pdf\" width=\"600\" height=\"400\">\n  <p>PDF cannot be displayed. <a href=\"report.pdf\">Download it</a>.</p>\n</object>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Cumulative Layout Shift (CLS) issues related to media, and how do you prevent them?",
+    "answer": "CLS occurs when content visibly shifts position after the initial render, often because an image or embed with no reserved dimensions suddenly takes up space once it finishes loading, pushing surrounding content down. Always specifying width/height attributes (or an aspect-ratio in CSS) on images, videos, and iframes lets the browser reserve the correct space up front, eliminating the shift.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "media", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you provide a text description for a complex image, like an infographic or detailed chart, beyond a short alt attribute?",
+    "answer": "A short alt attribute should summarize the image's purpose, but for complex images the full explanation is better placed as visible or adjacent text content on the page (or linked via aria-describedby to a longer description elsewhere), since alt text is meant to be a concise equivalent, not a place for lengthy prose that's awkward for screen reader users to sit through inline.",
+    "example": null,
+    "code": "<img src=\"infographic.png\" alt=\"2025 revenue breakdown by region\" aria-describedby=\"infographic-desc\">\n<p id=\"infographic-desc\">Detailed breakdown: North America 45%, Europe 30%, APAC 25%.</p>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the playsinline attribute used for on <video>?",
+    "answer": "On mobile browsers, particularly iOS Safari, video would historically play in a fullscreen native player by default rather than inline within the page layout. playsinline overrides that behavior so the video plays embedded in its normal position on the page, which is essential for background/hero videos and custom video UIs on mobile.",
+    "example": null,
+    "code": "<video autoplay muted loop playsinline src=\"hero-bg.mp4\"></video>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the <video> element's currentTime, duration, and paused JavaScript properties?",
+    "answer": "currentTime is a read/write property holding the current playback position in seconds, which can be set to seek. duration is a read-only property exposing the media's total length once metadata has loaded (NaN before that). paused is a read-only boolean reflecting whether playback is currently stopped, used together with the play() and pause() methods to build custom playback controls.",
+    "example": null,
+    "code": "const video = document.querySelector('video');\nvideo.currentTime = 30; // seek to 30s\nif (video.paused) video.play();",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you display a static poster image for an audio player, since <audio> has no built-in poster attribute like <video>?",
+    "answer": "Unlike <video>, <audio> has no poster attribute, so any cover art or thumbnail must be rendered separately in the surrounding markup, typically as an <img> placed alongside the <audio> element and styled together as a custom player layout, since the audio element itself only renders its playback controls.",
+    "example": null,
+    "code": "<div class=\"player\">\n  <img src=\"album-art.jpg\" alt=\"Album cover for Midnight Drive\">\n  <audio controls src=\"track.mp3\"></audio>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "media"],
+    "isFrequentlyAsked": false
+  }
+]

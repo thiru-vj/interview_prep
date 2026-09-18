@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Function Components",
+    "syntax": "function MyComponent(props) {\n  return <div>{props.text}</div>;\n}",
+    "description": "A JavaScript function that accepts a single `props` object and returns JSX describing what should render on screen. This is the standard way to define components in modern React.",
+    "parameters": "props — an object of values passed down from the parent component.",
+    "returns": "A React element (JSX) or, in newer React versions, other renderable values like strings, numbers, arrays, or null.",
+    "example": "function Greeting({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Function components can use Hooks (useState, useEffect, etc.); class components cannot use Hooks.",
+    "tags": ["react", "components", "fundamentals"]
+  },
+  {
+    "name": "JSX",
+    "syntax": "const element = <div className=\"box\">{value}</div>;",
+    "description": "A syntax extension to JavaScript that lets you write HTML-like markup inside JS files. It compiles to `React.createElement()` calls under the hood.",
+    "parameters": null,
+    "returns": "A React element (a plain JS object describing the DOM node to render).",
+    "example": "const el = <p>Count: {count}</p>;\n// compiles roughly to:\n// React.createElement('p', null, 'Count: ', count)",
+    "codeLanguage": "jsx",
+    "notes": "Use `className` instead of `class`, and camelCase for most DOM attributes (e.g. `onClick`, `tabIndex`).",
+    "tags": ["react", "jsx", "syntax"]
+  },
+  {
+    "name": "Fragments (<>...</>)",
+    "syntax": "<>\n  <ChildA />\n  <ChildB />\n</>",
+    "description": "Lets a component return multiple sibling elements without adding an extra wrapper node to the DOM.",
+    "parameters": null,
+    "returns": "A grouped list of children with no additional DOM element.",
+    "example": "function Row() {\n  return (\n    <>\n      <td>One</td>\n      <td>Two</td>\n    </>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Use the explicit `<React.Fragment key={id}>` form (instead of the `<>` shorthand) when you need to pass a `key`, such as inside a mapped list.",
+    "tags": ["react", "components", "jsx"]
+  },
+  {
+    "name": "children Prop",
+    "syntax": "<Card>{someContent}</Card>",
+    "description": "A special prop that holds whatever is nested between a component's opening and closing tags, enabling components to wrap and render arbitrary content.",
+    "parameters": null,
+    "returns": "Whatever was passed as nested JSX — a single element, a string, an array of elements, or nothing.",
+    "example": "function Card({ children }) {\n  return <div className=\"card\">{children}</div>;\n}\n\n<Card><p>Inside the card</p></Card>;",
+    "codeLanguage": "jsx",
+    "notes": "children can be any renderable value, so guard against unexpected types when rendering it directly.",
+    "tags": ["react", "props", "composition"]
+  },
+  {
+    "name": "Composition vs Inheritance",
+    "syntax": null,
+    "description": "React recommends composing components (nesting and passing props/children) to share and reuse behavior rather than building class inheritance hierarchies.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Dialog({ title, children }) {\n  return (\n    <div className=\"dialog\">\n      <h2>{title}</h2>\n      {children}\n    </div>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "The official React docs state they have not found a use case where an inheritance hierarchy is recommended over composition.",
+    "tags": ["react", "components", "patterns"]
+  },
+  {
+    "name": "Conditional Rendering",
+    "syntax": "{condition ? <A /> : <B />}\n{condition && <A />}",
+    "description": "Rendering different JSX depending on a condition, typically with ternaries, `&&`, early returns, or if/else outside the JSX.",
+    "parameters": null,
+    "returns": "The JSX for whichever branch is truthy/selected; null or false renders nothing.",
+    "example": "function Status({ isOnline }) {\n  return isOnline ? <span>Online</span> : <span>Offline</span>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Avoid `{count && <Badge />}` when `count` can be `0` — it renders the literal `0` instead of nothing; use `count > 0 && ...` instead.",
+    "tags": ["react", "jsx", "rendering"]
+  },
+  {
+    "name": "Rendering Lists with key",
+    "syntax": "{items.map(item => <li key={item.id}>{item.name}</li>)}",
+    "description": "Rendering an array of data as a list of elements using `.map()`, giving each element a stable `key` so React can track identity across re-renders.",
+    "parameters": "key — a string/number unique among siblings, used by React's reconciliation algorithm.",
+    "returns": "An array of React elements.",
+    "example": "function List({ items }) {\n  return (\n    <ul>\n      {items.map(item => <li key={item.id}>{item.label}</li>)}\n    </ul>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Avoid using array index as `key` when the list can reorder, be filtered, or have items inserted/removed — it can cause state and DOM to mismatch.",
+    "tags": ["react", "lists", "rendering"]
+  },
+  {
+    "name": "Controlled Components",
+    "syntax": "<input value={value} onChange={e => setValue(e.target.value)} />",
+    "description": "A form element whose value is driven entirely by React state, updated via an `onChange` handler, making state the single source of truth.",
+    "parameters": null,
+    "returns": null,
+    "example": "function NameInput() {\n  const [name, setName] = useState('');\n  return <input value={name} onChange={e => setName(e.target.value)} />;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Controlled inputs make validation, formatting, and conditional disabling straightforward since every keystroke updates state.",
+    "tags": ["react", "forms", "state"]
+  },
+  {
+    "name": "Uncontrolled Components",
+    "syntax": "<input ref={inputRef} defaultValue=\"initial\" />",
+    "description": "A form element that manages its own state internally in the DOM; React reads its current value on demand via a ref instead of tracking every change.",
+    "parameters": null,
+    "returns": null,
+    "example": "function NameInput() {\n  const inputRef = useRef(null);\n  const submit = () => console.log(inputRef.current.value);\n  return <input ref={inputRef} defaultValue=\"initial\" />;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Useful for simple forms, file inputs (which can't be controlled), or integrating with non-React code; less predictable than controlled components.",
+    "tags": ["react", "forms", "refs"]
+  },
+  {
+    "name": "Presentational vs Container Components",
+    "syntax": null,
+    "description": "A pattern separating components that focus on how things look (presentational, mostly props-driven) from components that focus on how things work (container, manage state/data-fetching).",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "Largely superseded by custom hooks in modern React, which extract stateful logic without requiring a wrapper component.",
+    "tags": ["react", "components", "patterns"]
+  }
+]

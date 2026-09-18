@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Selector function",
+    "syntax": "const selectTodos = (state) => state.todos;",
+    "description": "A function that takes the Redux store state and returns some derived piece of it. Selectors centralize the knowledge of how state is shaped, so components don't need to know the state tree's structure.",
+    "returns": "The selected (or derived) piece of state.",
+    "example": "const selectTodoCount = (state) => state.todos.length;",
+    "codeLanguage": "javascript",
+    "notes": "Co-locating selectors next to their slice (e.g. exported from the slice file) makes it easy to update them if the state shape changes.",
+    "tags": ["redux", "selectors", "concepts"]
+  },
+  {
+    "name": "useSelector()",
+    "syntax": "const value = useSelector(selectorFn)",
+    "description": "A react-redux hook that reads a value from the Redux store state by running the given selector function, and re-renders the component whenever the selected value changes.",
+    "parameters": "selectorFn — function receiving the store state and returning the desired value.",
+    "returns": "The value returned by the selector.",
+    "example": "import { useSelector } from 'react-redux';\nconst todos = useSelector((state) => state.todos.items);",
+    "codeLanguage": "javascript",
+    "notes": "useSelector compares the selected value with strict equality (===) by default — return primitives or memoized references to avoid unnecessary re-renders.",
+    "tags": ["redux", "selectors", "react-redux"]
+  },
+  {
+    "name": "createSelector() (reselect)",
+    "syntax": "createSelector(inputSelectors, resultFn)",
+    "description": "A function from the Reselect library (re-exported by Redux Toolkit) that creates a memoized selector, recomputing its result only when one of its input selectors' outputs changes.",
+    "parameters": "inputSelectors — one or more selector functions whose results are passed to resultFn. resultFn — combines the inputs into a derived value.",
+    "returns": "A memoized selector function.",
+    "example": "import { createSelector } from '@reduxjs/toolkit';\nconst selectCompletedCount = createSelector(\n  (state) => state.todos.items,\n  (items) => items.filter(t => t.completed).length\n);",
+    "codeLanguage": "javascript",
+    "notes": "Essential for expensive derived computations (filtering, sorting, aggregating) so they don't rerun on every render.",
+    "tags": ["redux", "selectors", "memoization"]
+  },
+  {
+    "name": "Deriving state with selectors",
+    "description": "Rather than storing computed values in the store, selectors compute derived data (filtered lists, totals, formatted values) on read, keeping the stored state minimal and normalized.",
+    "example": "const selectActiveTodos = (state) => state.todos.items.filter(t => !t.done);",
+    "codeLanguage": "javascript",
+    "notes": "Storing only raw data and deriving the rest avoids state getting out of sync.",
+    "tags": ["redux", "selectors", "concepts"]
+  },
+  {
+    "name": "Avoiding unnecessary re-renders with selectors",
+    "description": "Selecting the smallest, most specific piece of state needed (rather than a whole object) and memoizing derived values with createSelector prevents components from re-rendering when unrelated state changes.",
+    "example": "// Prefer:\nuseSelector((state) => state.todos.count);\n// Over selecting the whole todos object and reading .count in the component",
+    "codeLanguage": "javascript",
+    "notes": "Returning a new object/array literal from a plain useSelector call causes a re-render on every dispatch, since a new reference never equals the previous one.",
+    "tags": ["redux", "selectors", "performance"]
+  },
+  {
+    "name": "useSelector with shallowEqual",
+    "syntax": "useSelector(selectorFn, shallowEqual)",
+    "description": "Passes an equality function as the second argument to useSelector so it re-renders only when the selected object's top-level fields actually change, instead of on every new object reference.",
+    "example": "import { useSelector, shallowEqual } from 'react-redux';\nconst { count, name } = useSelector((state) => ({\n  count: state.todos.count,\n  name: state.user.name\n}), shallowEqual);",
+    "codeLanguage": "javascript",
+    "notes": "An alternative to this is calling useSelector multiple times, once per primitive value needed.",
+    "tags": ["redux", "selectors", "react-redux"]
+  }
+]

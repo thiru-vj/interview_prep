@@ -1,0 +1,112 @@
+[
+  {
+    "name": "React.memo()",
+    "syntax": "const MemoComponent = React.memo(Component, arePropsEqual);",
+    "description": "A higher-order component that skips re-rendering a component if its props are shallowly equal to the previous render's props.",
+    "parameters": "Component — the component to memoize. arePropsEqual — optional custom comparison function.",
+    "returns": "A new, memoized component.",
+    "example": "const Row = React.memo(function Row({ item }) {\n  return <li>{item.label}</li>;\n});",
+    "codeLanguage": "jsx",
+    "notes": "Only helps when the component re-renders often with the same props and rendering it is non-trivial; wrap function props passed to it with useCallback so they don't defeat the memoization.",
+    "tags": ["react", "performance", "memoization"]
+  },
+  {
+    "name": "forwardRef()",
+    "syntax": "const Input = forwardRef((props, ref) => <input ref={ref} {...props} />);",
+    "description": "Lets a component receive a ref from its parent and forward it to one of its own children, typically an underlying DOM node.",
+    "parameters": "render — a function receiving (props, ref).",
+    "returns": "A component that accepts a ref prop.",
+    "example": "const FancyInput = forwardRef(function FancyInput(props, ref) {\n  return <input ref={ref} className=\"fancy\" {...props} />;\n});\n\n// parent: <FancyInput ref={inputRef} />",
+    "codeLanguage": "jsx",
+    "notes": "Needed because refs aren't passed through props automatically like other values.",
+    "tags": ["react", "refs", "components"]
+  },
+  {
+    "name": "lazy()",
+    "syntax": "const OtherComponent = lazy(() => import('./OtherComponent'));",
+    "description": "Defines a component that is loaded via dynamic import only when it's first rendered, enabling code-splitting.",
+    "parameters": "loader — a function returning a Promise that resolves to a module with a default export component.",
+    "returns": "A component that must be rendered inside a Suspense boundary.",
+    "example": "const ProfilePage = lazy(() => import('./ProfilePage'));\n\n<Suspense fallback={<Spinner />}>\n  <ProfilePage />\n</Suspense>",
+    "codeLanguage": "jsx",
+    "notes": "Reduces the initial bundle size by splitting rarely-needed screens/components into separate chunks loaded on demand.",
+    "tags": ["react", "performance", "code-splitting"]
+  },
+  {
+    "name": "Suspense",
+    "syntax": "<Suspense fallback={<Loading />}>{children}</Suspense>",
+    "description": "A component that shows a fallback UI while its descendants are still 'loading' — such as a lazy-loaded component or data fetched via Suspense-compatible libraries.",
+    "parameters": "fallback — the UI to show while children aren't ready.",
+    "returns": null,
+    "example": "<Suspense fallback={<p>Loading...</p>}>\n  <LazyChart />\n</Suspense>",
+    "codeLanguage": "jsx",
+    "notes": "Works with React.lazy() out of the box; using it directly for data fetching requires a framework or library that supports Suspense-based fetching.",
+    "tags": ["react", "suspense", "loading-states"]
+  },
+  {
+    "name": "createPortal()",
+    "syntax": "createPortal(children, domNode)",
+    "description": "Renders children into a different part of the DOM tree than the component's normal parent hierarchy, while keeping them part of the same React tree for events and context.",
+    "parameters": "children — the React content to render. domNode — the target DOM node to render into.",
+    "returns": "A React portal node.",
+    "example": "function Modal({ children }) {\n  return createPortal(\n    <div className=\"modal\">{children}</div>,\n    document.getElementById('modal-root')\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Commonly used for modals, tooltips, and dropdowns that need to escape a parent's overflow:hidden or z-index stacking context.",
+    "tags": ["react", "portals", "dom"]
+  },
+  {
+    "name": "StrictMode",
+    "syntax": "<React.StrictMode>{children}</React.StrictMode>",
+    "description": "A development-only wrapper that helps surface potential problems by intentionally double-invoking certain functions (component bodies, some hooks) and warning about deprecated APIs.",
+    "parameters": null,
+    "returns": null,
+    "example": "<React.StrictMode>\n  <App />\n</React.StrictMode>",
+    "codeLanguage": "jsx",
+    "notes": "Has no effect on the production build — it's purely a development aid for catching side effects in render and other unsafe patterns.",
+    "tags": ["react", "debugging", "development"]
+  },
+  {
+    "name": "cloneElement()",
+    "syntax": "cloneElement(element, newProps, ...newChildren)",
+    "description": "Creates a copy of a React element with new or merged props, used to inject additional props into children passed to a component.",
+    "parameters": "element — the element to clone. newProps — props to merge onto the clone.",
+    "returns": "A new React element.",
+    "example": "function List({ children }) {\n  return React.Children.map(children, child =>\n    React.cloneElement(child, { className: 'list-item' })\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Considered a legacy pattern in most cases — render props, composition, or context are usually clearer alternatives.",
+    "tags": ["react", "elements", "legacy"]
+  },
+  {
+    "name": "Children Utilities",
+    "syntax": "React.Children.map(children, fn)",
+    "description": "A set of utility functions (map, forEach, count, only, toArray) for safely working with the opaque `props.children` structure, which can be a single node, an array, or nested arrays.",
+    "parameters": null,
+    "returns": "Depends on the method — e.g. React.Children.count() returns a number, React.Children.toArray() returns a flat array.",
+    "example": "function Tabs({ children }) {\n  return React.Children.map(children, (child, i) => (\n    <Tab key={i}>{child}</Tab>\n  ));\n}",
+    "codeLanguage": "jsx",
+    "notes": "Rarely needed if children are treated simply as opaque renderable content — mostly useful when a component must inspect or transform its children individually.",
+    "tags": ["react", "children", "utilities"]
+  },
+  {
+    "name": "act()",
+    "syntax": "await act(async () => { render(<Component />); });",
+    "description": "A testing utility (from `react` / `react-dom/test-utils`) that ensures all state updates, effects, and re-renders triggered inside the callback are flushed before assertions run.",
+    "parameters": "callback — function (sync or async) containing the code that triggers React updates.",
+    "returns": "A Promise if the callback is async, otherwise undefined.",
+    "example": "import { act } from 'react';\n\nawait act(async () => {\n  root.render(<Counter />);\n});",
+    "codeLanguage": "jsx",
+    "notes": "Testing Library's render/fireEvent already wrap calls in act() internally, so it's rarely needed to call directly in tests using that library.",
+    "tags": ["react", "testing", "utilities"]
+  },
+  {
+    "name": "createRoot()",
+    "syntax": "const root = createRoot(container);\nroot.render(<App />);",
+    "description": "The React DOM API (from `react-dom/client`) used to create a root and render a React element tree into a DOM container, enabling concurrent features.",
+    "parameters": "container — the DOM element to render into.",
+    "returns": "A root object with render() and unmount() methods.",
+    "example": "import { createRoot } from 'react-dom/client';\n\nconst root = createRoot(document.getElementById('root'));\nroot.render(<App />);",
+    "codeLanguage": "jsx",
+    "notes": "Replaced the legacy ReactDOM.render() API starting in React 18; ReactDOM.render() no longer enables concurrent features.",
+    "tags": ["react", "rendering", "react-dom"]
+  }
+]

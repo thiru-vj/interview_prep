@@ -1,0 +1,163 @@
+[
+  {
+    "name": "JSON.stringify()",
+    "syntax": "JSON.stringify(value, replacer, space)",
+    "description": "Converts a JavaScript value into a JSON string, optionally filtering properties and pretty-printing with indentation.",
+    "parameters": "value — the value to serialize. replacer — optional function or array to filter properties. space — optional indentation for pretty-printing.",
+    "returns": "A JSON-formatted string.",
+    "example": "JSON.stringify({ a: 1, b: 2 }, null, 2);",
+    "codeLanguage": "javascript",
+    "notes": "Functions, undefined values, and symbols are silently dropped or omitted during serialization.",
+    "tags": ["javascript", "json", "serialization"]
+  },
+  {
+    "name": "JSON.parse()",
+    "syntax": "JSON.parse(text, reviver)",
+    "description": "Parses a JSON string, constructing the JavaScript value or object it describes.",
+    "parameters": "text — the JSON string to parse. reviver — optional function to transform parsed values.",
+    "returns": "The JavaScript value corresponding to the parsed JSON text.",
+    "example": "JSON.parse('{\"a\":1}'); // { a: 1 }",
+    "codeLanguage": "javascript",
+    "notes": "Throws a SyntaxError on malformed JSON — wrap in try...catch when parsing untrusted input.",
+    "tags": ["javascript", "json", "serialization"]
+  },
+  {
+    "name": "Math.random()",
+    "syntax": "Math.random()",
+    "description": "Returns a pseudo-random floating-point number in the range [0, 1), including 0 but excluding 1.",
+    "returns": "A random number between 0 (inclusive) and 1 (exclusive).",
+    "example": "Math.floor(Math.random() * 10); // random integer 0-9",
+    "codeLanguage": "javascript",
+    "notes": "Not cryptographically secure — use the Web Crypto API's crypto.getRandomValues() for security-sensitive randomness.",
+    "tags": ["javascript", "math", "random"]
+  },
+  {
+    "name": "Math.floor()",
+    "syntax": "Math.floor(number)",
+    "description": "Rounds a number down to the nearest integer.",
+    "parameters": "number — the value to round down.",
+    "returns": "The largest integer less than or equal to the given number.",
+    "example": "Math.floor(4.7); // 4",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "math", "rounding"]
+  },
+  {
+    "name": "Math.round()",
+    "syntax": "Math.round(number)",
+    "description": "Rounds a number to the nearest integer, rounding .5 values up.",
+    "parameters": "number — the value to round.",
+    "returns": "The rounded integer.",
+    "example": "Math.round(4.5); // 5\nMath.round(4.4); // 4",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "math", "rounding"]
+  },
+  {
+    "name": "Math.max()",
+    "syntax": "Math.max(value1, value2, ...)",
+    "description": "Returns the largest of the given numbers.",
+    "parameters": "value1, value2, ... — numbers to compare.",
+    "returns": "The largest value, or -Infinity if no arguments are given.",
+    "example": "Math.max(1, 5, 3); // 5\nMath.max(...[1, 5, 3]); // 5",
+    "codeLanguage": "javascript",
+    "notes": "Use the spread operator to apply it to an array: Math.max(...array).",
+    "tags": ["javascript", "math"]
+  },
+  {
+    "name": "Math.min()",
+    "syntax": "Math.min(value1, value2, ...)",
+    "description": "Returns the smallest of the given numbers.",
+    "parameters": "value1, value2, ... — numbers to compare.",
+    "returns": "The smallest value, or Infinity if no arguments are given.",
+    "example": "Math.min(1, 5, 3); // 1",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "math"]
+  },
+  {
+    "name": "Math.abs()",
+    "syntax": "Math.abs(number)",
+    "description": "Returns the absolute (non-negative) value of a number.",
+    "parameters": "number — the value to convert.",
+    "returns": "The absolute value.",
+    "example": "Math.abs(-5); // 5",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "math"]
+  },
+  {
+    "name": "Number.isInteger()",
+    "syntax": "Number.isInteger(value)",
+    "description": "Determines whether the given value is an integer, without coercing the input type.",
+    "parameters": "value — the value to test.",
+    "returns": "true if the value is a number and an integer, otherwise false.",
+    "example": "Number.isInteger(5); // true\nNumber.isInteger(5.5); // false\nNumber.isInteger('5'); // false",
+    "codeLanguage": "javascript",
+    "notes": "Unlike the global isInteger-style checks, this does not coerce strings — '5' is not considered an integer.",
+    "tags": ["javascript", "numbers", "type-checking"]
+  },
+  {
+    "name": "Number.parseFloat()",
+    "syntax": "Number.parseFloat(string)",
+    "description": "Parses a string and returns a floating-point number, reading as much of the string as looks like a valid number.",
+    "parameters": "string — the string to parse.",
+    "returns": "The parsed floating-point number, or NaN if the string cannot be parsed.",
+    "example": "Number.parseFloat('3.14abc'); // 3.14",
+    "codeLanguage": "javascript",
+    "notes": "Equivalent to the global parseFloat() function, but namespaced under Number for module-style consistency.",
+    "tags": ["javascript", "numbers", "parsing"]
+  },
+  {
+    "name": "console.log()",
+    "syntax": "console.log(value1, value2, ...)",
+    "description": "Outputs one or more values to the console, commonly used for debugging.",
+    "parameters": "value1, value2, ... — any values to print.",
+    "example": "console.log('user:', { name: 'Sam' });",
+    "codeLanguage": "javascript",
+    "notes": "Supports string substitution with %s, %d, %o and CSS styling with %c.",
+    "tags": ["javascript", "console", "debugging"]
+  },
+  {
+    "name": "console.table()",
+    "syntax": "console.table(data)",
+    "description": "Displays tabular data (an array of objects or a 2D structure) as a formatted table in the console.",
+    "parameters": "data — an array or object to render as a table.",
+    "example": "console.table([{ id: 1, name: 'Sam' }, { id: 2, name: 'Alex' }]);",
+    "codeLanguage": "javascript",
+    "notes": "Much easier to scan than console.log() for arrays of similarly-shaped objects.",
+    "tags": ["javascript", "console", "debugging"]
+  },
+  {
+    "name": "setTimeout()",
+    "syntax": "setTimeout(callback, delayMs, ...args)",
+    "description": "Schedules a function to run once after a specified delay, without blocking the rest of the program.",
+    "parameters": "callback — function to execute. delayMs — delay in milliseconds. args — optional arguments passed to callback.",
+    "returns": "A timeout ID that can be passed to clearTimeout().",
+    "example": "setTimeout(() => console.log('later'), 1000);",
+    "codeLanguage": "javascript",
+    "notes": "The delay is a minimum, not a guarantee — actual execution can be delayed further by the event loop's workload.",
+    "tags": ["javascript", "timers", "async"]
+  },
+  {
+    "name": "setInterval()",
+    "syntax": "setInterval(callback, intervalMs, ...args)",
+    "description": "Repeatedly calls a function with a fixed time delay between each call, until cleared.",
+    "parameters": "callback — function to execute repeatedly. intervalMs — delay between calls in milliseconds. args — optional arguments passed to callback.",
+    "returns": "An interval ID that can be passed to clearInterval().",
+    "example": "const id = setInterval(() => console.log('tick'), 1000);",
+    "codeLanguage": "javascript",
+    "notes": "Always store the returned ID so the interval can be stopped later — forgetting to clear it is a common source of memory leaks.",
+    "tags": ["javascript", "timers", "async"]
+  },
+  {
+    "name": "clearTimeout()",
+    "syntax": "clearTimeout(timeoutId)",
+    "description": "Cancels a timeout previously scheduled with setTimeout(), preventing its callback from running.",
+    "parameters": "timeoutId — the ID returned by setTimeout().",
+    "example": "const id = setTimeout(doThing, 5000); clearTimeout(id); // doThing never runs",
+    "codeLanguage": "javascript",
+    "notes": "Also works to cancel a setInterval() timer via its interval-ID counterpart, clearInterval().",
+    "tags": ["javascript", "timers", "async"]
+  }
+]

@@ -1,0 +1,233 @@
+[
+  {
+    "name": "Type selector",
+    "syntax": "element { }",
+    "description": "Selects all elements of a given HTML tag name.",
+    "parameters": null,
+    "returns": null,
+    "example": "p {\n  color: navy;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "basics"]
+  },
+  {
+    "name": ".class",
+    "syntax": ".class-name { }",
+    "description": "Selects all elements that have the given class in their class attribute.",
+    "parameters": null,
+    "returns": null,
+    "example": ".card {\n  padding: 16px;\n}",
+    "codeLanguage": "css",
+    "notes": "An element can have multiple classes separated by spaces in its class attribute.",
+    "tags": ["css", "selectors", "class"]
+  },
+  {
+    "name": "#id",
+    "syntax": "#id-name { }",
+    "description": "Selects the single element with the matching id attribute.",
+    "parameters": null,
+    "returns": null,
+    "example": "#main-nav {\n  position: sticky;\n}",
+    "codeLanguage": "css",
+    "notes": "IDs must be unique per page and have high specificity — prefer classes for reusable styling.",
+    "tags": ["css", "selectors", "id"]
+  },
+  {
+    "name": "Universal selector (*)",
+    "syntax": "* { }",
+    "description": "Selects every element on the page.",
+    "parameters": null,
+    "returns": null,
+    "example": "* {\n  box-sizing: border-box;\n}",
+    "codeLanguage": "css",
+    "notes": "Commonly used in CSS resets; can hurt performance if used with heavy rules on large DOM trees.",
+    "tags": ["css", "selectors", "universal"]
+  },
+  {
+    "name": "Attribute selector",
+    "syntax": "[attr], [attr=\"value\"], [attr^=\"value\"], [attr$=\"value\"], [attr*=\"value\"]",
+    "description": "Selects elements based on the presence or value of an HTML attribute.",
+    "parameters": "^= starts with, $= ends with, *= contains, ~= contains word.",
+    "returns": null,
+    "example": "input[type=\"email\"] {\n  border-color: blue;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "attribute"]
+  },
+  {
+    "name": "Descendant combinator",
+    "syntax": "ancestor descendant { }",
+    "description": "Selects elements that are nested anywhere inside an ancestor element, at any depth.",
+    "parameters": null,
+    "returns": null,
+    "example": "article p {\n  line-height: 1.6;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "combinator"]
+  },
+  {
+    "name": "Child combinator (>)",
+    "syntax": "parent > child { }",
+    "description": "Selects only direct children of an element, not deeper descendants.",
+    "parameters": null,
+    "returns": null,
+    "example": "ul > li {\n  list-style: none;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "combinator"]
+  },
+  {
+    "name": "Adjacent sibling combinator (+)",
+    "syntax": "element + sibling { }",
+    "description": "Selects the element that comes immediately after another element and shares the same parent.",
+    "parameters": null,
+    "returns": null,
+    "example": "h2 + p {\n  margin-top: 0;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "combinator"]
+  },
+  {
+    "name": "General sibling combinator (~)",
+    "syntax": "element ~ siblings { }",
+    "description": "Selects all siblings that come after an element and share the same parent, not just the immediately adjacent one.",
+    "parameters": null,
+    "returns": null,
+    "example": "h2 ~ p {\n  color: gray;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "combinator"]
+  },
+  {
+    "name": "Grouping selector (,)",
+    "syntax": "selector1, selector2 { }",
+    "description": "Applies the same declaration block to multiple selectors, comma-separated.",
+    "parameters": null,
+    "returns": null,
+    "example": "h1, h2, h3 {\n  font-family: sans-serif;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "selectors", "grouping"]
+  },
+  {
+    "name": ":hover",
+    "syntax": "selector:hover { }",
+    "description": "Applies styles while the pointer is positioned over an element.",
+    "parameters": null,
+    "returns": null,
+    "example": "button:hover {\n  background: #333;\n}",
+    "codeLanguage": "css",
+    "notes": "Has no effect on touch-only devices since there is no persistent hover state.",
+    "tags": ["css", "pseudo-class", "interaction"]
+  },
+  {
+    "name": ":focus",
+    "syntax": "selector:focus { }",
+    "description": "Applies styles to an element while it has keyboard or programmatic focus.",
+    "parameters": null,
+    "returns": null,
+    "example": "input:focus {\n  outline: 2px solid blue;\n}",
+    "codeLanguage": "css",
+    "notes": "Never remove focus outlines without providing an equally visible replacement — it breaks keyboard accessibility.",
+    "tags": ["css", "pseudo-class", "accessibility"]
+  },
+  {
+    "name": ":active",
+    "syntax": "selector:active { }",
+    "description": "Applies styles while an element is being activated, such as during a mouse click or tap.",
+    "parameters": null,
+    "returns": null,
+    "example": "a:active {\n  color: red;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-class", "interaction"]
+  },
+  {
+    "name": ":nth-child()",
+    "syntax": "selector:nth-child(an + b | odd | even | number)",
+    "description": "Selects elements based on their position among siblings, counting all sibling element types.",
+    "parameters": "An+B formula, or the keywords odd/even, or a fixed integer position.",
+    "returns": null,
+    "example": "tr:nth-child(even) {\n  background: #f5f5f5;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-class", "structural"]
+  },
+  {
+    "name": ":nth-of-type()",
+    "syntax": "selector:nth-of-type(an + b | odd | even | number)",
+    "description": "Selects elements based on their position among siblings of the same element type, ignoring other tag types.",
+    "parameters": null,
+    "returns": null,
+    "example": "p:nth-of-type(2) {\n  font-weight: bold;\n}",
+    "codeLanguage": "css",
+    "notes": "Unlike :nth-child(), it only counts siblings that share the same tag name.",
+    "tags": ["css", "pseudo-class", "structural"]
+  },
+  {
+    "name": ":first-child / :last-child",
+    "syntax": "selector:first-child { }  selector:last-child { }",
+    "description": "Selects an element only if it is the first or last child of its parent, respectively.",
+    "parameters": null,
+    "returns": null,
+    "example": "li:first-child {\n  margin-top: 0;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-class", "structural"]
+  },
+  {
+    "name": ":not()",
+    "syntax": "selector:not(exception) { }",
+    "description": "Selects elements that do not match the selector passed as its argument.",
+    "parameters": "exception — any simple selector to exclude.",
+    "returns": null,
+    "example": "button:not(.disabled) {\n  cursor: pointer;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-class", "negation"]
+  },
+  {
+    "name": ":checked",
+    "syntax": "selector:checked { }",
+    "description": "Matches checkboxes, radio buttons, or options that are currently checked or selected.",
+    "parameters": null,
+    "returns": null,
+    "example": "input:checked + label {\n  color: green;\n}",
+    "codeLanguage": "css",
+    "notes": "Often combined with the sibling combinator to build CSS-only toggle UI.",
+    "tags": ["css", "pseudo-class", "forms"]
+  },
+  {
+    "name": "::before",
+    "syntax": "selector::before { content: \"...\"; }",
+    "description": "Inserts generated content immediately before an element's actual content.",
+    "parameters": null,
+    "returns": null,
+    "example": ".required::before {\n  content: \"* \";\n  color: red;\n}",
+    "codeLanguage": "css",
+    "notes": "Requires a content property to render, even if the value is an empty string.",
+    "tags": ["css", "pseudo-element", "generated-content"]
+  },
+  {
+    "name": "::after",
+    "syntax": "selector::after { content: \"...\"; }",
+    "description": "Inserts generated content immediately after an element's actual content.",
+    "parameters": null,
+    "returns": null,
+    "example": ".tooltip::after {\n  content: \"\";\n  border: 5px solid transparent;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-element", "generated-content"]
+  },
+  {
+    "name": "::placeholder",
+    "syntax": "input::placeholder { }",
+    "description": "Styles the placeholder text of a form input or textarea.",
+    "parameters": null,
+    "returns": null,
+    "example": "input::placeholder {\n  color: #999;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "pseudo-element", "forms"]
+  }
+]

@@ -21,7 +21,7 @@ Run `node scripts/generate-seed.mjs` after editing any of these files to regener
   // Optional. A short, runnable code block (a few lines). null if not needed.
   "code": "function debounce(fn, delay) {\n  let timer;\n  ...\n}",
 
-  // Required whenever "code" is set. One of: java | javascript | typescript | jsx | tsx | sql
+  // Required whenever "code" is set. One of: java | javascript | typescript | jsx | tsx | sql | html | css
   "codeLanguage": "javascript",
 
   // One of: easy | medium | hard

@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What are CSS custom properties (CSS variables) and how do you declare and use one?",
+    "answer": "Custom properties are author-defined variables, written with a double-hyphen prefix (--name), that store a reusable value and are read with the var() function. Unlike preprocessor variables, they're live in the DOM, participate in the cascade and inheritance, and can be read or changed at runtime with JavaScript or media queries.",
+    "example": null,
+    "code": ":root {\n  --primary-color: #3366ff;\n}\n\n.button {\n  background: var(--primary-color);\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why are CSS custom properties typically declared on the :root selector?",
+    "answer": ":root targets the document's root element (equivalent to html but with higher specificity), which is the highest point in the DOM tree, so any custom property declared there is inherited by every element on the page unless explicitly overridden further down. This makes it the conventional place for global design tokens like colors, spacing, and fonts.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the var() function's second argument (fallback value) work?",
+    "answer": "var(--name, fallback) supplies a fallback value to use if the referenced custom property is not defined or is invalid, similar to a default parameter. The fallback can itself be another var() call, another custom property, or any valid CSS value, and only applies when the variable is genuinely missing, not when it's an empty string.",
+    "example": null,
+    "code": "color: var(--text-color, #333);",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the calc() function used for in CSS?",
+    "answer": "calc() performs mathematical calculations (addition, subtraction, multiplication, division) directly in a CSS value, and crucially allows mixing different units in the same expression, such as combining a percentage and a fixed pixel value — something that's otherwise impossible without calc().",
+    "example": null,
+    "code": ".sidebar {\n  width: calc(100% - 250px);\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why must there be whitespace around the + and - operators inside a calc() expression, but not around * and /?",
+    "answer": "The CSS calc() grammar requires whitespace around + and - because without it, a value like calc(100%-20px) would be ambiguous with a negative unit token, so the parser can't reliably distinguish an operator from a sign. * and / don't have this ambiguity since a value can't begin with those characters, so whitespace around them is optional (though good practice for readability).",
+    "example": null,
+    "code": "width: calc(100% - 20px);  /* correct */\nwidth: calc(100%-20px);   /* invalid */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the min() and max() CSS functions do?",
+    "answer": "min() evaluates a comma-separated list of values and uses the smallest one, commonly used to cap a size (e.g. never exceed a max width). max() uses the largest value, commonly used to enforce a minimum floor. Both can mix units and include calc()-like expressions directly inside them.",
+    "example": null,
+    "code": ".box {\n  width: min(90vw, 600px);\n  font-size: max(1rem, 2vw);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "functions"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the clamp() function work, and what are its three arguments?",
+    "answer": "clamp(min, preferred, max) returns the preferred value, but constrains it to never go below the min or above the max — effectively a shorthand for max(min, min(preferred, max)). It's widely used for fluid typography and spacing that scales smoothly with the viewport while staying within safe bounds.",
+    "example": null,
+    "code": "font-size: clamp(1rem, 2vw + 0.5rem, 2rem);",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "clamp"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between CSS custom properties and Sass/LESS preprocessor variables in terms of runtime behavior?",
+    "answer": "Preprocessor variables are resolved once at compile time into static values baked into the final CSS output, so they can't be inspected or changed after the build. CSS custom properties persist in the browser at runtime, cascade and inherit like normal properties, can differ per element or media query, and can be read and mutated live via JavaScript's element.style.setProperty().",
+    "example": null,
+    "code": "el.style.setProperty('--primary-color', 'red');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you override a CSS custom property for just a specific component or scope?",
+    "answer": "Because custom properties follow the normal cascade and inheritance rules, redeclaring the same --name on a more specific selector (like a component class) overrides the value for that element and its descendants, without affecting the rest of the page that still inherits the :root value.",
+    "example": null,
+    "code": ":root { --spacing: 1rem; }\n.compact { --spacing: 0.5rem; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement a light/dark theme toggle using CSS custom properties?",
+    "answer": "Define semantic custom properties (like --bg-color, --text-color) at :root for the default theme, then redefine those same property names inside a `[data-theme=\"dark\"]` selector (or a prefers-color-scheme media query). Toggling a data attribute or class on the root element switches every property that references those variables instantly, without needing separate stylesheets.",
+    "example": null,
+    "code": ":root { --bg: white; --text: black; }\n[data-theme=\"dark\"] { --bg: #111; --text: #eee; }\nbody { background: var(--bg); color: var(--text); }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What happens if a CSS custom property is referenced but was never defined, and there's no fallback in var()?",
+    "answer": "If a custom property is undefined and var() has no fallback, the property using it is treated as having its 'guaranteed-invalid value' — for most properties this behaves like the unset keyword, either falling back to the inherited value or the initial value, effectively making the declaration act as if it weren't there at all.",
+    "example": null,
+    "code": "color: var(--undefined-color); /* falls back to inherited/initial */",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can CSS custom properties be used inside media queries or other at-rules directly?",
+    "answer": "Custom properties cannot be directly substituted into a media query's condition (e.g. `@media (min-width: var(--breakpoint))` is invalid) because media query conditions are evaluated before the cascade resolves custom property values. Workarounds include container queries with units defined differently, or using JavaScript to read/set styles based on matchMedia, since the native CSS environment/custom property system doesn't yet fully bridge this gap for most at-rules.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you combine calc() with a CSS custom property?",
+    "answer": "A custom property can be referenced with var() inside a calc() expression just like any other value, letting you build derived values (like spacing scales) from a single base variable, keeping the relationship between values centralized and easy to adjust.",
+    "example": null,
+    "code": ":root { --base: 8px; }\n.card { padding: calc(var(--base) * 2); }",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the @property at-rule and what advantages does it give over a plain custom property?",
+    "answer": "@property lets you formally register a custom property with a specific syntax type (like <color> or <length>), an initial-value, and whether it inherits. This enables the browser to properly type-check the value, provide a real default (unlike the guaranteed-invalid fallback of untyped variables), and — critically — allows the property to be smoothly animated/transitioned, which untyped string-based custom properties cannot be.",
+    "example": null,
+    "code": "@property --progress {\n  syntax: '<number>';\n  initial-value: 0;\n  inherits: false;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can nested calc() expressions or var() calls be used to build a spacing/typography scale system?",
+    "answer": "By defining a single base unit as a custom property and deriving all other spacing/type sizes from it using calc() with multipliers (e.g. --space-sm: calc(var(--space-base) * 0.5)), you create a consistent, easily-tunable design scale where changing one root value cascades proportionally through every derived value.",
+    "example": null,
+    "code": ":root {\n  --space-base: 1rem;\n  --space-sm: calc(var(--space-base) * 0.5);\n  --space-lg: calc(var(--space-base) * 2);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS env() function do, and what is a common use case?",
+    "answer": "env() accesses user-agent-defined environment variables that aren't under author control, most commonly the safe-area-inset values on devices with notches or rounded corners (like iPhones), letting you pad content away from those obstructed areas. It behaves syntactically like var() and also supports a fallback value as a second argument.",
+    "example": null,
+    "code": ".footer {\n  padding-bottom: env(safe-area-inset-bottom, 0px);\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do the attr() and counter() functions work in CSS?",
+    "answer": "attr() retrieves the value of an HTML attribute on the current element and inserts it as a string, most commonly used with the content property on ::before/::after (e.g. showing a data-tooltip attribute's text). counter() (with counter-reset and counter-increment) generates automatic sequential numbering, such as custom numbered headings or ordered list styling, without hardcoding numbers in the markup.",
+    "example": null,
+    "code": "a::after {\n  content: \" (\" attr(href) \")\";\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS var() function and the SCSS/Sass interpolation syntax #{$variable}?",
+    "answer": "SCSS's #{$variable} interpolation is a compile-time text substitution that happens before any CSS is generated, so it can be used anywhere in a rule, including inside selector names or property names, but produces static output. var() is a runtime CSS feature restricted to value positions (not selectors or property names in standard CSS), but it stays live and reactive to cascade, inheritance, and JavaScript changes after the page loads.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use CSS custom properties to pass dynamic values from JavaScript into CSS, such as for a progress bar or drag position?",
+    "answer": "JavaScript can call element.style.setProperty('--progress', '75%') to update a custom property directly on an element's inline style, and any CSS referencing var(--progress) will re-render immediately. This is an efficient bridge for frequently-changing values (like animation progress or mouse position) without manipulating full inline styles or triggering full class toggles.",
+    "example": null,
+    "code": "el.style.setProperty('--x', `${mouseX}px`);\n/* CSS: */\n.el { transform: translateX(var(--x)); }",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between clamp() and using multiple media queries to achieve responsive sizing?",
+    "answer": "clamp() produces continuous, fluid scaling between its minimum and maximum bounds as the viewport changes, with no discrete jump points. Media queries produce step-function sizing — the value stays fixed within a breakpoint range and jumps abruptly at each threshold — which requires more code to add finer-grained steps and can look less smooth during resizing.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "clamp"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you use calc() to create a full-viewport-height section that accounts for a fixed-height header?",
+    "answer": "By subtracting the known fixed header height from 100vh inside calc(), the section fills exactly the remaining vertical space below the header, rather than overflowing the page by the header's height as a plain 100vh would.",
+    "example": null,
+    "code": ".hero {\n  height: calc(100vh - 64px);\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are CSS color functions like rgb(), hsl(), and the newer oklch(), and why might you choose one over another?",
+    "answer": "rgb() defines color via red/green/blue channels, and hsl() via hue/saturation/lightness, which is more intuitive for creating tints, shades, and consistent color relationships by hand. oklch() is a newer, perceptually uniform color space where equal numeric changes in lightness or chroma look equally different to the human eye, making it better suited for generating accessible, evenly-spaced color palettes programmatically.",
+    "example": null,
+    "code": "color: hsl(220 90% 56%);\ncolor: oklch(65% 0.2 250);",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "color"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does modern CSS support relative color syntax, and what problem does it solve?",
+    "answer": "Relative color syntax (e.g. `hsl(from var(--base) h s calc(l - 20%))`) lets you derive a new color from an existing one by referencing and modifying its individual channel values directly in CSS. It solves the problem of needing separate hardcoded custom properties (or a preprocessor/JavaScript) for every color variant like a hover-darkened or disabled-lightened shade of a base color.",
+    "example": null,
+    "code": ".btn:hover {\n  background: hsl(from var(--btn-color) h s calc(l - 10%));\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "color"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS var() function's inheritance behavior mean for a custom property set inside a media query?",
+    "answer": "A custom property redeclared inside a media query only takes effect while that media query's condition matches; when it stops matching, elements fall back to whatever value they'd otherwise inherit or the initial value if nothing else defines it. This makes custom properties a clean way to swap entire sets of values (spacing, colors, font sizes) responsively without duplicating whole rule blocks per breakpoint.",
+    "example": null,
+    "code": "@media (min-width: 768px) {\n  :root { --gutter: 2rem; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you use calc() to mix a CSS custom property with a unit that's determined dynamically, and what's a limitation to be aware of?",
+    "answer": "Yes — for example calc(var(--multiplier) * 1px) turns a unitless custom property into a usable length. A key limitation is that a custom property storing just a raw number (with no unit) can't be used directly as a length without this kind of multiplication trick, since CSS won't implicitly attach a unit to it, and mismatched or invalid combinations make the whole declaration invalid.",
+    "example": null,
+    "code": ":root { --scale: 1.5; }\n.icon { width: calc(var(--scale) * 24px); }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "calc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a shorthand property's initial value reset and a custom property's inheritance when using a CSS reset?",
+    "answer": "A standard property reset with `all: unset` or a shorthand resets every sub-property to its initial value, which does not preserve custom properties. Custom properties are unaffected by `all: initial/unset` unless you also explicitly reset with `all: revert` in certain browsers, or you target them individually — this distinction matters when building isolated components that shouldn't leak inherited design tokens.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a reusable button component's sizing variants (small, medium, large) using CSS custom properties?",
+    "answer": "Define a base set of custom properties on the button class for padding and font-size, then create modifier classes (like .btn--sm) that only override those specific custom properties rather than repeating every declaration, letting the base rule's calc()-derived or direct values automatically adapt.",
+    "example": null,
+    "code": ".btn {\n  padding: var(--btn-padding, 0.5rem 1rem);\n  font-size: var(--btn-font-size, 1rem);\n}\n.btn--lg {\n  --btn-padding: 0.75rem 1.5rem;\n  --btn-font-size: 1.25rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS round() function and using calc() with modulo-like logic?",
+    "answer": "round() (part of newer CSS Values Level 4 math functions) explicitly rounds a value to the nearest multiple of a step, with a rounding strategy argument (nearest, up, down, to-zero), returning a clean snapped value in one function call. Before round() existed, similar snapping required verbose calc() workarounds since CSS has no built-in modulo operator, making round() a meaningful simplification for things like snapping grid tracks to whole pixels.",
+    "example": null,
+    "code": "width: round(nearest, 47px, 10px); /* 50px */",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't CSS custom properties be used to conditionally toggle an entire block of unrelated declarations the way a Sass @mixin or @if can?",
+    "answer": "Custom properties only ever resolve to a single value substituted into a property's value position — they can't expand into multiple property declarations, selectors, or conditional logic blocks the way a preprocessor mixin can. CSS does have limited conditional logic through things like the toggle() proposal or @container/@supports, but true multi-declaration branching still generally requires a preprocessor or JavaScript-driven class toggling.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "variables-functions", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS repeat() function used in grid-template-columns and a custom property storing a track count?",
+    "answer": "repeat(count, size) is a Grid-specific shorthand that expands into a repeated sequence of tracks in place, evaluated purely at layout time. Storing a column count in a custom property (e.g. --cols: 4) and referencing it inside repeat(var(--cols), 1fr) lets JavaScript or a media query change the effective column count dynamically by updating just that one variable, without rewriting the whole grid-template-columns declaration.",
+    "example": null,
+    "code": ":root { --cols: 3; }\n.grid { grid-template-columns: repeat(var(--cols), 1fr); }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "variables-functions", "grid"],
+    "isFrequentlyAsked": false
+  }
+]

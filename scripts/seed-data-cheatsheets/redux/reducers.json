@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Reducer function",
+    "syntax": "(state, action) => newState",
+    "description": "A pure function that takes the current state and an action, and returns the next state. Reducers describe how state changes in response to actions, without performing the changes directly.",
+    "parameters": "state — the current state (or undefined on the first call). action — the dispatched action object.",
+    "returns": "The next state value.",
+    "example": "function counterReducer(state = 0, action) {\n  switch (action.type) {\n    case 'counter/incremented': return state + 1;\n    default: return state;\n  }\n}",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["redux", "reducers", "concepts"]
+  },
+  {
+    "name": "Pure function requirement",
+    "description": "Reducers must be pure: given the same state and action, they always return the same output, and they must not mutate arguments, make API calls, generate random values, or cause other side effects.",
+    "notes": "Purity is what makes Redux state predictable and enables features like time-travel debugging and hot reloading.",
+    "tags": ["redux", "reducers", "concepts"]
+  },
+  {
+    "name": "combineReducers()",
+    "syntax": "combineReducers({ key1: reducer1, key2: reducer2 })",
+    "description": "Combines multiple slice reducers into a single root reducer, where each key in the resulting state object is managed by its corresponding reducer function.",
+    "parameters": "An object mapping state keys to the reducer function responsible for that slice of state.",
+    "returns": "A single reducer function that calls each child reducer and assembles the combined state object.",
+    "example": "import { combineReducers } from 'redux';\nconst rootReducer = combineReducers({ todos: todosReducer, user: userReducer });",
+    "codeLanguage": "javascript",
+    "notes": "When using configureStore, passing an object as the `reducer` option calls combineReducers for you automatically.",
+    "tags": ["redux", "reducers"]
+  },
+  {
+    "name": "Immutability in reducers",
+    "description": "Reducers must never mutate the existing state object — they must return a new state object (or the same reference if nothing changed) built with techniques like spreading or array copy methods.",
+    "example": "// Wrong: state.count++\n// Right:\nreturn { ...state, count: state.count + 1 };",
+    "codeLanguage": "javascript",
+    "notes": "Redux Toolkit's createSlice uses Immer internally, letting you write reducers with 'mutating' syntax that is converted to safe immutable updates.",
+    "tags": ["redux", "reducers", "immutability"]
+  },
+  {
+    "name": "Switch-based reducer pattern",
+    "syntax": "switch (action.type) { case '...': ...; default: return state; }",
+    "description": "The classic style of writing a Redux reducer as a switch statement over action.type, with each case returning the appropriately updated state.",
+    "example": "function todosReducer(state = [], action) {\n  switch (action.type) {\n    case 'todos/added':\n      return [...state, action.payload];\n    default:\n      return state;\n  }\n}",
+    "codeLanguage": "javascript",
+    "notes": "Still common in legacy code and interviews; createSlice replaces this with a plain object of case reducer functions.",
+    "tags": ["redux", "reducers", "legacy"]
+  },
+  {
+    "name": "Initial state",
+    "syntax": "function reducer(state = initialState, action) { ... }",
+    "description": "The default value a reducer returns when the store is first created and no state exists yet, provided via a default parameter for the `state` argument.",
+    "example": "const initialState = { count: 0 };\nfunction counterReducer(state = initialState, action) { /* ... */ }",
+    "codeLanguage": "javascript",
+    "notes": "Redux calls every reducer once with an internal @@INIT action to populate this initial state.",
+    "tags": ["redux", "reducers"]
+  },
+  {
+    "name": "Default case",
+    "syntax": "default: return state;",
+    "description": "The fallback branch in a switch-based reducer that returns the unchanged current state for any action type the reducer doesn't recognize.",
+    "notes": "Omitting the default case (or otherwise failing to return the existing state) causes the reducer to return undefined for unrelated actions, which is a common Redux bug.",
+    "tags": ["redux", "reducers"]
+  }
+]

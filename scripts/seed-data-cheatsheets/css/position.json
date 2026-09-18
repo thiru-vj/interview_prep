@@ -1,0 +1,90 @@
+[
+  {
+    "name": "position: static",
+    "syntax": "position: static;",
+    "description": "The default positioning value; the element follows normal document flow and offset properties (top/right/bottom/left) have no effect.",
+    "parameters": null,
+    "returns": null,
+    "example": ".box {\n  position: static;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "position", "layout"]
+  },
+  {
+    "name": "position: relative",
+    "syntax": "position: relative;",
+    "description": "Positions an element relative to its normal position in the document flow, using top/right/bottom/left offsets, while still occupying its original space.",
+    "parameters": null,
+    "returns": null,
+    "example": ".box {\n  position: relative;\n  top: 10px;\n}",
+    "codeLanguage": "css",
+    "notes": "Commonly used just to establish a positioning context for an absolutely positioned child, even without offsets.",
+    "tags": ["css", "position", "layout"]
+  },
+  {
+    "name": "position: absolute",
+    "syntax": "position: absolute;",
+    "description": "Removes an element from normal document flow and positions it relative to its nearest positioned ancestor.",
+    "parameters": null,
+    "returns": null,
+    "example": ".tooltip {\n  position: absolute;\n  top: 100%;\n  left: 0;\n}",
+    "codeLanguage": "css",
+    "notes": "If no ancestor has a position other than static, it positions relative to the initial containing block (the viewport).",
+    "tags": ["css", "position", "layout"]
+  },
+  {
+    "name": "position: fixed",
+    "syntax": "position: fixed;",
+    "description": "Removes an element from normal flow and positions it relative to the browser viewport, so it stays in place while the page scrolls.",
+    "parameters": null,
+    "returns": null,
+    "example": ".back-to-top {\n  position: fixed;\n  bottom: 20px;\n  right: 20px;\n}",
+    "codeLanguage": "css",
+    "notes": "A transformed or filtered ancestor changes the containing block, making a fixed element scroll with that ancestor instead of the viewport.",
+    "tags": ["css", "position", "layout"]
+  },
+  {
+    "name": "position: sticky",
+    "syntax": "position: sticky;",
+    "description": "Toggles between relative and fixed behavior — the element scrolls normally until it hits a defined offset, then sticks in place within its parent.",
+    "parameters": null,
+    "returns": null,
+    "example": "thead th {\n  position: sticky;\n  top: 0;\n}",
+    "codeLanguage": "css",
+    "notes": "Requires a top/bottom/left/right offset to activate, and won't stick past the bounds of its containing block.",
+    "tags": ["css", "position", "layout"]
+  },
+  {
+    "name": "top / right / bottom / left",
+    "syntax": "top: <length>; right: <length>; bottom: <length>; left: <length>;",
+    "description": "Sets the offset of a positioned element's edges relative to its containing block.",
+    "parameters": null,
+    "returns": null,
+    "example": ".modal {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n}",
+    "codeLanguage": "css",
+    "notes": "Has no effect on elements with position: static.",
+    "tags": ["css", "position", "offsets"]
+  },
+  {
+    "name": "z-index",
+    "syntax": "z-index: auto | <integer>;",
+    "description": "Sets the stack order of a positioned element, controlling which overlapping elements appear in front.",
+    "parameters": null,
+    "returns": null,
+    "example": ".modal {\n  position: fixed;\n  z-index: 1000;\n}",
+    "codeLanguage": "css",
+    "notes": "Only has an effect on elements with a position value other than static.",
+    "tags": ["css", "position", "stacking"]
+  },
+  {
+    "name": "Stacking context",
+    "syntax": null,
+    "description": "A conceptual grouping created by certain properties (like position + z-index, opacity < 1, or transform) where z-index values only compare against siblings inside the same context.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": null,
+    "notes": "A high z-index inside a low stacking context can still be visually behind an element with a much lower z-index in a different context.",
+    "tags": ["css", "position", "stacking"]
+  }
+]

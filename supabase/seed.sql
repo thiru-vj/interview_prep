@@ -14,7 +14,12 @@ values
   ('Java', 'java', 'Practice Core Java, OOP, Collections, exception handling, multithreading and modern Java interview questions.', 'coffee', 'backend', 1),
   ('JavaScript', 'javascript', 'Practice JavaScript fundamentals, functions, objects, async programming and ES6+ interview questions.', 'file-code-2', 'frontend', 2),
   ('React', 'react', 'Practice React fundamentals, components, hooks, state management and performance interview questions.', 'atom', 'frontend', 3),
-  ('SQL', 'sql', 'Practice SQL joins, aggregations, subqueries, CTEs, window functions and transaction interview questions.', 'database', 'database', 4)
+  ('SQL', 'sql', 'Practice SQL joins, aggregations, subqueries, CTEs, window functions and transaction interview questions.', 'database', 'database', 4),
+  ('HTML', 'html', 'Practice HTML semantics, accessibility, forms and document structure interview questions.', 'file-code', 'frontend', 5),
+  ('CSS', 'css', 'Practice CSS layout, flexbox, grid, responsive design and styling interview questions.', 'palette', 'frontend', 6),
+  ('Tailwind CSS', 'tailwind', 'Practice Tailwind CSS utility classes, configuration, responsive design and theming interview questions.', 'wind', 'frontend', 7),
+  ('Next.js', 'nextjs', 'Practice Next.js routing, rendering strategies, data fetching and API routes interview questions.', 'triangle', 'frontend', 8),
+  ('Node.js', 'nodejs', 'Practice Node.js runtime, event loop, modules, streams and Express interview questions.', 'hexagon', 'backend', 9)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -56,7 +61,42 @@ from (values
   ('sql', 'CTE', 'cte', 'Common Table Expressions.', 5),
   ('sql', 'Window Functions', 'window-functions', 'Analytic window functions.', 6),
   ('sql', 'Indexes', 'indexes', 'Indexing strategies and query performance.', 7),
-  ('sql', 'Transactions', 'transactions', 'Transactions and ACID properties.', 8)
+  ('sql', 'Transactions', 'transactions', 'Transactions and ACID properties.', 8),
+
+  ('html', 'Basics', 'basics', 'Core HTML syntax, elements and document structure.', 1),
+  ('html', 'Semantic HTML', 'semantic-html', 'Semantic elements and document outline.', 2),
+  ('html', 'Forms', 'forms', 'Form elements, input types and validation.', 3),
+  ('html', 'Accessibility', 'accessibility', 'ARIA attributes and accessibility best practices.', 4),
+  ('html', 'Media & Embedding', 'media', 'Images, video, audio, canvas and iframes.', 5),
+  ('html', 'Metadata & Performance', 'metadata-performance', 'Head metadata, SEO and resource loading strategies.', 6),
+
+  ('css', 'Basics', 'basics', 'Selectors, the box model and core CSS concepts.', 1),
+  ('css', 'Layout', 'layout', 'Flexbox, Grid and positioning.', 2),
+  ('css', 'Responsive Design', 'responsive-design', 'Media queries, units and mobile-first design.', 3),
+  ('css', 'Animations & Transitions', 'animations', 'Transitions, keyframe animations and transforms.', 4),
+  ('css', 'Variables & Functions', 'variables-functions', 'Custom properties and CSS functions like calc() and clamp().', 5),
+  ('css', 'Advanced CSS', 'advanced-css', 'Specificity, cascade, pseudo-classes and modern CSS features.', 6),
+
+  ('tailwind', 'Basics', 'basics', 'Utility-first fundamentals and core class naming conventions.', 1),
+  ('tailwind', 'Configuration', 'configuration', 'tailwind.config.js, theme customization and design tokens.', 2),
+  ('tailwind', 'Responsive & States', 'responsive-states', 'Responsive prefixes and hover/focus/dark variants.', 3),
+  ('tailwind', 'Layout Utilities', 'layout-utilities', 'Flexbox and Grid utility classes.', 4),
+  ('tailwind', 'Customization & Plugins', 'customization-plugins', '@apply, plugins and arbitrary values.', 5),
+  ('tailwind', 'Performance & Best Practices', 'performance', 'Content purging, JIT mode and optimization.', 6),
+
+  ('nextjs', 'Fundamentals', 'fundamentals', 'What Next.js is, project structure and pages.', 1),
+  ('nextjs', 'Routing', 'routing', 'File-based routing, App Router vs Pages Router and dynamic routes.', 2),
+  ('nextjs', 'Rendering Strategies', 'rendering-strategies', 'SSR, SSG, ISR and CSR in Next.js.', 3),
+  ('nextjs', 'Data Fetching', 'data-fetching', 'Server components, fetch caching and data-fetching functions.', 4),
+  ('nextjs', 'API Routes', 'api-routes', 'API routes, route handlers and middleware.', 5),
+  ('nextjs', 'Performance & Optimization', 'performance', 'Image/font optimization, code splitting and caching.', 6),
+
+  ('nodejs', 'Fundamentals', 'fundamentals', 'The Node.js runtime, V8 and module systems.', 1),
+  ('nodejs', 'Event Loop & Async', 'event-loop-async', 'The event loop, callbacks, promises and async/await.', 2),
+  ('nodejs', 'Modules & NPM', 'modules-npm', 'CommonJS vs ESM, package.json and npm.', 3),
+  ('nodejs', 'Streams & Buffers', 'streams-buffers', 'Streams, buffers and file system operations.', 4),
+  ('nodejs', 'Express & APIs', 'express-apis', 'Building REST APIs and middleware with Express.', 5),
+  ('nodejs', 'Performance & Debugging', 'performance-debugging', 'Clustering, worker threads, memory leaks and debugging.', 6)
 ) as v(language_slug, name, slug, description, display_order)
 join public.languages l on l.slug = v.language_slug
 on conflict (language_id, slug) do update set

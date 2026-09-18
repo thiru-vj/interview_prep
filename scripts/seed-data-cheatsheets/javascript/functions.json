@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Function Declaration",
+    "syntax": "function name(param1, param2) { ... }",
+    "description": "Defines a named function using the function keyword. Function declarations are hoisted, so they can be called before their definition in the code.",
+    "example": "greet('Sam'); function greet(name) { console.log(`Hi, ${name}`); }",
+    "codeLanguage": "javascript",
+    "notes": "Fully hoisted, including the function body — unlike function expressions.",
+    "tags": ["javascript", "functions", "declarations"]
+  },
+  {
+    "name": "Function Expression",
+    "syntax": "const name = function(param1, param2) { ... };",
+    "description": "Defines a function as part of an expression, typically assigned to a variable. Not hoisted the way declarations are.",
+    "example": "const greet = function(name) { return `Hi, ${name}`; };",
+    "codeLanguage": "javascript",
+    "notes": "Can be named or anonymous; a named function expression's name is only visible inside its own body.",
+    "tags": ["javascript", "functions", "declarations"]
+  },
+  {
+    "name": "Closures",
+    "syntax": null,
+    "description": "A closure is formed when an inner function retains access to variables from its enclosing (outer) function's scope, even after the outer function has returned.",
+    "example": "function counter() { let count = 0; return () => ++count; } const inc = counter(); inc(); // 1",
+    "codeLanguage": "javascript",
+    "notes": "Closures are the mechanism behind private state, memoization, and function factories in JavaScript.",
+    "tags": ["javascript", "functions", "scope"]
+  },
+  {
+    "name": "IIFE (Immediately Invoked Function Expression)",
+    "syntax": "(function() { ... })();",
+    "description": "A function that is defined and executed immediately after creation, commonly used to create an isolated scope.",
+    "example": "(function() { console.log('runs immediately'); })();",
+    "codeLanguage": "javascript",
+    "notes": "Largely superseded by block scoping (let/const) and ES modules, which provide scope isolation without the IIFE pattern.",
+    "tags": ["javascript", "functions", "scope"]
+  },
+  {
+    "name": "Higher-Order Functions",
+    "syntax": null,
+    "description": "A function that either accepts one or more functions as arguments, returns a function, or both.",
+    "example": "function withLogging(fn) { return (...args) => { console.log('calling'); return fn(...args); }; }",
+    "codeLanguage": "javascript",
+    "notes": "Array methods like map(), filter(), and reduce() are all higher-order functions since they accept a callback.",
+    "tags": ["javascript", "functions", "patterns"]
+  },
+  {
+    "name": "this Keyword",
+    "syntax": "this",
+    "description": "Refers to the context in which a function is called. Its value depends on how the function is invoked — as a method, a plain function, a constructor, or via call/apply/bind.",
+    "example": "const obj = { name: 'Sam', greet() { return this.name; } }; obj.greet(); // 'Sam'",
+    "codeLanguage": "javascript",
+    "notes": "Arrow functions do not have their own `this` — they inherit it lexically from the enclosing scope.",
+    "tags": ["javascript", "functions", "this"]
+  },
+  {
+    "name": "call()",
+    "syntax": "fn.call(thisArg, arg1, arg2, ...)",
+    "description": "Invokes a function immediately with a specified `this` value and arguments passed individually.",
+    "parameters": "thisArg — value to use as `this`. arg1, arg2, ... — arguments passed to the function.",
+    "returns": "The return value of the called function.",
+    "example": "function greet() { return `Hi, ${this.name}`; } greet.call({ name: 'Sam' }); // 'Hi, Sam'",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "functions", "this"]
+  },
+  {
+    "name": "apply()",
+    "syntax": "fn.apply(thisArg, [argsArray])",
+    "description": "Invokes a function immediately with a specified `this` value and arguments provided as an array.",
+    "parameters": "thisArg — value to use as `this`. argsArray — array (or array-like) of arguments to pass.",
+    "returns": "The return value of the called function.",
+    "example": "function sum(a, b) { return a + b; } sum.apply(null, [1, 2]); // 3",
+    "codeLanguage": "javascript",
+    "notes": "Functionally identical to call(), differing only in how arguments are supplied — the spread operator has made apply() less common.",
+    "tags": ["javascript", "functions", "this"]
+  },
+  {
+    "name": "bind()",
+    "syntax": "const boundFn = fn.bind(thisArg, arg1, arg2, ...)",
+    "description": "Returns a new function with `this` permanently bound to the given value, optionally pre-filling some arguments.",
+    "parameters": "thisArg — value to bind as `this`. arg1, arg2, ... — optional arguments to pre-bind (partial application).",
+    "returns": "A new function with bound context (and arguments, if provided).",
+    "example": "const greet = function() { return this.name; }.bind({ name: 'Sam' }); greet(); // 'Sam'",
+    "codeLanguage": "javascript",
+    "notes": "Unlike call() and apply(), bind() does not invoke the function immediately — it returns a new one for later use.",
+    "tags": ["javascript", "functions", "this"]
+  },
+  {
+    "name": "Recursion",
+    "syntax": null,
+    "description": "A technique where a function calls itself to solve a problem by breaking it into smaller subproblems, until reaching a base case.",
+    "example": "function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); } factorial(5); // 120",
+    "codeLanguage": "javascript",
+    "notes": "Without a well-defined base case, recursion causes a \"Maximum call stack size exceeded\" error.",
+    "tags": ["javascript", "functions", "recursion"]
+  },
+  {
+    "name": "Pure Functions",
+    "syntax": null,
+    "description": "A function that always returns the same output for the same input and produces no side effects, such as mutating external state.",
+    "example": "const add = (a, b) => a + b; // pure — depends only on its arguments",
+    "codeLanguage": "javascript",
+    "notes": "Pure functions are easier to test, reason about, and are foundational to predictable state management patterns.",
+    "tags": ["javascript", "functions", "patterns"]
+  },
+  {
+    "name": "Function Hoisting",
+    "syntax": null,
+    "description": "Function declarations are moved to the top of their containing scope during compilation, making them callable before their textual definition.",
+    "example": "sayHi(); function sayHi() { console.log('hi'); } // works fine",
+    "codeLanguage": "javascript",
+    "notes": "Function expressions and arrow functions assigned to let/const are not hoisted this way — only the variable declaration is hoisted, not its value.",
+    "tags": ["javascript", "functions", "hoisting"]
+  }
+]

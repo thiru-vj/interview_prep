@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Async actions",
+    "syntax": null,
+    "description": "Zustand has no special API for async logic — actions can simply be async functions that call set() before and after an awaited operation, such as a fetch call.",
+    "parameters": null,
+    "returns": null,
+    "example": "const useUserStore = create((set) => ({\n  user: null,\n  loading: false,\n  fetchUser: async (id) => {\n    set({ loading: true });\n    const res = await fetch(`/api/users/${id}`);\n    set({ user: await res.json(), loading: false });\n  },\n}));",
+    "codeLanguage": "javascript",
+    "notes": "Since set() is synchronous and side-effect free, you can call it any number of times before, during, and after an await.",
+    "tags": ["zustand", "async-integration", "async"]
+  },
+  {
+    "name": "Handling async errors",
+    "syntax": null,
+    "description": "Async actions typically wrap the awaited call in try/catch and store an error field in state, so components can render loading/error/success states.",
+    "parameters": null,
+    "returns": null,
+    "example": "fetchUser: async (id) => {\n  set({ loading: true, error: null });\n  try {\n    const res = await fetch(`/api/users/${id}`);\n    set({ user: await res.json(), loading: false });\n  } catch (err) {\n    set({ error: err.message, loading: false });\n  }\n},",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["zustand", "async-integration", "error-handling"]
+  },
+  {
+    "name": "persist middleware",
+    "syntax": "import { persist } from 'zustand/middleware'\ncreate(persist(stateCreator, { name: 'storage-key' }))",
+    "description": "The persist middleware automatically saves store state to storage (localStorage by default) and rehydrates it on load, keeping state across page refreshes.",
+    "parameters": "stateCreator — the store creator function. options.name — the storage key. options.storage — optional custom storage adapter.",
+    "returns": "A wrapped state creator to pass into create().",
+    "example": "const useStore = create(\n  persist(\n    (set) => ({ theme: 'light', setTheme: (theme) => set({ theme }) }),\n    { name: 'app-settings' }\n  )\n);",
+    "codeLanguage": "javascript",
+    "notes": "Use the `partialize` option to persist only specific fields instead of the entire store.",
+    "tags": ["zustand", "async-integration", "middleware"]
+  },
+  {
+    "name": "devtools middleware",
+    "syntax": "import { devtools } from 'zustand/middleware'\ncreate(devtools(stateCreator))",
+    "description": "The devtools middleware connects a store to the Redux DevTools browser extension, letting you inspect state and action history during development.",
+    "parameters": "stateCreator — the store creator function. options.name — optional label shown in DevTools.",
+    "returns": "A wrapped state creator to pass into create().",
+    "example": "const useStore = create(\n  devtools((set) => ({ count: 0, increment: () => set((s) => ({ count: s.count + 1 })) }))\n);",
+    "codeLanguage": "javascript",
+    "notes": "Named set() calls (set(fn, false, 'increment')) show up as labeled actions in the DevTools timeline.",
+    "tags": ["zustand", "async-integration", "devtools"]
+  },
+  {
+    "name": "immer middleware",
+    "syntax": "import { immer } from 'zustand/middleware/immer'\ncreate(immer(stateCreator))",
+    "description": "The immer middleware lets actions write 'mutating' update logic against a draft state, while immer produces an immutable update under the hood.",
+    "parameters": "stateCreator — the store creator function, where set() accepts a draft-mutating recipe function.",
+    "returns": "A wrapped state creator to pass into create().",
+    "example": "const useStore = create(\n  immer((set) => ({\n    todos: [],\n    addTodo: (text) => set((draft) => { draft.todos.push({ text, done: false }); }),\n  }))\n);",
+    "codeLanguage": "javascript",
+    "notes": "Useful for deeply nested state where manual spreading becomes verbose; requires the `immer` package as a dependency.",
+    "tags": ["zustand", "async-integration", "immer"]
+  },
+  {
+    "name": "Combining middleware",
+    "syntax": "create(devtools(persist(immer(stateCreator), options)))",
+    "description": "Zustand middleware functions can be composed by nesting them around the state creator, applying each one's behavior to the resulting store.",
+    "parameters": null,
+    "returns": "A wrapped state creator with all composed middleware applied.",
+    "example": "const useStore = create(\n  devtools(\n    persist(\n      (set) => ({ count: 0 }),\n      { name: 'counter' }\n    )\n  )\n);",
+    "codeLanguage": "javascript",
+    "notes": "Order matters — middleware closer to the state creator runs first; check each middleware's docs for recommended ordering.",
+    "tags": ["zustand", "async-integration", "middleware"]
+  },
+  {
+    "name": "Slice pattern",
+    "syntax": null,
+    "description": "For larger stores, state and actions are split into separate 'slice' creator functions that are combined into one store via create(), keeping each domain's logic in its own module.",
+    "parameters": null,
+    "returns": null,
+    "example": "const createBearSlice = (set) => ({\n  bears: 0,\n  addBear: () => set((s) => ({ bears: s.bears + 1 })),\n});\nconst createFishSlice = (set) => ({\n  fish: 0,\n  addFish: () => set((s) => ({ fish: s.fish + 1 })),\n});\nconst useStore = create((...a) => ({\n  ...createBearSlice(...a),\n  ...createFishSlice(...a),\n}));",
+    "codeLanguage": "javascript",
+    "notes": "All slices share the same set/get, so a single store is still produced — this is an organizational pattern, not multiple stores.",
+    "tags": ["zustand", "async-integration", "slices"]
+  },
+  {
+    "name": "subscribeWithSelector middleware",
+    "syntax": "import { subscribeWithSelector } from 'zustand/middleware'\ncreate(subscribeWithSelector(stateCreator))",
+    "description": "Adds an enhanced subscribe() method to the store that accepts a selector and listener, allowing code outside React to react to changes in a specific slice of state.",
+    "parameters": "stateCreator — the store creator function.",
+    "returns": "A wrapped state creator whose store exposes subscribe(selector, listener, options?).",
+    "example": "const useStore = create(subscribeWithSelector((set) => ({ count: 0 })));\nuseStore.subscribe((state) => state.count, (count) => console.log('count changed', count));",
+    "codeLanguage": "javascript",
+    "notes": "Without this middleware, store.subscribe() only fires on any state change and passes the full state, not a selected slice.",
+    "tags": ["zustand", "async-integration", "middleware"]
+  }
+]

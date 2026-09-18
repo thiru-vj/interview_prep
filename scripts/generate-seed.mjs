@@ -26,7 +26,18 @@ const OUTPUT_FILE = join(__dirname, '..', 'supabase', 'seed-frontend.sql')
 const START_INDEX = 101
 
 const DIFFICULTIES = new Set(['easy', 'medium', 'hard'])
-const VALID_CODE_LANGUAGES = new Set(['java', 'javascript', 'typescript', 'jsx', 'tsx', 'sql', null, undefined])
+const VALID_CODE_LANGUAGES = new Set([
+  'java',
+  'javascript',
+  'typescript',
+  'jsx',
+  'tsx',
+  'sql',
+  'html',
+  'css',
+  null,
+  undefined,
+])
 
 function sqlString(value) {
   if (value === null || value === undefined) return 'null'
@@ -144,7 +155,7 @@ function buildValuesRow(row) {
 }
 
 function main() {
-  const languages = ['javascript', 'react']
+  const languages = ['javascript', 'react', 'html', 'css', 'tailwind', 'nextjs', 'nodejs']
   const allRows = languages.flatMap((lang) => loadLanguage(lang))
 
   if (allRows.length === 0) {

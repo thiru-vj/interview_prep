@@ -1,0 +1,466 @@
+[
+  {
+    "question": "What are the four main rendering strategies available in Next.js?",
+    "answer": "Static Site Generation (SSG) renders pages to HTML at build time. Server-Side Rendering (SSR) renders HTML on each request. Incremental Static Regeneration (ISR) is static generation that can be re-generated in the background after a set interval or on demand. Client-Side Rendering (CSR) renders content in the browser using JavaScript after an initial (often minimal) HTML shell loads.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between SSG and SSR, and how do you choose between them?",
+    "answer": "SSG generates a page's HTML once at build time and serves the same static file to every visitor, making it extremely fast and cacheable but unable to reflect per-request data. SSR generates HTML fresh on every request, so it can include request-specific or frequently changing data, at the cost of a server round trip on every visit. Choose SSG for content that's the same for all users and doesn't change often (marketing pages, blog posts); choose SSR when content must be personalized or truly real-time.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "ssr",
+      "ssg"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is Incremental Static Regeneration (ISR) and what problem does it solve?",
+    "answer": "ISR lets you use static generation for pages but automatically regenerate them in the background after a specified revalidation interval, without needing to rebuild the entire site. It solves the problem of SSG becoming stale for content that changes occasionally (like product prices or article edits) while still serving fast, cached static pages most of the time instead of rendering on every request like SSR.",
+    "example": null,
+    "code": "fetch('https://api.example.com/data', { next: { revalidate: 60 } });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "isr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "In ISR, what actually happens when a request comes in after the revalidation window has expired?",
+    "answer": "The stale cached page is still served immediately to that visitor (stale-while-revalidate behavior), and Next.js triggers a regeneration of the page in the background. Once regeneration completes, subsequent requests get the fresh version — no single visitor is ever forced to wait for a rebuild, unlike the 'blocking' fallback mode for entirely new paths.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "isr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is on-demand revalidation, and how does it differ from time-based ISR?",
+    "answer": "Time-based ISR revalidates a page automatically after a fixed number of seconds elapses. On-demand revalidation instead lets your code explicitly trigger a re-generation immediately — for example, calling `revalidatePath()` or `revalidateTag()` from a server action or API route right after a CMS webhook fires — so content updates can appear instantly instead of waiting for the next interval.",
+    "example": null,
+    "code": "import { revalidatePath } from 'next/cache';\n\nawait revalidatePath('/blog/my-post');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "isr",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is client-side rendering (CSR) in a Next.js app, and when does it apply?",
+    "answer": "CSR happens when a component is marked `'use client'` and fetches or computes its own data inside `useEffect` or with a client data-fetching library, rendering entirely in the browser after JavaScript loads. It applies for content that's genuinely user- or interaction-specific and doesn't benefit from being in the initial server-rendered HTML, such as a live chat widget or an authenticated user's real-time notification feed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "csr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a Server Component and a Client Component in the App Router?",
+    "answer": "A Server Component renders on the server, never ships its own JavaScript to the browser, and can directly access backend resources like databases, but it can't use state, effects, or browser-only APIs. A Client Component, marked with the `'use client'` directive, renders on the server for the initial HTML too but is then hydrated and can re-render in the browser, so it supports hooks like `useState` and `useEffect` and can respond to user interaction.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "'use client';\nimport { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "server-components",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't you import a Server Component into a Client Component the same way you'd import any component?",
+    "answer": "Once you're inside a Client Component boundary, React treats everything under it as needing to run/hydrate on the client, so a Server Component imported and rendered directly inside a Client Component would effectively become a Client Component too, losing its server-only benefits. The supported pattern is to pass Server Components down as `children` (or another prop) from a parent Server Component, so the Client Component just renders whatever was already rendered on the server without importing it itself.",
+    "example": null,
+    "codeLanguage": "jsx",
+    "code": "// Server Component passes a Server Component as children into a Client Component\n<ClientWrapper>\n  <ServerChild />\n</ClientWrapper>",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "server-components",
+      "client-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `'use client'` directive actually do?",
+    "answer": "`'use client'` at the top of a file marks the boundary between server-only and client-capable code — everything exported from that file (and everything it imports that doesn't have its own boundary) becomes part of the client bundle and can use hooks and browser APIs. It doesn't mean the component skips server rendering entirely; it's still rendered to HTML on the server for the initial load and then hydrated on the client.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "client-components"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is hydration, and why does a 'hydration mismatch' error occur?",
+    "answer": "Hydration is the process where React attaches event listeners and internal state to server-rendered HTML already present in the DOM, making it interactive, rather than re-rendering from scratch. A hydration mismatch error happens when the HTML React generates on the client during hydration doesn't match what the server actually sent — common causes include using `Date.now()`, `Math.random()`, or browser-only globals like `window` directly during render.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "hydration"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you choose a rendering strategy for a specific page in the App Router, since there's no explicit per-page function to pick one like `getStaticProps`?",
+    "answer": "The App Router infers the strategy from what a route does: a route with no dynamic data access is statically rendered by default at build time, while using dynamic APIs (like reading cookies/headers, or a `fetch` with `cache: 'no-store'`) automatically opts the route into dynamic (per-request) rendering. You can also force behavior explicitly with the `dynamic` route segment config, e.g. `export const dynamic = 'force-dynamic'`.",
+    "example": null,
+    "code": "export const dynamic = 'force-dynamic'; // opt a route out of static rendering",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'static rendering' mean in the App Router, and how does it relate to SSG from the Pages Router?",
+    "answer": "Static rendering in the App Router is conceptually the App Router's version of SSG: route output is computed once, either at build time or lazily on first request afterward, and served as cached HTML to subsequent visitors until revalidated. Unlike the Pages Router, there's no separate `getStaticProps` function to opt in — it's the default behavior for routes that don't use dynamic data.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router",
+      "ssg"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'dynamic rendering' in the App Router, and what triggers it?",
+    "answer": "Dynamic rendering means a route is rendered on the server at request time rather than cached statically, analogous to SSR. It's triggered automatically by using request-specific data like `cookies()`, `headers()`, or `searchParams`, by a `fetch` call configured with `cache: 'no-store'` or a short `revalidate`, or explicitly via `export const dynamic = 'force-dynamic'`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is streaming SSR, and how does Next.js use it with Suspense?",
+    "answer": "Streaming SSR sends HTML to the browser in chunks as it becomes ready, instead of waiting for the entire page to finish rendering on the server before sending anything. Wrapping a slow-loading part of a page in a `<Suspense>` boundary lets Next.js send the rest of the page immediately and stream in that section's HTML (plus a script to swap it in) once its data resolves, improving perceived load time.",
+    "example": null,
+    "code": "<Suspense fallback={<Spinner />}>\n  <SlowComponent />\n</Suspense>",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "streaming",
+      "suspense"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is SSR generally better for SEO than pure client-side rendering?",
+    "answer": "With SSR, the HTML sent to the browser already contains the actual page content, so search engine crawlers can index it without needing to execute JavaScript. With pure CSR, the initial HTML is often just an empty shell, and while major crawlers like Googlebot can execute JavaScript, it's slower, less reliable, and many other crawlers/social media link previewers don't execute JS at all.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "ssr",
+      "seo"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the performance trade-offs of SSR compared to SSG?",
+    "answer": "SSR adds latency on every request because the server has to render the page fresh each time (including any data fetching involved), whereas SSG serves a pre-built static file that can be cached at the edge/CDN and returned near-instantly. SSR is also more expensive to scale since it consumes server compute per request, while SSG scales essentially for free once built.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "ssr",
+      "ssg",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How did you opt a page into SSG versus SSR in the Pages Router?",
+    "answer": "Exporting `getStaticProps` from a page made it statically generated at build time. Exporting `getServerSideProps` instead made it server-rendered on every request. A page could only use one or the other, not both, and Next.js inferred the rendering strategy purely from which function was present.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is partial prerendering (PPR) in Next.js?",
+    "answer": "Partial Prerendering is a newer Next.js rendering model that combines a static shell (prerendered at build time) with dynamic 'holes' streamed in at request time, all within a single route response, instead of a route being entirely static or entirely dynamic. It lets a page serve instantly with static content while personalized or real-time sections stream in afterward, without the developer having to split the page into separate routes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "partial-prerendering"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is edge rendering in Next.js, and how does it differ from rendering in a traditional Node.js server region?",
+    "answer": "Edge rendering runs a route's server code in a lightweight JavaScript runtime deployed to many geographically distributed edge locations (rather than one or a few origin server regions), reducing latency for globally distributed users. The Edge Runtime is more restricted than Node.js — it doesn't support all Node APIs (like the `fs` module) — so not every server function can run there unmodified.",
+    "example": null,
+    "code": "export const runtime = 'edge';",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "edge"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When would you deliberately choose CSR over SSR/SSG for a section of a Next.js page?",
+    "answer": "CSR makes sense for content that's highly interactive and user-specific, doesn't need to be indexed by search engines, or depends on data only available in the browser (like `localStorage`, geolocation, or a websocket connection) — for example, a shopping cart drawer, a live dashboard widget, or a rich in-browser editor. Rendering these on the server would add no SEO or first-paint value and complicate the server code for no benefit.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "csr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can a single Next.js page combine multiple rendering strategies for different parts of itself?",
+    "answer": "Yes — this is one of the App Router's core strengths. A page can be statically rendered overall, include a Suspense-wrapped section that streams in dynamically rendered content, and nest Client Components that render/re-render entirely in the browser, all within one route, rather than being locked into a single strategy for the whole page as the Pages Router effectively was.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the risk of calling `cookies()` or `headers()` inside a component that's meant to be statically rendered?",
+    "answer": "Both functions read request-specific data, so calling either one inside a route automatically opts that entire route out of static rendering and into dynamic, per-request rendering — even if the rest of the route's logic would otherwise be static. This can silently turn a fast cached page into a slower dynamic one if used without realizing the consequence.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "dynamic-apis"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js decide the revalidation time for a statically rendered route composed of multiple `fetch` calls with different `revalidate` values?",
+    "answer": "Next.js uses the shortest (most frequent) `revalidate` value among all `fetch` requests made within that route as the effective revalidation interval for the whole route's static cache, ensuring no cached data on the page is served staler than the most time-sensitive fetch requested.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "isr",
+      "caching"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between rendering and hydration cost, and why does Next.js try to minimize client JavaScript?",
+    "answer": "Rendering cost is the work the server does to produce HTML; hydration cost is the work the browser does afterward to attach React's behavior to that HTML, which requires downloading, parsing, and executing JavaScript for every hydrated component. By defaulting to Server Components (which need zero client JS), Next.js reduces the amount of code the browser must hydrate, directly improving metrics like Time to Interactive.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "hydration",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might using `Math.random()` or `new Date()` directly inside a Server Component's render logic cause problems?",
+    "answer": "If that value differs between the server-rendered HTML and what the client would compute on re-render (or during hydration checks), React flags a hydration mismatch. For values that legitimately need to be random or time-based, the safer pattern is to compute them once and pass them down, or defer them to a Client Component with `useEffect` so they only run after hydration completes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "hydration",
+      "gotcha"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'time to first byte' (TTFB) tell you when comparing SSG, ISR, and SSR?",
+    "answer": "TTFB measures how quickly the server starts sending a response. SSG and cached ISR pages have very low TTFB because the HTML is already built and often served from a CDN edge cache. SSR has a higher TTFB because the server must run rendering logic and any data fetching for that specific request before it can respond.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "ssr",
+      "ssg",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js's rendering model handle a page that needs both fast static content and personalized, per-user content, like an e-commerce product page with a personalized 'recommended for you' section?",
+    "answer": "The common pattern is to statically render (or ISR-cache) the bulk of the page — product details, images, descriptions — and wrap the personalized section in a Client Component or a Suspense-streamed dynamic component that fetches user-specific recommendations separately, so the static shell loads instantly while the personalized part fills in afterward.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router",
+      "streaming"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `force-static` route segment config, and how does it differ from the default static behavior?",
+    "answer": "`export const dynamic = 'force-static'` forces a route to be statically rendered even if it uses dynamic APIs like `cookies()` or `searchParams` — those calls return empty values instead of opting the route into dynamic rendering. It's useful when you know a route should always be static and want a build-time guarantee rather than relying on Next.js's automatic inference.",
+    "example": null,
+    "code": "export const dynamic = 'force-static';",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is 'the App Router uses Server Components' not the same statement as 'the App Router only does server rendering'?",
+    "answer": "Server Components describe where a component's code runs and whether it ships JavaScript to the client, which is a per-component decision, not a whole-page rendering strategy — a page built from Server Components can still be statically generated, incrementally regenerated, or dynamically rendered per request. Rendering strategy (static vs. dynamic) and the server/client component split are two independent, orthogonal decisions in the App Router.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "server-components"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What visual/UX problem can occur with pure CSR that SSR/SSG avoid, and what is it commonly called?",
+    "answer": "Pure CSR often shows a blank page or a loading spinner while JavaScript downloads and runs before any real content appears, sometimes called a 'flash of blank content' or, once basic layout renders but data hasn't loaded, a layout shift as content pops in. SSR and SSG avoid this by delivering meaningful content in the very first HTML response, so users see something immediately even before JavaScript finishes loading.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "csr",
+      "ux"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the `revalidate` route segment config differ from passing `revalidate` to individual `fetch` calls?",
+    "answer": "Exporting `export const revalidate = 60` from a `page.js` or `layout.js` sets a default revalidation time for the entire route segment, applying to every cacheable data request within it unless a specific `fetch` call overrides it with its own `next: { revalidate }` option. It's a convenient way to set one revalidation policy for a route without annotating every fetch call individually.",
+    "example": null,
+    "code": "export const revalidate = 60; // seconds",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "isr"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is a marketing landing page usually a better fit for SSG than SSR, while a user's account settings page is usually a better fit for SSR or CSR?",
+    "answer": "A marketing page shows the same content to every visitor and rarely changes, so pre-building it once at compile time and serving the cached HTML to everyone is both faster and cheaper. An account settings page is inherently per-user and often requires authentication, so it needs request-time or client-time data that can't be baked into one shared static file ahead of time.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "rendering-strategies",
+      "ssg",
+      "ssr"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

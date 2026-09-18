@@ -1,0 +1,86 @@
+[
+  {
+    "name": "getAttribute()",
+    "syntax": "element.getAttribute(name)",
+    "description": "Reads the current value of a named attribute on an element.",
+    "parameters": "name — the attribute name.",
+    "returns": "The attribute's string value, or null if the attribute doesn't exist.",
+    "example": "img.getAttribute('src');",
+    "codeLanguage": "javascript",
+    "notes": "Always returns a string (or null) — even boolean-looking attributes like 'disabled' return an empty string when present.",
+    "tags": ["dom", "attributes"]
+  },
+  {
+    "name": "setAttribute()",
+    "syntax": "element.setAttribute(name, value)",
+    "description": "Sets the value of a named attribute on an element, creating it if it doesn't already exist.",
+    "parameters": "name — the attribute name. value — coerced to a string.",
+    "returns": "undefined.",
+    "example": "button.setAttribute('disabled', '');",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "attributes"]
+  },
+  {
+    "name": "removeAttribute()",
+    "syntax": "element.removeAttribute(name)",
+    "description": "Removes a named attribute from an element entirely.",
+    "parameters": "name — the attribute name to remove.",
+    "returns": "undefined.",
+    "example": "button.removeAttribute('disabled');",
+    "codeLanguage": "javascript",
+    "notes": "For boolean attributes like disabled or checked, removing the attribute is the correct way to turn it off rather than setting it to 'false'.",
+    "tags": ["dom", "attributes"]
+  },
+  {
+    "name": "hasAttribute()",
+    "syntax": "element.hasAttribute(name)",
+    "description": "Checks whether an element currently has a given attribute, regardless of its value.",
+    "parameters": "name — the attribute name to check.",
+    "returns": "true if the attribute exists, false otherwise.",
+    "example": "if (input.hasAttribute('required')) { /* ... */ }",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "attributes"]
+  },
+  {
+    "name": "dataset",
+    "syntax": "element.dataset.camelCaseName",
+    "description": "Provides convenient read/write access to an element's custom data-* attributes, exposed as camelCase properties.",
+    "parameters": "Each data-my-value attribute maps to dataset.myValue.",
+    "returns": "A DOMStringMap of the element's data-* attributes.",
+    "example": "<div id=\"card\" data-user-id=\"42\"></div>\ndocument.getElementById('card').dataset.userId; // '42'",
+    "codeLanguage": "html",
+    "notes": "All dataset values are strings; convert with Number()/JSON.parse() as needed.",
+    "tags": ["dom", "attributes", "data-attributes"]
+  },
+  {
+    "name": "Attributes vs properties",
+    "description": "Attributes are the initial values defined in HTML markup and accessed as strings via getAttribute()/setAttribute(), while properties are the live JavaScript representation on the DOM object and can hold typed values (booleans, numbers, objects) that reflect the element's current state.",
+    "example": "input.getAttribute('value'); // original HTML value, unchanged by typing\ninput.value; // current live value as the user types",
+    "codeLanguage": "javascript",
+    "notes": "For form controls especially, prefer the .value/.checked property over the attribute to read the current user-facing state.",
+    "tags": ["dom", "attributes", "properties"]
+  },
+  {
+    "name": "toggleAttribute()",
+    "syntax": "element.toggleAttribute(name, force)",
+    "description": "Adds an attribute if it's absent, or removes it if present; useful for boolean attributes like disabled or open.",
+    "parameters": "name — attribute name. force — optional boolean to force add (true) or remove (false) instead of toggling.",
+    "returns": "true if the attribute is present after the call, false otherwise.",
+    "example": "details.toggleAttribute('open');",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "attributes"]
+  },
+  {
+    "name": "attributes property",
+    "syntax": "element.attributes",
+    "description": "Returns a live collection of all attribute nodes currently set on an element, useful for iterating over every attribute generically.",
+    "returns": "A live NamedNodeMap of Attr nodes.",
+    "example": "[...el.attributes].forEach(attr => console.log(attr.name, attr.value));",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "attributes"]
+  }
+]

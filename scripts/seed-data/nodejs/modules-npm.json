@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is the difference between require() and import in Node.js?",
+    "answer": "require() is the CommonJS function for synchronously loading a module, returning module.exports and usable anywhere in a script's execution. import is the ES Module syntax, statically analyzed at parse time (so import statements must be at the top level, not conditional), and loaded asynchronously by the module loader — Node supports both, but you generally can't mix require() and import syntax within the same file.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does Node.js resolve require('./foo') versus require('foo')?",
+    "answer": "A path starting with './' or '../' is resolved relative to the requiring file's directory, checking for foo.js, foo.json, foo.node, or a foo/index.js in that order. A bare specifier like 'foo' (no leading path) is treated as a package name and resolved by walking up the directory tree looking in each ancestor's node_modules folder until it's found or the filesystem root is reached.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules", "resolution"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does node_modules resolution walk up parent directories, and what problem does that solve?",
+    "answer": "Node's algorithm looks in ./node_modules, then ../node_modules, and so on up to the root, which lets nested packages each have their own node_modules without duplicating shared dependencies at every level — a dependency installed at the project root is still resolvable from deep within it. This is also what enables npm's deduplication/hoisting strategy, where compatible versions of a package are hoisted to a shared ancestor node_modules folder instead of being installed redundantly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "npm", "resolution"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Are CommonJS modules cached after being required, and what does that mean in practice?",
+    "answer": "Yes — Node caches modules by resolved file path the first time they're required, so subsequent require() calls for the same module return the exact same exported object instead of re-executing the module's code. This means any mutable state inside a module (like a shared counter or a singleton instance) persists and is shared across every part of the app that requires it.",
+    "example": null,
+    "code": "// counter.js\nlet count = 0;\nmodule.exports = { increment: () => ++count };\n// Every require('./counter') call gets the SAME object/state",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules", "caching"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a circular dependency in Node.js modules, and how does CommonJS handle it?",
+    "answer": "A circular dependency occurs when module A requires module B, and B (directly or transitively) requires A back. CommonJS handles it by returning whatever partial exports object the first module has built so far at the point the circular require happens, rather than erroring or infinite-looping — which means the second module may see an incomplete version of the first module's exports if accessed too early, a subtle source of bugs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules", "circular-dependency"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the essential fields typically found in a package.json file?",
+    "answer": "Common fields include \"name\" and \"version\" (identity), \"main\" (CommonJS entry point) and/or \"exports\" (fine-grained entry/subpath control), \"scripts\" (named CLI commands like start/test/build), \"dependencies\"/\"devDependencies\" (required packages), \"type\" (module system default), and \"engines\" (supported Node version range).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is semantic versioning (semver), and how do npm version ranges like ^1.2.3 and ~1.2.3 differ?",
+    "answer": "Semver uses MAJOR.MINOR.PATCH, where major bumps signal breaking changes, minor adds backward-compatible features, and patch fixes bugs without changing the API. In package.json, ^1.2.3 allows updates that don't change the leftmost non-zero digit (so up to but not including 2.0.0), while ~1.2.3 is stricter, only allowing patch-level updates (up to but not including 1.3.0).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "semver"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the purpose of package-lock.json, and why should it typically be committed to version control?",
+    "answer": "package-lock.json records the exact resolved version (and integrity hash) of every installed package, including nested dependencies, so that running npm install produces an identical dependency tree on every machine and every CI run, rather than the potentially different versions that would be selected by re-resolving semver ranges fresh each time. Committing it ensures reproducible builds across environments and over time.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-lock"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's the difference between npm install and npm ci?",
+    "answer": "npm install reads package.json, resolves dependencies (potentially updating package-lock.json if ranges allow newer compatible versions), and can add/remove packages. npm ci instead requires an existing, exact package-lock.json, deletes node_modules first, and installs precisely what the lockfile specifies without modifying it — faster and stricter, which is why it's the recommended command for CI pipelines and reproducible deploys.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are npm 'peerDependencies', and when would a package use them?",
+    "answer": "peerDependencies declare that a package expects the consuming project to provide a compatible version of another package itself, rather than bundling its own copy — common for plugins (e.g. a React component library declaring react as a peer) where having two separate copies of the dependency in the tree would cause conflicts or duplicate-instance bugs. npm (v7+) automatically installs peer dependencies unless a conflicting version already exists.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is npx, and how is it different from a locally or globally installed CLI tool?",
+    "answer": "npx executes a package's binary without requiring a permanent install — if the package is already in local node_modules/.bin, it runs that; otherwise, it temporarily downloads and runs it (optionally caching it) for that one invocation. It's useful for one-off tool usage or trying a CLI without cluttering global installs or committing an unnecessary dependency.",
+    "example": null,
+    "code": "npx create-react-app my-app\nnpx cowsay hello",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm", "cli"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you publish a package to the npm registry, and what does the package \"version\" field control during publishing?",
+    "answer": "After authenticating with npm login and ensuring the package.json is correct, npm publish uploads the package to the registry under its current \"name\"@\"version\". npm refuses to publish if that exact version already exists for the package, which is why bumping the version (often via npm version patch/minor/major, which also updates package.json and creates a git tag) is required before every publish.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the \"exports\" field in package.json control, and why was it introduced?",
+    "answer": "The \"exports\" field explicitly defines which subpaths of a package are importable from outside, and can map different files for CommonJS (\"require\") versus ESM (\"import\") consumers, or for different runtime conditions. It was introduced to give package authors control over their public API surface (preventing arbitrary deep imports into internal files) and to properly support dual CJS/ESM packages.",
+    "example": null,
+    "code": "// package.json\n{\n  \"exports\": {\n    \".\": {\n      \"import\": \"./esm/index.js\",\n      \"require\": \"./cjs/index.js\"\n    }\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "package-json", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you make a CommonJS module interoperate with a package that only ships ES Modules?",
+    "answer": "Since require() can't synchronously load an ESM-only package, the usual workaround is to use a dynamic import() (which returns a Promise) from within the CommonJS module — this works because dynamic import() is available even in CommonJS files, unlike static import statements. Alternatively, migrating the consuming project itself to ESM avoids the interop issue altogether.",
+    "example": null,
+    "code": "// CommonJS file\nasync function loadEsmOnlyPkg() {\n  const mod = await import('esm-only-package');\n  return mod.default;\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules", "esm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a dependency listed with an exact version ('1.2.3') versus a range ('^1.2.3') in package.json?",
+    "answer": "An exact version pins the dependency to that precise release, meaning npm install always resolves it to exactly 1.2.3 regardless of newer compatible releases. A range like ^1.2.3 allows npm to install any version compatible per semver rules (here, up to but excluding 2.0.0), which can pull in newer patch/minor releases automatically — useful for getting bug fixes, but it does introduce some risk of unexpected behavior changes if a dependency doesn't perfectly follow semver.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm", "semver"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'dependency hoisting' in npm, and what problem can it cause?",
+    "answer": "Hoisting means npm tries to install a single shared copy of a dependency at the top level of node_modules when multiple packages need compatible versions of it, rather than duplicating it inside each dependent package's own node_modules. The downside is 'phantom dependencies' — code can accidentally require() a hoisted package that isn't actually declared in its own package.json, working locally but breaking if the hoisting layout changes or in stricter package managers like pnpm.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "npm", "node-modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between npm, yarn, and pnpm at a conceptual level?",
+    "answer": "All three are package managers for the same npm registry and package.json format, but differ in installation strategy: npm and (classic) yarn generally flatten and hoist dependencies into a single node_modules tree, while pnpm uses a content-addressable global store and symlinks packages into a stricter, non-flattened node_modules, preventing phantom dependency access and saving disk space across projects. Yarn also introduced features like workspaces and a lockfile format that npm later adopted similar equivalents of.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-managers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are npm 'workspaces', and what problem do they solve for monorepos?",
+    "answer": "Workspaces let a single top-level package.json declare multiple sub-packages (each with their own package.json) that npm installs and links together as one operation — cross-referencing local packages via symlinks instead of publishing them to the registry first. This solves the pain of managing multiple related packages (e.g. a shared UI library and an app that consumes it) in one repository without manual linking or duplicate installs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "monorepo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Node.js decide which version of a dependency to load when multiple versions exist in node_modules?",
+    "answer": "Node's module resolution just looks up the directory tree for the nearest node_modules containing the requested package name, without any awareness of semver — so if package A requires lodash@2 and package B (a sibling dependency) requires lodash@4, npm typically nests a separate copy inside whichever package's own node_modules needs the non-hoisted version, and each require() call resolves to whichever copy is nearest in the directory tree from that requiring file.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of a .npmignore file (or the \"files\" field in package.json)?",
+    "answer": "Both control which files get included when a package is published to npm — .npmignore works like .gitignore, excluding matched files/patterns from the published tarball, while the \"files\" field is an allowlist specifying exactly which files/folders to include. Using either keeps published packages lean by excluding test files, source maps, CI config, and other files irrelevant to consumers.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does npm audit do, and what are its limitations?",
+    "answer": "npm audit checks the installed dependency tree against a database of known security vulnerabilities and reports affected packages along with suggested fixes (often via npm audit fix, which updates to patched versions within allowed semver ranges). Its limitations include false positives/noise for vulnerabilities in code paths that aren't actually reachable by the app, and it can't catch vulnerabilities that aren't yet reported in the database.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do environment-specific configuration values (like API keys) typically get into a Node.js app without being committed to source control?",
+    "answer": "They're usually read from process.env, populated either by the hosting platform/CI directly setting environment variables, or locally via a .env file (loaded by a package like dotenv) that's excluded from git via .gitignore. This keeps secrets out of the codebase while still letting the app read them the same way (process.env.KEY) regardless of environment.",
+    "example": null,
+    "code": "require('dotenv').config();\nconst apiKey = process.env.API_KEY;",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm", "configuration"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a 'scoped' npm package (e.g. @babel/core), and why do organizations use scopes?",
+    "answer": "A scoped package name is prefixed with @scope/, typically an organization or username, which namespaces the package to avoid naming collisions with unrelated packages on the public registry. Organizations use scopes both to group related packages clearly (@babel/core, @babel/preset-env) and to publish private packages restricted to members of that scope.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if two files import each other using ES Modules — does it behave the same as CommonJS's circular dependency handling?",
+    "answer": "Not exactly — ESM uses 'live bindings,' meaning an imported name is a reference to the exporting module's binding rather than a snapshot copied at import time, so even with a circular import, accessing a value after both modules have finished initializing generally reflects the correct final value (though accessing it too early, before it's assigned, throws a ReferenceError due to the temporal dead zone). This differs from CommonJS's circular handling, which just hands back a possibly-incomplete exports object without any live-binding guarantees.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules", "esm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between 'dependencies' and 'optionalDependencies' in package.json?",
+    "answer": "\"dependencies\" must install successfully or npm install fails entirely. \"optionalDependencies\" are attempted but allowed to fail (e.g. a native module that only builds on certain platforms) without failing the whole install — code using an optional dependency needs to handle the case where it wasn't actually installed, typically with a try/catch around the require() call.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you check which versions of a package's dependencies are actually installed versus what's allowed by package.json?",
+    "answer": "npm list (or npm ls) prints the resolved dependency tree actually present in node_modules, including transitive dependencies and their exact installed versions, which can be filtered with npm list <package> to trace where a specific version came from. This is distinct from package.json, which only shows the allowed semver ranges, not the concrete versions actually resolved.",
+    "example": null,
+    "code": "npm ls lodash\nnpm outdated",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'dependency confusion,' and how does it relate to package naming?",
+    "answer": "Dependency confusion is a supply-chain attack where an attacker publishes a malicious public package under the same name as an organization's internal/private package; if the build tooling is misconfigured to prefer the public registry (or falls back to it), it can pull in the attacker's package instead of the intended private one. Mitigations include scoping internal packages (@company/pkg), configuring registry scoping explicitly, and pre-registering internal package names publicly as empty placeholders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "npm", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the \"engines\" field in package.json do, and is it enforced automatically?",
+    "answer": "\"engines\" declares which Node (and optionally npm) versions the package is intended to support, e.g. { \"node\": \">=18\" }. By default npm only prints a warning if the current Node version doesn't satisfy it, rather than blocking the install — strict enforcement requires either setting engine-strict=true in .npmrc or explicit checks in CI.",
+    "example": null,
+    "code": "{\n  \"engines\": { \"node\": \">=18.0.0\" }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do dynamic import() expressions differ from static import statements in terms of when and how they run?",
+    "answer": "A static import statement is hoisted and resolved before any module code runs, always at the top level, and can't be conditional. Dynamic import('module-name') is a function-like expression that returns a Promise, can be called anywhere (inside conditionals, loops, or after some computed path), and is commonly used for lazy-loading a module only when it's actually needed, or for interop with ESM-only packages from CommonJS.",
+    "example": null,
+    "code": "if (condition) {\n  const { heavyFn } = await import('./heavy-module.js');\n  heavyFn();\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules", "esm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the significance of a package having both a 'main' and a 'module' field in package.json (outside the newer 'exports' field)?",
+    "answer": "This was a common convention before \"exports\" existed: \"main\" points to a CommonJS build for Node/bundlers that expect it, while \"module\" (recognized by bundlers like Webpack/Rollup, though not by Node itself) points to an ES Module build, allowing tree-shaking-capable bundlers to prefer the ESM version while Node's require() still falls back to \"main\". It's a workaround predating standardized dual-package support via \"exports\".",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "package-json", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might npm install produce a different dependency tree on two different days for the same package.json, if no lockfile is present?",
+    "answer": "Without a lockfile, npm re-resolves every semver range against whatever the latest compatible versions are in the registry at install time — if any transitive dependency published a new version matching an existing range in between the two installs, the resulting tree (and potentially behavior) can differ, which is exactly the non-determinism that committing package-lock.json is meant to prevent.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "package-lock"],
+    "isFrequentlyAsked": false
+  }
+]

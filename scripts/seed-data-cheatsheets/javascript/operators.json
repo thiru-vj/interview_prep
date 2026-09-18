@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Arithmetic Operators",
+    "syntax": "+  -  *  /  %  **",
+    "description": "Perform mathematical calculations: addition, subtraction, multiplication, division, remainder (modulo), and exponentiation.",
+    "example": "10 % 3; // 1\n2 ** 3; // 8",
+    "codeLanguage": "javascript",
+    "notes": "The + operator also performs string concatenation when either operand is a string.",
+    "tags": ["javascript", "operators", "arithmetic"]
+  },
+  {
+    "name": "Assignment Operators",
+    "syntax": "=  +=  -=  *=  /=  %=  **=",
+    "description": "Assign a value to a variable, optionally combining the assignment with an arithmetic operation on the current value.",
+    "example": "let x = 5; x += 3; // x is 8",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "operators", "assignment"]
+  },
+  {
+    "name": "Comparison Operators (== vs ===)",
+    "syntax": "==  !=  ===  !==  <  >  <=  >=",
+    "description": "Compare two values. == and != coerce types before comparing, while === and !== check both value and type without coercion.",
+    "example": "1 == '1'; // true\n1 === '1'; // false",
+    "codeLanguage": "javascript",
+    "notes": "Best practice is to always use === and !== to avoid unpredictable coercion bugs.",
+    "tags": ["javascript", "operators", "comparison"]
+  },
+  {
+    "name": "Logical Operators (&&, ||, !)",
+    "syntax": "a && b   a || b   !a",
+    "description": "Combine or invert boolean expressions. && returns the first falsy value (or the last value), || returns the first truthy value, ! inverts truthiness.",
+    "example": "true && 'yes'; // 'yes'\nfalse || 'default'; // 'default'",
+    "codeLanguage": "javascript",
+    "notes": "&& and || are often used for short-circuit patterns like isReady && doThing() instead of an if statement.",
+    "tags": ["javascript", "operators", "logical"]
+  },
+  {
+    "name": "Ternary Operator (?:)",
+    "syntax": "condition ? valueIfTrue : valueIfFalse",
+    "description": "A shorthand conditional expression that evaluates to one of two values depending on a condition.",
+    "example": "const status = age >= 18 ? 'adult' : 'minor';",
+    "codeLanguage": "javascript",
+    "notes": "Can be chained, but nested ternaries quickly hurt readability — prefer if/else for complex branching.",
+    "tags": ["javascript", "operators", "conditionals"]
+  },
+  {
+    "name": "typeof Operator",
+    "syntax": "typeof value",
+    "description": "Returns a string indicating the type of the operand, such as 'string', 'number', 'boolean', 'undefined', 'object', or 'function'.",
+    "example": "typeof 'hi'; // 'string'\ntypeof undefined; // 'undefined'",
+    "codeLanguage": "javascript",
+    "notes": "typeof null is 'object' and typeof [] is also 'object' — use Array.isArray() to detect arrays specifically.",
+    "tags": ["javascript", "operators", "type-checking"]
+  },
+  {
+    "name": "instanceof Operator",
+    "syntax": "object instanceof Constructor",
+    "description": "Tests whether the prototype of a constructor appears anywhere in an object's prototype chain.",
+    "example": "[] instanceof Array; // true\n[] instanceof Object; // true",
+    "codeLanguage": "javascript",
+    "notes": "Does not work reliably across different execution contexts (e.g. iframes), where each has its own global constructors.",
+    "tags": ["javascript", "operators", "type-checking"]
+  },
+  {
+    "name": "Bitwise Operators",
+    "syntax": "&  |  ^  ~  <<  >>  >>>",
+    "description": "Perform operations on the individual bits of numbers: AND, OR, XOR, NOT, left shift, sign-propagating right shift, and zero-fill right shift.",
+    "example": "5 & 1; // 1\n5 << 1; // 10",
+    "codeLanguage": "javascript",
+    "notes": "Numbers are converted to 32-bit integers before bitwise operations are applied.",
+    "tags": ["javascript", "operators", "bitwise"]
+  },
+  {
+    "name": "Comma Operator",
+    "syntax": "expr1, expr2, expr3",
+    "description": "Evaluates each of its operands from left to right and returns the value of the last operand.",
+    "example": "let x = (1 + 1, 2 + 2); // x is 4",
+    "codeLanguage": "javascript",
+    "notes": "Rarely used outside of for loop headers, e.g. for (let i = 0, j = 10; i < j; i++, j--).",
+    "tags": ["javascript", "operators", "expressions"]
+  },
+  {
+    "name": "Increment/Decrement Operators (++/--)",
+    "syntax": "x++  ++x  x--  --x",
+    "description": "Increase or decrease a numeric variable by one. The prefix form returns the updated value; the postfix form returns the original value.",
+    "example": "let x = 5; x++; // x is 6\nlet y = 5; console.log(y++); // logs 5, then y is 6",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["javascript", "operators", "arithmetic"]
+  },
+  {
+    "name": "Logical Assignment Operators (&&=, ||=, ??=)",
+    "syntax": "a &&= b   a ||= b   a ??= b",
+    "description": "Combine a logical operation with assignment, only assigning the right-hand value when the logical condition is met.",
+    "example": "let config = {}; config.timeout ??= 5000; // sets timeout only if it was null/undefined",
+    "codeLanguage": "javascript",
+    "notes": "Introduced in ES2021 as a concise alternative to patterns like a = a || b.",
+    "tags": ["javascript", "operators", "assignment"]
+  },
+  {
+    "name": "in Operator",
+    "syntax": "'key' in object",
+    "description": "Tests whether a specified property exists in an object or its prototype chain.",
+    "example": "'toString' in {}; // true (inherited)\n'a' in { a: 1 }; // true",
+    "codeLanguage": "javascript",
+    "notes": "Unlike hasOwnProperty(), in also returns true for inherited properties.",
+    "tags": ["javascript", "operators", "objects"]
+  },
+  {
+    "name": "delete Operator",
+    "syntax": "delete object.property",
+    "description": "Removes a property from an object entirely, rather than just setting it to undefined.",
+    "example": "const obj = { a: 1 }; delete obj.a; 'a' in obj; // false",
+    "codeLanguage": "javascript",
+    "notes": "Has no effect on variables or function declarations — it only removes object properties.",
+    "tags": ["javascript", "operators", "objects"]
+  },
+  {
+    "name": "void Operator",
+    "syntax": "void expression",
+    "description": "Evaluates an expression and discards its return value, always resulting in undefined.",
+    "example": "void 0; // undefined",
+    "codeLanguage": "javascript",
+    "notes": "Historically used in href=\"javascript:void(0)\" links to prevent navigation without producing a visible return value.",
+    "tags": ["javascript", "operators", "expressions"]
+  },
+  {
+    "name": "Exponentiation Operator (**)",
+    "syntax": "base ** exponent",
+    "description": "Raises the first operand to the power of the second operand, equivalent to Math.pow().",
+    "example": "2 ** 10; // 1024",
+    "codeLanguage": "javascript",
+    "notes": "Right-associative: 2 ** 3 ** 2 evaluates as 2 ** (3 ** 2) = 512.",
+    "tags": ["javascript", "operators", "arithmetic"]
+  }
+]

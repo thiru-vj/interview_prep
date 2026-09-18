@@ -1,0 +1,439 @@
+[
+  {
+    "question": "How does file-based routing work in Next.js?",
+    "answer": "Next.js maps the file system directly to URL routes: in the App Router, each folder under `app/` becomes a URL segment, and a `page.js` file inside it makes that segment publicly reachable. In the Pages Router, every file directly under `pages/` (excluding special files) becomes a route matching its file path, e.g. `pages/about.js` maps to `/about`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the key structural difference between routing in the App Router versus the Pages Router?",
+    "answer": "In the Pages Router, a file's path directly determines both its route and its component in one file. In the App Router, a folder defines the URL segment, but the folder itself renders nothing — you need a `page.js` file inside it to make that segment an actual page, which allows the same folder to also hold `layout.js`, `loading.js`, and other co-located files without them becoming routes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "app-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create a dynamic route segment in Next.js?",
+    "answer": "Wrap a folder or file name in square brackets to make it a dynamic segment that matches any value at that position in the URL. In the App Router, `app/blog/[slug]/page.js` matches `/blog/anything` and exposes `anything` as `params.slug`; the Pages Router equivalent is `pages/blog/[slug].js`.",
+    "example": null,
+    "code": "// app/blog/[slug]/page.js\nexport default function BlogPost({ params }) {\n  return <h1>{params.slug}</h1>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a catch-all route segment, and how does it differ from an optional catch-all?",
+    "answer": "A catch-all segment, written `[...slug]`, matches any number of path segments after that point and exposes them as an array, e.g. `/a/b/c` becomes `['a', 'b', 'c']`; it requires at least one segment to match. An optional catch-all, written `[[...slug]]`, additionally matches the route with zero extra segments (the base path itself), which a plain catch-all does not.",
+    "example": "// app/shop/[[...slug]]/page.js matches /shop, /shop/a, /shop/a/b",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do nested layouts work in the App Router?",
+    "answer": "Each folder in the route hierarchy can define its own `layout.js`, and layouts nest automatically: a route's rendered output is wrapped by its own layout, which is wrapped by its parent's layout, all the way up to the root layout. This lets you share UI (like a sidebar for a specific section) with only the routes under that folder, without re-declaring it in every page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "layouts"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a route group in the App Router, and what problem does it solve?",
+    "answer": "A route group is a folder name wrapped in parentheses, like `(marketing)`, which lets you organize routes into logical groups or apply a shared layout to a subset of routes without that folder name appearing in the URL. It solves the problem of needing different root-level layouts for different sections of a site (e.g. a marketing site vs. a dashboard) that would otherwise all share one top-level layout.",
+    "example": "app/(marketing)/about/page.js  // URL is still /about",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "route-groups"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a parallel route in the App Router, and when would you use one?",
+    "answer": "Parallel routes, denoted with a `@folder` naming convention (a 'slot'), let you render two or more independent pages in the same layout simultaneously, each with its own loading and error state — useful for things like a dashboard that shows an analytics panel and a team activity feed side by side, each fetching and rendering independently.",
+    "example": "app/@analytics/page.js and app/@team/page.js rendered together via layout.js's {analytics} and {team} props",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "routing",
+      "parallel-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an intercepting route in the App Router, and what's a typical use case?",
+    "answer": "Intercepting routes, using conventions like `(.)folder`, let you load a route from another part of the app within the current layout, commonly used to show a photo in a modal when navigated to via client-side navigation, while still showing the full standalone page if the URL is loaded directly (e.g. on refresh or shared link). Instagram's photo-in-modal-over-feed pattern is the classic example.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "routing",
+      "intercepting-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you programmatically navigate between pages in the App Router?",
+    "answer": "Use the `useRouter` hook from `next/navigation` inside a client component and call `router.push(path)` to navigate, or `router.replace(path)` to navigate without adding a history entry. Note this is a different `useRouter` from the one in `next/router`, which is used only in the Pages Router.",
+    "example": null,
+    "code": "'use client';\nimport { useRouter } from 'next/navigation';\n\nfunction LoginButton() {\n  const router = useRouter();\n  return <button onClick={() => router.push('/dashboard')}>Go</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "navigation"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `<Link>` component and why should it be used instead of a plain `<a>` tag?",
+    "answer": "`next/link`'s `<Link>` component enables client-side navigation between routes without a full page reload, and it automatically prefetches the linked page's code in the background when it scrolls into the viewport (in production), making subsequent navigation feel instant. A plain `<a>` tag would trigger a full browser page reload for every internal navigation, losing client-side state and being noticeably slower.",
+    "example": null,
+    "code": "import Link from 'next/link';\n\n<Link href=\"/about\">About</Link>",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "link"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you read the current pathname and search params inside a client component in the App Router?",
+    "answer": "The `usePathname` hook from `next/navigation` returns the current URL's path, and `useSearchParams` returns a read-only `URLSearchParams`-like object for the query string. Both are client-only hooks and must be used inside a component marked `'use client'`.",
+    "example": null,
+    "code": "'use client';\nimport { usePathname, useSearchParams } from 'next/navigation';\n\nfunction Debug() {\n  const pathname = usePathname();\n  const searchParams = useSearchParams();\n  return <p>{pathname}?{searchParams.toString()}</p>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "hooks"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How did dynamic routing work in the Pages Router before the App Router existed?",
+    "answer": "A file named with square brackets, like `pages/posts/[id].js`, became a dynamic route, and the matched value was accessed via the `useRouter` hook's `router.query.id` on the client, or as the `params.id` argument passed into `getStaticProps`/`getServerSideProps` on the server.",
+    "example": null,
+    "code": "import { useRouter } from 'next/router';\n\nfunction Post() {\n  const { query } = useRouter();\n  return <p>{query.id}</p>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you build a custom 404 page in Next.js?",
+    "answer": "In the App Router, create `app/not-found.js`, which Next.js renders automatically for unmatched routes or when the `notFound()` function is called from a server component. In the Pages Router, create `pages/404.js`, which Next.js statically generates and serves for any unmatched route.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "error-handling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `notFound()` function do in the App Router?",
+    "answer": "Calling `notFound()` inside a server component or route handler immediately halts rendering and tells Next.js to render the nearest `not-found.js` boundary with a 404 status code — commonly used when a dynamic route's data lookup (e.g. a blog post by slug) comes back empty.",
+    "example": null,
+    "code": "import { notFound } from 'next/navigation';\n\nasync function Page({ params }) {\n  const post = await getPost(params.slug);\n  if (!post) notFound();\n  return <article>{post.title}</article>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "error-handling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you set up redirects and rewrites in Next.js?",
+    "answer": "Both are configured in `next.config.js` via async `redirects()` and `rewrites()` functions that return arrays of source/destination pairs. A redirect sends the browser a 301/302 response and changes the visible URL; a rewrite proxies the request to a different internal path while keeping the URL the user sees unchanged.",
+    "example": null,
+    "code": "async redirects() {\n  return [{ source: '/old', destination: '/new', permanent: true }];\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "redirects"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you trigger a redirect from inside a server component or server action?",
+    "answer": "Call the `redirect()` function from `next/navigation`, passing the destination path — it works by throwing a special error internally that Next.js's rendering pipeline catches to perform the redirect, so any code after the call in the same function won't execute.",
+    "example": null,
+    "code": "import { redirect } from 'next/navigation';\n\nasync function Page() {\n  const user = await getUser();\n  if (!user) redirect('/login');\n  return <Dashboard user={user} />;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "redirects"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between `params` and `searchParams` in an App Router page component?",
+    "answer": "`params` contains the values matched by dynamic route segments in the URL path (e.g. `[id]` becomes `params.id`). `searchParams` contains the parsed query string (e.g. `?sort=asc` becomes `searchParams.sort`). Both are passed as props to `page.js` components, with `params` also available to layouts.",
+    "example": null,
+    "code": "// app/products/[id]/page.js\nfunction Page({ params, searchParams }) {\n  // params.id, searchParams.sort\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create nested dynamic routes, such as `/shop/[category]/[product]`?",
+    "answer": "Nest dynamic segment folders inside each other in the App Router: `app/shop/[category]/[product]/page.js`. Both segments are available together as `params.category` and `params.product` on the page component, matching URLs like `/shop/shoes/sneaker-42`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `generateStaticParams` used for?",
+    "answer": "`generateStaticParams`, exported from a dynamic route's `page.js`, tells Next.js which values of a dynamic segment to pre-render at build time (similar in purpose to `getStaticPaths` in the Pages Router). It returns an array of param objects, and Next.js statically generates one page per entry, falling back to on-demand rendering for any params not included, depending on `dynamicParams` settings.",
+    "example": null,
+    "code": "export async function generateStaticParams() {\n  const posts = await getPosts();\n  return posts.map((post) => ({ slug: post.slug }));\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "static-generation"
+    ],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How did `getStaticPaths` work in the Pages Router, and what does its `fallback` option control?",
+    "answer": "`getStaticPaths`, exported alongside `getStaticProps` on a dynamic page, returns the list of param combinations to pre-render at build time. Its `fallback` option controls what happens for paths not in that list: `false` returns a 404, `true` serves a fallback loading state while generating the page on first request, and `'blocking'` waits server-side and serves the fully rendered page on first request with no fallback flash.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "pages-router",
+      "static-generation"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you show a loading UI while a route segment's data is being fetched in the App Router?",
+    "answer": "Add a `loading.js` file to a route segment's folder — Next.js automatically wraps that segment's `page.js` in a React Suspense boundary and renders `loading.js` as the fallback until the async data-fetching in the page finishes, giving instant loading states without manually adding Suspense yourself.",
+    "example": null,
+    "code": "// app/dashboard/loading.js\nexport default function Loading() {\n  return <p>Loading dashboard...</p>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "loading-states"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Next.js handle route-level error boundaries in the App Router?",
+    "answer": "An `error.js` file in a route segment's folder automatically wraps that segment in a React error boundary. It must be a client component and receives `error` and `reset` props, where `reset` lets the user retry rendering the segment without a full page reload.",
+    "example": null,
+    "code": "'use client';\nexport default function Error({ error, reset }) {\n  return <button onClick={() => reset()}>Try again: {error.message}</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "error-handling"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is route prefetching in Next.js and when does it happen automatically?",
+    "answer": "Prefetching means Next.js loads a route's code (and, for static routes, its data) in the background before the user actually navigates to it, so the navigation feels instant. In the App Router, `<Link>` components automatically prefetch routes as they enter the viewport in production mode; it's disabled in development and can be turned off per-link with `prefetch={false}`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "prefetching",
+      "performance"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can a single Next.js app mix the App Router and the Pages Router at the same time?",
+    "answer": "Yes — Next.js allows `app/` and `pages/` to coexist in the same project for incremental migration. If a route exists in both, the `app/` version takes precedence; this dual setup is meant as a transitional state rather than a long-term architecture.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "migration"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create a route that only handles specific HTTP methods, like a webhook endpoint, without it becoming a normal page?",
+    "answer": "In the App Router, add a `route.js` file to a folder instead of `page.js`, and export functions named after HTTP methods (`GET`, `POST`, etc.) — this makes the segment a Route Handler that returns raw responses instead of rendering UI. A folder can't have both `page.js` and `route.js` at the same segment level.",
+    "example": null,
+    "codeLanguage": "javascript",
+    "code": "// app/api/webhook/route.js\nexport async function POST(request) {\n  const body = await request.json();\n  return Response.json({ received: true });\n}",
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "route-handlers"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is shallow routing, and does the App Router support it the same way the Pages Router did?",
+    "answer": "Shallow routing means updating the URL (e.g. query params) without re-running data-fetching functions or losing component state — in the Pages Router this was done via `router.push(url, undefined, { shallow: true })`. The App Router doesn't have a direct shallow option on `useRouter`; similar effects are typically achieved by manipulating `URLSearchParams` and using `router.replace` combined with client state, or `history.pushState` directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "pages-router"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you access dynamic route params inside a layout, and what's the limitation compared to a page?",
+    "answer": "A `layout.js` receives `params` for the dynamic segments it wraps, just like a page does, but it does not receive `searchParams` — layouts don't re-render on query-string-only navigation, so exposing search params to them would encourage patterns that break that optimization.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "routing",
+      "layouts",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What naming convention marks a folder as private in the App Router, excluding it from routing?",
+    "answer": "Prefixing a folder name with an underscore, like `_components` or `_lib`, opts it and all its subfolders out of routing entirely, even if it contains a `page.js`. It's useful for colocating implementation details (helper components, utilities) next to the routes that use them without accidentally creating a URL.",
+    "example": "app/dashboard/_components/Chart.js  // not routable",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "conventions"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you handle internationalized (i18n) routing in Next.js?",
+    "answer": "The Pages Router has built-in i18n routing support configured in `next.config.js` (locale list, default locale, and automatic locale-prefixed paths like `/fr/about`). The App Router doesn't have built-in i18n routing; instead you implement it yourself using a `[locale]` dynamic segment at the root of `app/` combined with middleware to detect and redirect based on the user's preferred locale.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": [
+      "nextjs",
+      "routing",
+      "i18n"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if two different route segments could match the same URL, such as a static route and a dynamic route at the same level?",
+    "answer": "Next.js prioritizes more specific matches: a static segment (e.g. `app/blog/latest/page.js`) takes precedence over a dynamic segment at the same level (e.g. `app/blog/[slug]/page.js`) for a request to `/blog/latest`. This lets you carve out specific static pages that would otherwise be swallowed by a dynamic catch-all sibling.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": [
+      "nextjs",
+      "routing",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you link to a dynamic route and pass along its parameter using the `<Link>` component?",
+    "answer": "Build the `href` string with the dynamic value interpolated directly into the path, matching the folder's bracket segment, since `<Link>` doesn't have a separate params API — the href is just the final URL string (or a URL object with `pathname`/`query` in the Pages Router style).",
+    "example": null,
+    "code": "<Link href={`/blog/${post.slug}`}>{post.title}</Link>",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": [
+      "nextjs",
+      "routing",
+      "link",
+      "dynamic-routes"
+    ],
+    "isFrequentlyAsked": false
+  }
+]

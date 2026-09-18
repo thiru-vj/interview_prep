@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What does the `@apply` directive do in Tailwind CSS?",
+    "answer": "`@apply` lets you compose existing utility classes into a custom, named CSS class, so instead of repeating a long utility list on every instance of a component in markup, you define it once in CSS and reference it by a single class name. It's processed at build time, so the result is plain CSS with no runtime cost.",
+    "example": null,
+    "code": ".btn-primary {\n  @apply bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "When should you reach for `@apply` versus extracting a reusable component in your JS framework?",
+    "answer": "`@apply` makes sense for simple, purely visual repetition (like a consistent button style used in a non-component context, such as server-rendered HTML or markdown output), while a framework component is generally preferred in React/Vue apps because it also encapsulates behavior, props, and accessibility logic, not just class names — most teams use components as the primary extraction mechanism and reach for `@apply` only in edge cases.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you use variant-prefixed utilities like `hover:` or `md:` inside an `@apply` rule?",
+    "answer": "Yes — Tailwind supports applying variant-prefixed utilities directly inside `@apply`, such as `@apply hover:bg-blue-700 md:px-6;`, which get compiled into the appropriate nested pseudo-class rules or media queries within the resulting custom class, exactly as if they'd been written in markup.",
+    "example": null,
+    "code": ".card {\n  @apply rounded-lg border p-4 hover:shadow-md md:p-6;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the `@layer` directive used for in a Tailwind CSS file?",
+    "answer": "`@layer` assigns a block of custom CSS to one of Tailwind's three internal layers — `base`, `components`, or `utilities` — so it's injected in the correct position relative to Tailwind's generated styles and correctly deduplicated/purged along with everything else. Without `@layer`, custom CSS added outside the directives can end up in the wrong cascade position or get treated inconsistently by the build.",
+    "example": null,
+    "code": "@layer components {\n  .btn {\n    @apply rounded px-4 py-2 font-medium;\n  }\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["tailwind", "customization", "layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you define a reusable `.card` component class using `@apply`?",
+    "answer": "You write a normal CSS class selector inside `@layer components` and use `@apply` to pull in the utility classes that define its look, giving you a single semantic class name to use in markup instead of repeating the full utility list everywhere the card pattern appears.",
+    "example": null,
+    "code": "@layer components {\n  .card {\n    @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm;\n  }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's a downside of overusing `@apply` across a large stylesheet instead of using utilities directly in markup?",
+    "answer": "Heavy use of `@apply` recreates the exact problem utility-first CSS was designed to avoid — you end up maintaining a growing, hand-named stylesheet again, losing the main benefit of styles being colocated and immediately visible in the markup. It can also subtly increase specificity compared to plain utility classes, since you're now dealing with a named class selector rather than flat utility selectors, making later overrides slightly harder.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you write a basic Tailwind plugin that adds new utility classes using `addUtilities`?",
+    "answer": "You call Tailwind's `plugin()` function with a callback that receives helper functions, and call `addUtilities()` with an object of new CSS rules, which registers them as first-class utilities (including variant support) rather than ad hoc CSS.",
+    "example": null,
+    "code": "const plugin = require('tailwindcss/plugin');\n\nmodule.exports = plugin(function ({ addUtilities }) {\n  addUtilities({\n    '.text-shadow': { textShadow: '0 2px 4px rgba(0,0,0,0.3)' },\n  });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does `addComponents` differ from `addUtilities` inside a Tailwind plugin?",
+    "answer": "`addComponents` registers higher-level, multi-property component-style classes into the `components` layer (conceptually similar to what `@apply` produces), while `addUtilities` registers single-purpose utility classes into the `utilities` layer. The distinction mainly affects cascade ordering — component styles are meant to be easily overridden by utilities, matching the layer order `base` → `components` → `utilities`.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ addComponents }) {\n  addComponents({\n    '.btn': {\n      padding: '.5rem 1rem',\n      borderRadius: '.25rem',\n      fontWeight: '600',\n    },\n  });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does `addBase` do inside a Tailwind plugin?",
+    "answer": "`addBase` injects raw CSS rules into the `base` layer, the same layer Preflight uses, which is appropriate for setting default styles on plain HTML elements (like a custom `h1` default size) rather than opt-in classes — base styles apply automatically wherever the matching element appears, with no class needed.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ addBase, theme }) {\n  addBase({\n    h1: { fontSize: theme('fontSize.2xl') },\n  });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you create a custom variant using `addVariant` in a Tailwind plugin?",
+    "answer": "`addVariant(name, definition)` registers a new variant prefix that generates the given selector modification wherever it's used, letting you create project-specific state variants beyond the built-in ones — for example, a `theme-dark:` variant tied to a `[data-theme=\"dark\"]` attribute selector instead of the standard `dark:` class strategy.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ addVariant }) {\n  addVariant('theme-dark', '[data-theme=\"dark\"] &');\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `matchUtilities` used for in a Tailwind plugin, and how does it differ from `addUtilities`?",
+    "answer": "`matchUtilities` dynamically generates a whole family of utilities from a theme scale (much like Tailwind's own built-in utilities do), so a single registration can produce `.my-util-{key}` for every value in a given theme object, including support for arbitrary values — `addUtilities` only registers the fixed, literal set of classes you write out explicitly.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ matchUtilities, theme }) {\n  matchUtilities(\n    { 'text-shadow': (value) => ({ textShadow: value }) },\n    { values: theme('textShadow') }\n  );\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is `matchVariant` used for in Tailwind's plugin API?",
+    "answer": "`matchVariant` is the dynamic counterpart to `addVariant`, letting you register a whole parameterized family of variants that accept a value (including arbitrary values), similar to how the built-in `data-[state=open]:` or `aria-[...]:` variants work internally — useful for building a custom variant that needs to accept different selector parameters rather than a single fixed one.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the official first-party Tailwind plugins offer, and which are most commonly used?",
+    "answer": "The most widely used official plugins are `@tailwindcss/forms` (resets form elements to a consistent, easily-styleable baseline), `@tailwindcss/typography` (the `prose` class for styling raw HTML content like blog posts or markdown output), `@tailwindcss/aspect-ratio` (aspect-ratio helpers, now largely superseded by the built-in `aspect-*` utilities), and `@tailwindcss/container-queries` (container query support, now built into core in v4).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "customization", "official-plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you use the `@tailwindcss/typography` plugin's `prose` class?",
+    "answer": "Adding the `prose` class to a container automatically applies sensible, well-designed typographic styles (heading sizes, paragraph spacing, link colors, list markers) to any raw HTML rendered inside it, which is ideal for content you don't control the individual tags of, like markdown-rendered blog posts, without needing to write custom CSS for every possible HTML element.",
+    "example": null,
+    "code": "<article class=\"prose dark:prose-invert lg:prose-lg\">\n  <h1>Post title</h1>\n  <p>Rendered markdown content...</p>\n</article>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "typography-plugin"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does the `@tailwindcss/forms` plugin exist, and what problem does it solve?",
+    "answer": "Native form elements (checkboxes, radios, selects) come with inconsistent, hard-to-override, browser-specific default styling. The forms plugin resets them to a clean, minimal baseline that's easy to restyle predictably with ordinary utility classes, instead of every project needing to hand-write its own form-element reset.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "forms-plugin"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a CSS data-type hint in an arbitrary value, like `text-[length:1rem]` versus `text-[1rem]`, and when is it needed?",
+    "answer": "Tailwind usually infers what kind of CSS value an arbitrary value represents (a color, a length, etc.) from its syntax, but some values are ambiguous — `text-[1rem]` could mean font size, color, or text-shadow depending on context. A data-type hint prefix like `length:` or `color:` explicitly tells Tailwind how to interpret the value so it generates the correct property.",
+    "example": null,
+    "code": "<p class=\"text-[length:1rem] text-[color:#334155]\">Explicit arbitrary value types</p>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind's JIT engine decide which CSS to actually generate for a project?",
+    "answer": "Rather than pre-generating every possible utility combination ahead of time, the Just-In-Time engine scans the files listed in `content` for strings that look like class names, and generates CSS only for the ones it finds, including arbitrary-value classes it discovers on the fly — this is why unused classes never bloat the output and why a class name must appear as a complete, unbroken string in your source for it to be detected.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "jit"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the arbitrary properties syntax in Tailwind, like `[mask-type:luminance]`, and how is it different from an arbitrary value?",
+    "answer": "An arbitrary value fills in the value for an existing utility (`bg-[#1da1f2]` still uses the known `background-color` property). An arbitrary property lets you write an entirely custom CSS property/value pair that Tailwind doesn't have a named utility for at all, wrapped in square brackets as `[property:value]`, generating a one-off declaration directly.",
+    "example": null,
+    "code": "<div class=\"[mask-type:luminance] [writing-mode:vertical-rl]\">Custom properties</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you reference a CSS custom property (variable) as part of an arbitrary value?",
+    "answer": "You can pass a `var(--my-var)` reference inside an arbitrary value's brackets, or use the shorthand parenthesis syntax for custom properties (`bg-(--brand-color)` in newer Tailwind versions), which is useful for values that are set dynamically at runtime — for example, a theme color injected via inline `style` on a root element and consumed by utility classes throughout the page.",
+    "example": null,
+    "code": "<div style=\"--brand-color: #7c3aed\" class=\"bg-[var(--brand-color)] text-white\">Dynamic brand color</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the tradeoff between using `@apply` to centralize styling versus using CSS custom properties for theming?",
+    "answer": "`@apply` centralizes a *fixed set* of utility classes into one class name at build time, which is great for structural repetition but doesn't change at runtime. CSS custom properties (often combined with Tailwind's arbitrary value syntax or theme config) allow values to be swapped dynamically in the browser — such as toggling a brand color at runtime — without a rebuild, which `@apply`-based classes can't do on their own.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "theming"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the tradeoffs of extracting a repeated utility pattern into a CSS component class versus a framework component (e.g. a React component)?",
+    "answer": "A CSS class extraction (via `@apply`) is framework-agnostic and works in plain HTML, but only captures styling, not behavior, props, or slots. A framework component captures both styling and logic/behavior in one reusable unit and integrates naturally with props-driven variants, but ties the reuse to that specific framework — in a React or Vue codebase, component extraction is almost always the better default.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you write a plugin that registers a reusable `.btn` component class using theme values instead of hardcoded ones?",
+    "answer": "Inside `addComponents`, you use the `theme()` helper the plugin callback receives to pull colors, spacing, and radius straight from the project's configured design tokens, so the generated component automatically stays consistent with whatever theme customizations the project has made, rather than hardcoding values that could drift out of sync.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ addComponents, theme }) {\n  addComponents({\n    '.btn': {\n      backgroundColor: theme('colors.blue.600'),\n      color: theme('colors.white'),\n      padding: `${theme('spacing.2')} ${theme('spacing.4')}`,\n      borderRadius: theme('borderRadius.md'),\n    },\n  });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you use Tailwind's configured breakpoints inside a custom CSS media query with the `screens()` function?",
+    "answer": "`screens('md')` resolves to the min-width value configured for that breakpoint in `theme.screens`, letting hand-written custom CSS media queries stay in sync with the same breakpoint values utilities use, instead of hardcoding a pixel value that could drift if the config changes later.",
+    "example": null,
+    "code": "@media (min-width: screens('md')) {\n  .custom-banner {\n    padding: 2rem;\n  }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "theme-function"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between `plugin()` and `plugin.withOptions()` when authoring a Tailwind plugin?",
+    "answer": "`plugin()` creates a plugin with fixed, non-configurable behavior. `plugin.withOptions()` creates a plugin *factory* — a function that accepts an options object from the consumer's config and returns a configured plugin instance — which is needed whenever a plugin should be customizable per project, like letting consumers choose a class prefix or toggle a feature.",
+    "example": null,
+    "code": "module.exports = plugin.withOptions(function (options = {}) {\n  return function ({ addUtilities }) {\n    addUtilities({ '.custom': { color: options.color || 'black' } });\n  };\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Do declarations inside an `@apply` rule follow the normal CSS cascade with respect to their source order?",
+    "answer": "Yes — if two applied utilities set the same CSS property, the one whose generated rule comes later in Tailwind's compiled stylesheet wins, following the same rules as any conflicting utilities used directly in markup; the order they're listed textually inside the `@apply` line itself doesn't determine the winner, since `@apply` just expands to the underlying rules.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you `@apply` a class that itself uses an arbitrary value, like `@apply bg-[#123456]`?",
+    "answer": "Yes — `@apply` works with any valid utility class Tailwind can generate, including ones built from arbitrary values, since at build time it's simply pulling in the already-generated CSS declarations for that class name regardless of how the class was produced.",
+    "example": null,
+    "code": ".brand-banner {\n  @apply bg-[#123456] text-white p-6;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does `@apply` require Tailwind to run as part of a PostCSS build step rather than working in a plain CSS file loaded directly in the browser?",
+    "answer": "`@apply` is not valid standard CSS syntax — it's a Tailwind-specific at-rule that must be resolved by Tailwind's PostCSS plugin during the build, which looks up each referenced utility's already-computed CSS declarations and inlines them into the custom class. Without running through that build step, browsers would simply ignore or error on the `@apply` line since it has no native meaning.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "build-tools"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you add a brand-new custom utility class scoped correctly into Tailwind's utilities layer without writing a full plugin?",
+    "answer": "You can wrap plain CSS class definitions in `@layer utilities` directly in your stylesheet, which registers them alongside Tailwind's own generated utilities for correct cascade ordering and lets them be purged if unused, without needing the JavaScript plugin API at all — appropriate for a handful of simple, project-specific one-off utilities.",
+    "example": null,
+    "code": "@layer utilities {\n  .text-shadow-sm {\n    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);\n  }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happened to plugins like `@tailwindcss/aspect-ratio` and `@tailwindcss/line-clamp` in more recent Tailwind versions?",
+    "answer": "Both were originally separate official plugins, but their functionality (the `aspect-*` and `line-clamp-*` utilities) was merged directly into Tailwind's core utility set in later v3 releases, so most projects no longer need to install them separately — they're only still relevant for older projects pinned to earlier versions.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "customization", "official-plugins"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you force `!important` on a specific `@apply`-generated declaration without making the whole config important?",
+    "answer": "Prefixing an individual utility with `!` inside the `@apply` line, like `@apply !bg-blue-500;`, marks just that declaration as important, which is the scoped alternative to setting the global `important: true` config option and is useful when only one property in a component class needs to reliably win against a stubborn external override.",
+    "example": null,
+    "code": ".banner {\n  @apply !bg-blue-500 text-white p-4;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["tailwind", "customization", "apply"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you register a variant that applies under multiple different selector conditions at once using `addVariant`?",
+    "answer": "`addVariant` accepts an array of selector strings (or an array of raw CSS rule strings) instead of a single one, which generates the variant's styles under each condition, useful for a variant that should trigger from more than one state — for example, treating both `:hover` and `:focus` as a single combined `interactive:` variant.",
+    "example": null,
+    "code": "module.exports = plugin(function ({ addVariant }) {\n  addVariant('interactive', ['&:hover', '&:focus']);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["tailwind", "customization", "plugins"],
+    "isFrequentlyAsked": false
+  }
+]

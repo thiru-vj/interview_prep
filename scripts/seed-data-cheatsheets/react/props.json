@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Passing Props",
+    "syntax": "<Greeting name=\"Sam\" age={30} />",
+    "description": "Attributes passed to a component are collected into a single `props` object, which the component reads to customize its output.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Greeting(props) {\n  return <p>Hi {props.name}, age {props.age}</p>;\n}\n\n<Greeting name=\"Sam\" age={30} />;",
+    "codeLanguage": "jsx",
+    "notes": "Non-string values (numbers, objects, booleans, functions) must be wrapped in `{}`.",
+    "tags": ["react", "props", "fundamentals"]
+  },
+  {
+    "name": "Default Props",
+    "syntax": "function Button({ variant = 'primary' }) { ... }",
+    "description": "Provides a fallback value for a prop when the parent doesn't pass one, most commonly done with a default parameter in the function signature.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Button({ variant = 'primary', children }) {\n  return <button className={variant}>{children}</button>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "The static `Component.defaultProps = {...}` assignment still works but is deprecated for function components in favor of default parameters.",
+    "tags": ["react", "props", "defaults"]
+  },
+  {
+    "name": "children as a Prop",
+    "syntax": "function Layout({ children }) { return <main>{children}</main>; }",
+    "description": "`children` is just a regular prop that React populates automatically from nested JSX content, enabling wrapper/layout components.",
+    "parameters": null,
+    "returns": null,
+    "example": "<Layout>\n  <Sidebar />\n  <Content />\n</Layout>",
+    "codeLanguage": "jsx",
+    "notes": null,
+    "tags": ["react", "props", "composition"]
+  },
+  {
+    "name": "Prop Drilling",
+    "syntax": null,
+    "description": "Passing props down through several layers of intermediate components that don't use the data themselves, just to get it to a deeply nested child.",
+    "parameters": null,
+    "returns": null,
+    "example": "// theme passes through Header even though only Logo needs it\n<App theme={theme}>\n  <Header theme={theme}>\n    <Logo theme={theme} />\n  </Header>\n</App>",
+    "codeLanguage": "jsx",
+    "notes": "Context, component composition, or state management libraries are common ways to avoid excessive prop drilling.",
+    "tags": ["react", "props", "anti-pattern"]
+  },
+  {
+    "name": "Typing Props with TypeScript",
+    "syntax": "type Props = { name: string; onClose?: () => void };\nfunction Modal({ name, onClose }: Props) { ... }",
+    "description": "Defining a type or interface for a component's props so TypeScript can check what's passed in and enable editor autocompletion.",
+    "parameters": null,
+    "returns": null,
+    "example": "interface ButtonProps {\n  label: string;\n  disabled?: boolean;\n}\n\nfunction Button({ label, disabled = false }: ButtonProps) {\n  return <button disabled={disabled}>{label}</button>;\n}",
+    "codeLanguage": "tsx",
+    "notes": "Use `?` for optional props and prefer explicit types over `React.FC`, which implicitly adds `children` and offers little benefit.",
+    "tags": ["react", "props", "typescript"]
+  },
+  {
+    "name": "Spreading Props",
+    "syntax": "<Input {...inputProps} />",
+    "description": "Uses the object spread operator to forward all key/value pairs of an object as individual props to a component in one expression.",
+    "parameters": null,
+    "returns": null,
+    "example": "function TextField(props) {\n  return <input {...props} className=\"text-field\" />;\n}",
+    "codeLanguage": "jsx",
+    "notes": "Convenient for pass-through wrapper components, but can obscure exactly which props a component accepts — use deliberately.",
+    "tags": ["react", "props", "jsx"]
+  },
+  {
+    "name": "Props are Read-Only",
+    "syntax": null,
+    "description": "A component must never mutate its own props; React treats components as pure functions of their props, and mutating them breaks that contract.",
+    "parameters": null,
+    "returns": null,
+    "example": "function Bad(props) {\n  props.value = 0; // never do this\n  return <span>{props.value}</span>;\n}",
+    "codeLanguage": "jsx",
+    "notes": "If a child needs to change data owned by a parent, the parent should pass a callback prop instead of letting the child mutate props directly.",
+    "tags": ["react", "props", "immutability"]
+  },
+  {
+    "name": "PropTypes",
+    "syntax": "MyComponent.propTypes = { name: PropTypes.string.isRequired };",
+    "description": "A runtime type-checking library for React props, from the separate `prop-types` package, used mainly in JavaScript (non-TypeScript) codebases.",
+    "parameters": null,
+    "returns": null,
+    "example": "import PropTypes from 'prop-types';\n\nfunction Avatar({ src, size }) {\n  return <img src={src} width={size} height={size} />;\n}\n\nAvatar.propTypes = {\n  src: PropTypes.string.isRequired,\n  size: PropTypes.number,\n};",
+    "codeLanguage": "jsx",
+    "notes": "Only warns in development via the console; TypeScript is generally preferred for compile-time prop checking in new projects.",
+    "tags": ["react", "props", "validation"]
+  }
+]

@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is Flexbox and what problem does it solve?",
+    "answer": "Flexbox is a one-dimensional layout model for distributing space among items in a row or a column, even when their sizes are unknown or dynamic. It solves problems that were painful with floats or tables, like vertical centering, equal-height columns, and evenly distributing extra space between items.",
+    "example": null,
+    "code": ".container {\n  display: flex;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between justify-content and align-items in Flexbox?",
+    "answer": "justify-content aligns flex items along the main axis (horizontal by default, in a row container), controlling how extra space is distributed between and around items. align-items aligns items along the cross axis (perpendicular to the main axis), controlling how each item is positioned within the line's height or width.",
+    "example": null,
+    "code": ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the flex-grow, flex-shrink, and flex-basis shorthand (flex) work?",
+    "answer": "flex-basis sets an item's initial main-size before extra space is distributed. flex-grow is a unitless number that determines how much of the remaining free space an item should consume relative to its siblings. flex-shrink determines how much an item should shrink relative to siblings when there isn't enough space. The flex shorthand combines all three, e.g. `flex: 1 1 0` or the common `flex: 1`.",
+    "example": null,
+    "code": ".item {\n  flex: 1 1 200px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is CSS Grid and how does it differ from Flexbox?",
+    "answer": "CSS Grid is a two-dimensional layout system that lets you control rows and columns simultaneously, making it ideal for overall page layouts and complex grids. Flexbox is one-dimensional, laying items out in a single row or column at a time — the two are complementary, and it's common to use Grid for the page shell and Flexbox for smaller components within it.",
+    "example": null,
+    "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the fr unit mean in CSS Grid?",
+    "answer": "The fr unit represents a fraction of the available (leftover) space in a grid container after fixed-size tracks and gaps are accounted for. `grid-template-columns: 1fr 2fr` splits remaining space so the second column gets twice as much as the first.",
+    "example": null,
+    "code": "grid-template-columns: 200px 1fr 1fr;",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create a responsive grid without media queries using auto-fit or auto-fill?",
+    "answer": "repeat(auto-fit, minmax(200px, 1fr)) or repeat(auto-fill, ...) lets the grid automatically calculate how many columns fit the container width, wrapping items as needed. auto-fit collapses empty tracks to fill leftover space among existing items, while auto-fill preserves empty tracks even if there's no content, which affects sizing when there are fewer items than would fill a row.",
+    "example": null,
+    "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n  gap: 1rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the different values of the CSS position property?",
+    "answer": "static is the default flow position, unaffected by top/left/right/bottom. relative offsets an element from its normal position while still reserving its original space. absolute removes the element from normal flow and positions it relative to its nearest positioned ancestor (or the initial containing block). fixed positions relative to the viewport and stays put during scrolling. sticky toggles between relative and fixed depending on scroll position within its containing block.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does position: sticky actually do, and what are common pitfalls when it doesn't work?",
+    "answer": "position: sticky treats an element as relative until it crosses a specified threshold (like top: 0) during scrolling within its nearest scrolling ancestor, at which point it becomes fixed within that container's bounds. Common pitfalls: an ancestor with overflow: hidden, auto, or scroll can clip the sticky effect, and a parent without enough height for the element to scroll within will prevent it from appearing to stick at all.",
+    "example": null,
+    "code": ".header {\n  position: sticky;\n  top: 0;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a positioned element's containing block for absolute positioning?",
+    "answer": "An absolutely positioned element is placed relative to its nearest ancestor whose position is anything other than static (relative, absolute, fixed, or sticky). If no such ancestor exists, it's positioned relative to the initial containing block, which is roughly the viewport.",
+    "example": null,
+    "code": ".parent {\n  position: relative;\n}\n.child {\n  position: absolute;\n  top: 0;\n  right: 0;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you vertically and horizontally center an element in CSS?",
+    "answer": "The most common modern approach is Flexbox: set display: flex, justify-content: center, and align-items: center on the parent. Grid offers an even shorter equivalent with place-items: center. Absolute positioning with top: 50%, left: 50%, and transform: translate(-50%, -50%) is another common technique when Flexbox/Grid isn't applicable.",
+    "example": null,
+    "code": ".center {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between align-items and align-self?",
+    "answer": "align-items is set on the flex or grid container and applies a default cross-axis alignment to all children. align-self is set on an individual item and overrides the container's align-items value for just that one item.",
+    "example": null,
+    "code": ".item {\n  align-self: flex-end;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS float property do and why is it rarely used for layout today?",
+    "answer": "float takes an element out of normal flow and pushes it to the left or right, letting inline content wrap around it — originally intended for wrapping text around images. It was repurposed for multi-column layouts before Flexbox and Grid existed, but caused issues like collapsing parent heights (requiring clearfix hacks), which Flexbox and Grid solve natively without side effects.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "layout", "float"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the clearfix hack and why was it needed?",
+    "answer": "When all children of a container are floated, the container collapses to zero height because floated elements don't contribute to their parent's height in normal flow. The clearfix hack adds a pseudo-element after the content with `clear: both` (or uses `display: flow-root`) to force the container to expand and contain its floated children.",
+    "example": null,
+    "code": ".clearfix::after {\n  content: \"\";\n  display: table;\n  clear: both;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "float"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do grid-template-areas work in CSS Grid?",
+    "answer": "grid-template-areas lets you name grid regions as a visual ASCII-art-like map of strings, and then assign each child to a named area with the grid-area property. It's a very readable way to define page layouts like header/sidebar/main/footer without manually counting rows and columns.",
+    "example": null,
+    "code": ".layout {\n  display: grid;\n  grid-template-areas:\n    \"header header\"\n    \"sidebar main\"\n    \"footer footer\";\n}\n.header { grid-area: header; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between grid-gap (gap) and margin when spacing grid or flex items?",
+    "answer": "gap applies uniform spacing only between grid/flex items, without adding space before the first or after the last item, and doesn't cause margin-collapsing issues. margin must be applied per-item and can create uneven spacing at the edges of the container unless carefully managed with negative margins or :not(:last-child) selectors.",
+    "example": null,
+    "code": ".grid {\n  display: grid;\n  gap: 16px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the z-index property do, and when does it have no effect?",
+    "answer": "z-index controls the stacking order of positioned elements along the z-axis — higher values render on top of lower ones. It only has an effect on elements with a position value other than static; on a static element, z-index is ignored entirely.",
+    "example": null,
+    "code": ".modal {\n  position: fixed;\n  z-index: 1000;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a stacking context in CSS?",
+    "answer": "A stacking context is a self-contained group of elements whose z-index values are only compared against each other, not against elements outside the context. Certain properties — a positioned element with a non-auto z-index, opacity less than 1, transform, filter, or will-change — create a new stacking context, which can cause a high z-index inside one context to still render below a lower z-index element in a different, later stacking context.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you make flex items wrap onto multiple lines?",
+    "answer": "By default, flex items shrink to fit on one line (flex-wrap: nowrap). Setting flex-wrap: wrap allows items to flow onto additional lines when they don't fit the container's main-axis size, and align-content can then control how those wrapped lines are spaced along the cross axis.",
+    "example": null,
+    "code": ".container {\n  display: flex;\n  flex-wrap: wrap;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between grid-auto-rows/grid-auto-columns and grid-template-rows/grid-template-columns?",
+    "answer": "grid-template-rows/columns explicitly define the sizes of the named tracks in the grid. grid-auto-rows/columns set the sizing for any implicit tracks the browser creates automatically when content is placed outside the explicitly defined grid, such as extra rows added when there are more items than defined cells.",
+    "example": null,
+    "code": ".grid {\n  grid-template-columns: repeat(3, 1fr);\n  grid-auto-rows: 100px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you make a single flex or grid item span multiple columns?",
+    "answer": "In Grid, use grid-column: span 2 (or explicit line numbers like grid-column: 1 / 3) on an item to make it stretch across multiple tracks. Flexbox has no native column-spanning concept since it's one-dimensional, but flex-basis or flex-grow can be used to make an item take proportionally more space along the main axis.",
+    "example": null,
+    "code": ".featured {\n  grid-column: span 2;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the order property in Flexbox used for?",
+    "answer": "order lets you visually reorder flex items independently of their source order in the DOM, using integer values (default 0) — items with lower order values render first. It only changes visual/painting order, not the DOM or tab order, which can create accessibility mismatches if used carelessly.",
+    "example": null,
+    "code": ".first-visually {\n  order: -1;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you center a flex container's content while also aligning individual items differently?",
+    "answer": "Set justify-content and align-items on the container for the default alignment of all children, then override an individual item's cross-axis alignment with align-self on that specific item — there's no per-item override for justify-content on the main axis since it operates on the whole line's distribution, not single items.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between inset and setting top, right, bottom, and left individually?",
+    "answer": "inset is a shorthand property that sets top, right, bottom, and left in one declaration, following the same order syntax as margin/padding shorthands. `inset: 0` is a common way to make a positioned element fill its containing block completely.",
+    "example": null,
+    "code": ".overlay {\n  position: absolute;\n  inset: 0;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a classic 'holy grail' layout (header, footer, and three columns) using CSS Grid?",
+    "answer": "Define a grid container with named template areas for header, nav, main, aside, and footer, sizing the middle row to 1fr so it fills remaining vertical space, and the side columns to fixed or auto widths. Assign each child to its area with grid-area, which produces a robust, source-order-independent layout in far less code than older float or table-based techniques.",
+    "example": null,
+    "code": ".layout {\n  display: grid;\n  grid-template-columns: 200px 1fr 200px;\n  grid-template-rows: auto 1fr auto;\n  grid-template-areas:\n    \"header header header\"\n    \"nav main aside\"\n    \"footer footer footer\";\n  min-height: 100vh;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What causes an element with position: absolute to be positioned relative to the viewport instead of its intended parent?",
+    "answer": "If none of the element's ancestors have a position value other than static, there's no positioned containing block to anchor to, so the browser falls back to the initial containing block, which behaves like the viewport. The fix is to add position: relative (with no offsets) to the intended parent, establishing it as the containing block.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "layout", "positioning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS multi-column layout (columns) and CSS Grid?",
+    "answer": "Multi-column layout (column-count, column-width) flows a single block of content automatically across a fixed number of newspaper-style columns, breaking content wherever it naturally overflows — it's designed for text reflow, not precise item placement. Grid explicitly places distinct items into a defined row/column structure, giving full control over where each element sits.",
+    "example": null,
+    "code": ".article {\n  column-count: 3;\n  column-gap: 2rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do min-content, max-content, and fit-content behave as sizing keywords?",
+    "answer": "min-content sizes an element to the smallest width it can be without overflowing its content (e.g. the widest unbreakable word). max-content sizes it to fit all content on one line without wrapping, however wide that requires. fit-content behaves like max-content but caps out at the available space, wrapping content once it would exceed the container.",
+    "example": null,
+    "code": ".box {\n  width: fit-content;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "sizing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might flex items not shrink below their content size even with flex-shrink set?",
+    "answer": "Flex items have an implicit min-width (or min-height for column direction) of auto by default, which prevents them from shrinking smaller than their content's minimum size, overriding flex-shrink. Setting min-width: 0 (or min-height: 0) on the item removes this constraint, which is the classic fix for text or images overflowing a flex child.",
+    "example": null,
+    "code": ".item {\n  flex: 1;\n  min-width: 0;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between grid-row/grid-column line-based placement and named lines or areas?",
+    "answer": "Line-based placement uses numeric grid line indexes, e.g. grid-column: 2 / 4, counting from the edges of the explicit grid. Named lines let you assign custom names to specific lines in grid-template-columns/rows and reference them by name instead of number, which can be more readable. Named areas (grid-template-areas plus grid-area) go a step further, letting you place items by a descriptive region name rather than any line math.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS aspect-ratio property simplify layout that previously needed the 'padding-top trick'?",
+    "answer": "Before aspect-ratio existed, maintaining a fixed width-to-height ratio for elements like video embeds required a padding-top percentage hack on a wrapper combined with absolute positioning of the inner content. aspect-ratio: width / height lets you declare the ratio directly on the element itself, and the browser computes the matching dimension automatically.",
+    "example": null,
+    "code": ".video-wrapper {\n  aspect-ratio: 16 / 9;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "layout", "sizing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS place-items shorthand do?",
+    "answer": "place-items is a shorthand for align-items and justify-items in a single declaration, most commonly used with Grid. `place-items: center` centers items along both axes simultaneously, making it a quick one-liner for centering content.",
+    "example": null,
+    "code": ".grid {\n  display: grid;\n  place-items: center;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "layout", "grid"],
+    "isFrequentlyAsked": false
+  }
+]

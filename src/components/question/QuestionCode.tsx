@@ -7,6 +7,8 @@ import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typesc
 import jsx from 'react-syntax-highlighter/dist/esm/languages/prism/jsx'
 import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
 import sql from 'react-syntax-highlighter/dist/esm/languages/prism/sql'
+import markup from 'react-syntax-highlighter/dist/esm/languages/prism/markup'
+import css from 'react-syntax-highlighter/dist/esm/languages/prism/css'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -16,15 +18,18 @@ SyntaxHighlighter.registerLanguage('typescript', typescript)
 SyntaxHighlighter.registerLanguage('jsx', jsx)
 SyntaxHighlighter.registerLanguage('tsx', tsx)
 SyntaxHighlighter.registerLanguage('sql', sql)
+SyntaxHighlighter.registerLanguage('html', markup)
+SyntaxHighlighter.registerLanguage('css', css)
 
 interface QuestionCodeProps {
   code: string
   language?: string | null
+  wrap?: boolean
 }
 
-const SUPPORTED_LANGUAGES = new Set(['java', 'javascript', 'typescript', 'jsx', 'tsx', 'sql'])
+const SUPPORTED_LANGUAGES = new Set(['java', 'javascript', 'typescript', 'jsx', 'tsx', 'sql', 'html', 'css'])
 
-export function QuestionCode({ code, language }: QuestionCodeProps) {
+export function QuestionCode({ code, language, wrap = false }: QuestionCodeProps) {
   const [copied, setCopied] = useState(false)
   const { theme } = useTheme()
   const normalized = language?.toLowerCase()
@@ -63,12 +68,19 @@ export function QuestionCode({ code, language }: QuestionCodeProps) {
           )}
         </button>
       </div>
-      <div className="overflow-x-auto">
+      <div className={wrap ? '' : 'overflow-x-auto'}>
         <SyntaxHighlighter
           language={resolvedLanguage}
           style={theme === 'dark' ? oneDark : oneLight}
-          customStyle={{ margin: 0, borderRadius: 0, fontSize: '0.8125rem', padding: '1rem' }}
-          wrapLongLines={false}
+          customStyle={{
+            margin: 0,
+            borderRadius: 0,
+            fontSize: '0.8125rem',
+            padding: '1rem',
+            whiteSpace: wrap ? 'pre-wrap' : 'pre',
+            wordBreak: wrap ? 'break-word' : 'normal',
+          }}
+          wrapLongLines={wrap}
         >
           {code}
         </SyntaxHighlighter>

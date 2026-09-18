@@ -1,0 +1,167 @@
+[
+  {
+    "name": "display: grid",
+    "syntax": "display: grid | inline-grid;",
+    "description": "Turns an element into a grid container, enabling two-dimensional layout of its direct children into rows and columns.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  display: grid;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "layout"]
+  },
+  {
+    "name": "grid-template-columns",
+    "syntax": "grid-template-columns: <track-list>;",
+    "description": "Defines the number and size of the columns in a grid container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  grid-template-columns: 200px 1fr 1fr;\n}",
+    "codeLanguage": "css",
+    "notes": "The fr unit distributes remaining free space proportionally between tracks.",
+    "tags": ["css", "grid", "tracks"]
+  },
+  {
+    "name": "grid-template-rows",
+    "syntax": "grid-template-rows: <track-list>;",
+    "description": "Defines the number and size of the rows in a grid container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  grid-template-rows: auto 1fr auto;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "tracks"]
+  },
+  {
+    "name": "grid-template-areas",
+    "syntax": "grid-template-areas: \"name name\" \"name name\";",
+    "description": "Defines named grid areas as a visual ASCII-art-like map, which grid items can then be placed into by name.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  grid-template-areas:\n    \"header header\"\n    \"sidebar content\";\n}",
+    "codeLanguage": "css",
+    "notes": "Each string represents a row; repeating a name spans that area across multiple cells.",
+    "tags": ["css", "grid", "areas"]
+  },
+  {
+    "name": "grid-area",
+    "syntax": "grid-area: name | row-start / column-start / row-end / column-end;",
+    "description": "Assigns a grid item to a named area defined in grid-template-areas, or places it directly by line numbers.",
+    "parameters": null,
+    "returns": null,
+    "example": ".header {\n  grid-area: header;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "placement"]
+  },
+  {
+    "name": "grid-column",
+    "syntax": "grid-column: start / end;",
+    "description": "Shorthand for grid-column-start and grid-column-end, positioning and sizing an item across column lines.",
+    "parameters": null,
+    "returns": null,
+    "example": ".featured {\n  grid-column: 1 / 3;\n}",
+    "codeLanguage": "css",
+    "notes": "span keyword can be used instead of a line number, e.g. grid-column: span 2.",
+    "tags": ["css", "grid", "placement"]
+  },
+  {
+    "name": "grid-row",
+    "syntax": "grid-row: start / end;",
+    "description": "Shorthand for grid-row-start and grid-row-end, positioning and sizing an item across row lines.",
+    "parameters": null,
+    "returns": null,
+    "example": ".featured {\n  grid-row: 1 / 3;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "placement"]
+  },
+  {
+    "name": "justify-items",
+    "syntax": "justify-items: start | end | center | stretch;",
+    "description": "Aligns grid items along the inline (row) axis within their grid cell, for all items in the container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  justify-items: center;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "alignment"]
+  },
+  {
+    "name": "justify-self",
+    "syntax": "justify-self: start | end | center | stretch;",
+    "description": "Overrides justify-items for a single grid item, aligning it individually along the inline axis of its cell.",
+    "parameters": null,
+    "returns": null,
+    "example": ".item--highlight {\n  justify-self: end;\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "alignment"]
+  },
+  {
+    "name": "grid-auto-flow",
+    "syntax": "grid-auto-flow: row | column | dense;",
+    "description": "Controls how auto-placed grid items (those without an explicit position) are inserted into the grid.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  grid-auto-flow: dense;\n}",
+    "codeLanguage": "css",
+    "notes": "dense fills earlier gaps in the grid, which can reorder items visually away from source order.",
+    "tags": ["css", "grid", "auto-placement"]
+  },
+  {
+    "name": "grid-auto-columns / grid-auto-rows",
+    "syntax": "grid-auto-columns: <track-size>; grid-auto-rows: <track-size>;",
+    "description": "Sets the size of implicitly-created grid tracks that aren't defined in grid-template-columns/rows.",
+    "parameters": null,
+    "returns": null,
+    "example": ".container {\n  grid-auto-rows: minmax(100px, auto);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "tracks"]
+  },
+  {
+    "name": "repeat()",
+    "syntax": "repeat(count, track-size)",
+    "description": "Repeats a track size pattern a given number of times inside grid-template-columns/rows, avoiding manual repetition.",
+    "parameters": "count — number of repetitions or auto-fill/auto-fit. track-size — the size to repeat.",
+    "returns": null,
+    "example": ".container {\n  grid-template-columns: repeat(3, 1fr);\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "functions"]
+  },
+  {
+    "name": "minmax()",
+    "syntax": "minmax(min, max)",
+    "description": "Defines a track size range, letting a track grow up to a max but never shrink below a min.",
+    "parameters": "min — smallest allowed size. max — largest allowed size.",
+    "returns": null,
+    "example": ".container {\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n}",
+    "codeLanguage": "css",
+    "notes": null,
+    "tags": ["css", "grid", "functions"]
+  },
+  {
+    "name": "auto-fit vs auto-fill",
+    "syntax": "repeat(auto-fit | auto-fill, minmax(min, max))",
+    "description": "Automatically determines how many tracks fit in the container; auto-fit collapses empty tracks to zero width while auto-fill preserves their space.",
+    "parameters": null,
+    "returns": null,
+    "example": ".gallery {\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n}",
+    "codeLanguage": "css",
+    "notes": "auto-fit is usually what you want for responsive card grids that should stretch to fill the row.",
+    "tags": ["css", "grid", "responsive"]
+  },
+  {
+    "name": "place-items",
+    "syntax": "place-items: align-items justify-items;",
+    "description": "Shorthand for setting align-items and justify-items together in a grid (or flex) container.",
+    "parameters": null,
+    "returns": null,
+    "example": ".center-box {\n  display: grid;\n  place-items: center;\n}",
+    "codeLanguage": "css",
+    "notes": "A popular one-liner for centering a single child both horizontally and vertically.",
+    "tags": ["css", "grid", "alignment"]
+  }
+]

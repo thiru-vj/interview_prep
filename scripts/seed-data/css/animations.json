@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is the difference between CSS transitions and CSS animations?",
+    "answer": "A transition smoothly interpolates a property between two states (start and end) triggered by some change, like a hover or class toggle, and requires an external trigger to run. An animation, defined with @keyframes, can have multiple intermediate steps, run automatically on load, loop indefinitely, and doesn't need a triggering state change to start.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What CSS properties does the transition shorthand accept?",
+    "answer": "The transition shorthand accepts, in order, transition-property (which CSS property to animate, or 'all'), transition-duration, transition-timing-function, and transition-delay. Multiple transitions can be comma-separated to animate different properties with different timings.",
+    "example": null,
+    "code": ".box {\n  transition: transform 0.3s ease-in-out, opacity 0.2s linear 0.1s;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you define a keyframe animation and apply it to an element?",
+    "answer": "@keyframes defines named percentage-based steps (or 'from'/'to') describing property values at points during the animation's duration. You then apply it with the animation shorthand or individual animation-* properties, specifying at minimum the animation's name and duration.",
+    "example": null,
+    "code": "@keyframes fadeIn {\n  from { opacity: 0; }\n  to { opacity: 1; }\n}\n\n.el {\n  animation: fadeIn 0.5s ease-out;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the 2D transform functions translate(), scale(), and rotate()?",
+    "answer": "translate(x, y) moves an element along the x and/or y axis without affecting layout flow. scale(x, y) resizes an element proportionally or non-uniformly from its transform-origin. rotate(angle) spins an element around a fixed point (also determined by transform-origin) by the given angle, typically in degrees.",
+    "example": null,
+    "code": ".box {\n  transform: translate(10px, 20px) rotate(45deg) scale(1.2);\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why are transform and opacity the preferred properties to animate for performance?",
+    "answer": "Animating transform and opacity can often be handled entirely by the GPU via compositing, skipping the browser's layout (reflow) and paint steps entirely. Animating properties like width, top, or margin triggers layout recalculation on every frame, which is much more expensive and can cause janky, dropped-frame animations, especially on lower-powered devices.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "animations", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the animation-fill-mode property control?",
+    "answer": "animation-fill-mode determines what styles apply to an element before the animation starts and after it ends. forwards retains the last keyframe's computed values after the animation finishes, backwards applies the first keyframe's values during the animation-delay period, and both combines both behaviors — without it, the element reverts to its pre-animation styles once the animation ends.",
+    "example": null,
+    "code": ".el {\n  animation: slideIn 1s ease forwards;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between animation-iteration-count: infinite and setting a specific numeric value?",
+    "answer": "A numeric value for animation-iteration-count runs the animation exactly that many times (fractional values are allowed and stop partway through the last cycle) and then stops, reverting unless fill-mode retains the end state. infinite makes the animation repeat forever with no natural stopping point, commonly used for loading spinners or continuous decorative motion.",
+    "example": null,
+    "code": ".spinner {\n  animation: spin 1s linear infinite;\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the transform-origin property control?",
+    "answer": "transform-origin sets the point around which a transform (like rotate or scale) is applied, defaulting to the center of the element (50% 50%). Changing it — for example to '0 0' (top-left) — changes how the element visually pivots or grows, which matters a lot for effects like a rotating hinge or a corner-anchored scale.",
+    "example": null,
+    "code": ".hinge {\n  transform-origin: top left;\n  transform: rotate(20deg);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are CSS timing functions (ease, linear, ease-in-out, cubic-bezier) and how do they affect an animation's feel?",
+    "answer": "A timing function defines the rate of change of an animated property over its duration, not just its start and end values. linear progresses at a constant rate, ease starts slow, speeds up, then slows down near the end (the default), ease-in starts slow and accelerates, ease-out starts fast and decelerates, and cubic-bezier(x1, y1, x2, y2) defines a fully custom easing curve for precise control.",
+    "example": null,
+    "code": ".box {\n  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you animate multiple keyframe steps with different percentages instead of just from/to?",
+    "answer": "Instead of only 'from' and 'to' (equivalent to 0% and 100%), @keyframes can define any number of percentage checkpoints, letting you control the exact value of properties at intermediate points in the animation timeline, such as creating a bounce or pulse effect with several stages.",
+    "example": null,
+    "code": "@keyframes pulse {\n  0% { transform: scale(1); }\n  50% { transform: scale(1.1); }\n  100% { transform: scale(1); }\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between animation-direction values normal, reverse, alternate, and alternate-reverse?",
+    "answer": "normal plays each iteration forward from 0% to 100%. reverse always plays backward from 100% to 0%. alternate plays forward on odd iterations and backward on even ones, creating a smooth back-and-forth loop instead of a jump-cut reset. alternate-reverse is the same but starts with a backward iteration first.",
+    "example": null,
+    "code": ".breathe {\n  animation: pulse 2s ease-in-out infinite alternate;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you pause and resume a CSS animation, and when is this useful?",
+    "answer": "animation-play-state can be set to paused or running, often toggled via :hover or a JavaScript class toggle, letting you freeze an animation at its current frame and resume from that same point later. This is useful for interactive effects, like pausing a marquee or spinner when the user hovers over it.",
+    "example": null,
+    "code": ".marquee:hover {\n  animation-play-state: paused;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the 2D and 3D CSS transform functions, such as rotate() vs rotateX()/rotateY()/rotate3d()?",
+    "answer": "2D transform functions like rotate(), translate(), and scale() operate purely on the flat x/y plane. 3D functions like rotateX(), rotateY(), rotate3d(), and translate3d() operate in three-dimensional space along the z-axis too, and require a perspective value (on the element or its parent) to actually render with visible depth rather than looking flat.",
+    "example": null,
+    "code": ".card {\n  perspective: 1000px;\n}\n.card-inner {\n  transform: rotateY(180deg);\n  transition: transform 0.6s;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS perspective property do for 3D transforms?",
+    "answer": "perspective defines the distance between the viewer and the z=0 plane, which controls how dramatic the 3D depth effect appears — a smaller value creates a more exaggerated, close-up perspective, while a larger value creates a subtler effect. It must be set on the parent of a 3D-transformed element (or via the transform function perspective()) for 3D transforms like rotateX/Y to render with visible depth.",
+    "example": null,
+    "code": ".scene {\n  perspective: 800px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you detect when a CSS transition or animation has finished, using JavaScript?",
+    "answer": "The transitionend event fires when a CSS transition completes, and animationend (plus animationstart and animationiteration) fire for keyframe animations. These events let JavaScript synchronize follow-up logic, like removing an element from the DOM after a fade-out transition finishes, without relying on a manually estimated setTimeout.",
+    "example": null,
+    "code": "el.addEventListener('transitionend', () => el.remove());",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why won't a CSS transition run if you change a property's value and the transition property at the same time in the same style change?",
+    "answer": "A transition only animates a change between the previously computed value and a new value that the browser detects as a change over subsequent frames. If both the transition-defining styles and the property's target value are applied in the same synchronous style recalculation (e.g. both set at once via a class added on page load), the browser may never register an initial state to transition from, so the change appears instantly instead of animating — a common fix is to force a reflow or use requestAnimationFrame before toggling the class.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the will-change property and when should you use it?",
+    "answer": "will-change hints to the browser that a property (like transform or opacity) is about to change, letting it optimize ahead of time by promoting the element to its own compositor layer. It should be used sparingly and only right before an animation starts (often added/removed dynamically), since applying it broadly or permanently can waste memory by creating unnecessary layers.",
+    "example": null,
+    "code": ".el {\n  will-change: transform;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you create a smooth loading spinner using only CSS?",
+    "answer": "A common approach styles a circular element with a transparent border on one side and a solid color on the rest, then applies an infinite linear keyframe animation that rotates it a full 360 degrees, creating a continuously spinning effect with no JavaScript required.",
+    "example": null,
+    "code": "@keyframes spin {\n  to { transform: rotate(360deg); }\n}\n.spinner {\n  border: 4px solid #eee;\n  border-top-color: #333;\n  border-radius: 50%;\n  animation: spin 1s linear infinite;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between transitioning height: auto directly versus using max-height or the newer interpolate-size for a collapse/expand animation?",
+    "answer": "CSS transitions cannot animate to or from the keyword 'auto' because the browser doesn't know an interpolatable start/end pixel value, so transitioning height: auto jumps instantly instead of animating. A common workaround transitions max-height to a value comfortably larger than the content, and the newer interpolate-size: allow-keywords CSS property (with calc-size()) is designed to solve this natively by letting auto participate in transitions.",
+    "example": null,
+    "code": ".panel {\n  max-height: 0;\n  overflow: hidden;\n  transition: max-height 0.3s ease;\n}\n.panel.open {\n  max-height: 500px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do CSS animations interact with the prefers-reduced-motion media feature for accessibility?",
+    "answer": "Wrapping non-essential animation/transition declarations in an @media (prefers-reduced-motion: reduce) block lets you disable, shorten, or replace motion for users who have indicated a system preference against it, which matters for users with vestibular disorders. A common pattern sets animation-duration and transition-duration to a near-zero value instead of removing the effect entirely, preserving state changes without the motion.",
+    "example": null,
+    "code": "@media (prefers-reduced-motion: reduce) {\n  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between animating with CSS transitions/keyframes and animating with the Web Animations API (WAAPI) in JavaScript?",
+    "answer": "CSS transitions/animations are declared statically in stylesheets and run on the compositor without needing JavaScript, which is simplest for fixed, predictable effects. The Web Animations API lets you construct, control (play, pause, reverse, seek), and dynamically generate animations from JavaScript with the same underlying performance characteristics, which is better suited for animations whose parameters depend on runtime data or user interaction.",
+    "example": null,
+    "code": "el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: 'forwards' });",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["css", "animations"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS matrix() transform function represent, and why is it rarely written by hand?",
+    "answer": "matrix() takes six values that together encode a full 2D affine transformation (combining translation, rotation, scale, and skew) as a single 3x3 transformation matrix. It's rarely hand-written because the values aren't intuitive; instead, developers use the individual functions like translate/rotate/scale, and matrix() is typically only seen as a computed output value or produced programmatically.",
+    "example": null,
+    "code": "transform: matrix(1, 0, 0, 1, 50, 100); /* equivalent to translate(50px, 100px) */",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you stagger animations across multiple elements using only CSS?",
+    "answer": "Applying a different animation-delay to each element — often calculated via the :nth-child() pseudo-class or with a CSS custom property multiplied by an index — makes elements start their animation at slightly offset times, creating a staggered, cascading visual effect instead of all elements animating in unison.",
+    "example": null,
+    "code": ".item:nth-child(1) { animation-delay: 0s; }\n.item:nth-child(2) { animation-delay: 0.1s; }\n.item:nth-child(3) { animation-delay: 0.2s; }",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the backface-visibility property used for?",
+    "answer": "backface-visibility controls whether the back side of a 3D-transformed element is rendered when it's rotated to face away from the viewer (e.g. past 90 degrees on rotateY). Setting it to hidden is the standard technique for flip-card effects, so the reversed, mirrored content of the front face isn't visible through the back during the flip.",
+    "example": null,
+    "code": ".card-face {\n  backface-visibility: hidden;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you animate CSS Grid or Flexbox layout properties like grid-template-columns directly, and what's the usual workaround?",
+    "answer": "Historically, properties like grid-template-columns were not smoothly animatable because they resolve to a list of track sizes rather than a single interpolatable value, so changes would jump instantly. Modern browsers have added interpolation support for many of these properties, but a common cross-browser-safe workaround is animating transform or a numeric custom property with @property instead, and deriving layout from that.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "animations", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the @property at-rule in relation to animating CSS custom properties?",
+    "answer": "By default, CSS custom properties are treated as untyped strings, so the browser can't meaningfully interpolate between two values (e.g. animating a gradient angle or a color stored in a variable) — it just swaps instantly. @property lets you register a custom property with a specific syntax type (like <angle> or <color>), an initial value, and inheritance behavior, which enables smooth animation/transition of that custom property.",
+    "example": null,
+    "code": "@property --angle {\n  syntax: '<angle>';\n  initial-value: 0deg;\n  inherits: false;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "custom-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between transition-delay and animation-delay?",
+    "answer": "Both delay the start of their respective effect by the specified time, but transition-delay only matters the first time a transition-triggering property change occurs (e.g. a class toggle), while animation-delay applies once when the animation begins, and — if animation-direction is set to backwards or both — the first keyframe's styles are visibly applied during that delay period.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create a smooth hover-triggered scale/lift effect on a card using CSS transitions?",
+    "answer": "Set a transition on the transform and box-shadow properties on the base state, then define the changed values (like a slight scale-up and a larger shadow) on the :hover pseudo-class — the browser automatically animates between the two states over the given duration, without needing keyframes for a simple two-state effect.",
+    "example": null,
+    "code": ".card {\n  transition: transform 0.2s ease, box-shadow 0.2s ease;\n}\n.card:hover {\n  transform: translateY(-4px) scale(1.02);\n  box-shadow: 0 10px 20px rgba(0,0,0,0.15);\n}",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["css", "animations", "transitions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the skew() transform function and what visual effect does it create?",
+    "answer": "skew(x-angle, y-angle) distorts an element by slanting it along the x and/or y axis, turning rectangles into parallelogram-like shapes, without changing its actual size or rotation. It's often used for decorative section dividers or stylized button/card effects.",
+    "example": null,
+    "code": ".banner {\n  transform: skewY(-3deg);\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "animations", "transforms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between animating with steps() as a timing function versus a smooth easing curve like ease?",
+    "answer": "steps(n) divides an animation into a fixed number of discrete jumps rather than a continuous transition, holding each intermediate value for an equal fraction of the duration before jumping to the next — commonly used for sprite-sheet animations or typewriter text effects. Smooth easing functions like ease or cubic-bezier() interpolate continuously between values, producing fluid rather than stepped motion.",
+    "example": null,
+    "code": ".sprite {\n  animation: run 1s steps(8) infinite;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "animations", "keyframes"],
+    "isFrequentlyAsked": false
+  }
+]

@@ -1,0 +1,222 @@
+[
+  {
+    "name": "id",
+    "syntax": "<div id=\"unique-name\">",
+    "description": "Assigns a unique identifier to an element, used to target it from CSS, JavaScript or an in-page anchor link.",
+    "parameters": null,
+    "returns": null,
+    "example": "<h2 id=\"contact\">Contact</h2>\n<a href=\"#contact\">Jump to Contact</a>",
+    "codeLanguage": "html",
+    "notes": "Must be unique within the page — duplicate ids break getElementById and CSS specificity assumptions.",
+    "tags": ["html", "attribute", "css"]
+  },
+  {
+    "name": "class",
+    "syntax": "<div class=\"card highlight\">",
+    "description": "Assigns one or more space-separated class names to an element for styling with CSS or selection with JavaScript.",
+    "parameters": null,
+    "returns": null,
+    "example": "<button class=\"btn btn-primary\">Save</button>",
+    "codeLanguage": "html",
+    "notes": "Unlike id, class is not unique — many elements can share the same class.",
+    "tags": ["html", "attribute", "css"]
+  },
+  {
+    "name": "style",
+    "syntax": "<div style=\"color: red; font-size: 14px;\">",
+    "description": "Applies inline CSS declarations directly to a single element.",
+    "parameters": null,
+    "returns": null,
+    "example": "<p style=\"color: blue; margin: 0;\">Inline styled text</p>",
+    "codeLanguage": "html",
+    "notes": "Inline styles have very high specificity and are hard to override — prefer classes for anything reused.",
+    "tags": ["html", "attribute", "css"]
+  },
+  {
+    "name": "src",
+    "syntax": "<img src=\"path/to/file\" />",
+    "description": "Specifies the URL of an external resource to embed, used on elements like <img>, <script>, <video>, <audio> and <iframe>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<script src=\"/js/app.js\"></script>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "attribute", "media"]
+  },
+  {
+    "name": "href",
+    "syntax": "<a href=\"https://example.com\">",
+    "description": "Specifies the destination URL for a hyperlink or linked resource, used on <a> and <link>.",
+    "parameters": null,
+    "returns": null,
+    "example": "<a href=\"/about\">About us</a>",
+    "codeLanguage": "html",
+    "notes": "A href starting with # links to an element with a matching id on the same page.",
+    "tags": ["html", "attribute", "navigation"]
+  },
+  {
+    "name": "alt",
+    "syntax": "<img alt=\"description\" />",
+    "description": "Provides alternative text for an image, read by screen readers and shown if the image fails to load.",
+    "parameters": null,
+    "returns": null,
+    "example": "<img src=\"cat.jpg\" alt=\"A orange tabby cat sleeping\" />",
+    "codeLanguage": "html",
+    "notes": "Use alt=\"\" (empty) for purely decorative images so screen readers skip them.",
+    "tags": ["html", "attribute", "accessibility"]
+  },
+  {
+    "name": "title",
+    "syntax": "<abbr title=\"...\">",
+    "description": "Provides advisory, supplementary text for an element, typically shown as a tooltip on hover.",
+    "parameters": null,
+    "returns": null,
+    "example": "<span title=\"Coordinated Universal Time\">UTC</span>",
+    "codeLanguage": "html",
+    "notes": "Not reliably accessible (not announced on focus by all screen readers) — don't rely on it as the sole source of critical information.",
+    "tags": ["html", "attribute", "accessibility"]
+  },
+  {
+    "name": "data-*",
+    "syntax": "<div data-user-id=\"42\">",
+    "description": "Custom attribute prefix for embedding private, page-specific data directly on an element, readable via JavaScript.",
+    "parameters": null,
+    "returns": null,
+    "example": "<li data-item-id=\"7\" data-status=\"done\">Task</li>\n<script>\n  el.dataset.itemId; // \"7\"\n</script>",
+    "codeLanguage": "html",
+    "notes": "Accessible in JS via the element's `dataset` property, which converts kebab-case to camelCase.",
+    "tags": ["html", "attribute", "javascript"]
+  },
+  {
+    "name": "disabled",
+    "syntax": "<button disabled>Submit</button>",
+    "description": "Disables a form control or button, greying it out and preventing user interaction and form submission of its value.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"text\" disabled value=\"Read only\" />",
+    "codeLanguage": "html",
+    "notes": "A boolean attribute — its mere presence disables the element, regardless of its value.",
+    "tags": ["html", "attribute", "forms"]
+  },
+  {
+    "name": "placeholder",
+    "syntax": "<input placeholder=\"Enter your name\" />",
+    "description": "Shows hint text inside an empty <input> or <textarea> that disappears once the user starts typing.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"email\" placeholder=\"you@example.com\" />",
+    "codeLanguage": "html",
+    "notes": "Not a substitute for a <label> — placeholder text disappears on input and isn't reliably accessible.",
+    "tags": ["html", "attribute", "forms"]
+  },
+  {
+    "name": "target",
+    "syntax": "<a href=\"url\" target=\"_blank\">",
+    "description": "Specifies where to open a linked document or embedded frame — a new tab, the same frame, or a named frame.",
+    "parameters": "_self (default), _blank (new tab), _parent, _top.",
+    "returns": null,
+    "example": "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener\">Open in new tab</a>",
+    "codeLanguage": "html",
+    "notes": "Pair target=\"_blank\" with rel=\"noopener\" to prevent the new page from controlling the opener window.",
+    "tags": ["html", "attribute", "navigation"]
+  },
+  {
+    "name": "rel",
+    "syntax": "<a href=\"url\" rel=\"noopener\">",
+    "description": "Describes the relationship between the current document and a linked resource, used on <a> and <link>.",
+    "parameters": "Common values: noopener, noreferrer, nofollow, stylesheet, icon, preload.",
+    "returns": null,
+    "example": "<link rel=\"stylesheet\" href=\"main.css\" />\n<a href=\"...\" rel=\"nofollow\">Sponsored link</a>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "attribute", "seo"]
+  },
+  {
+    "name": "tabindex",
+    "syntax": "<div tabindex=\"0\">",
+    "description": "Controls whether an element is keyboard-focusable and its position in tab order.",
+    "parameters": "0 — focusable in natural DOM order. -1 — focusable only via script. Positive number — explicit (and discouraged) tab order.",
+    "returns": null,
+    "example": "<div tabindex=\"0\" role=\"button\">Custom clickable div</div>",
+    "codeLanguage": "html",
+    "notes": "Avoid positive tabindex values — they create a confusing, hard-to-maintain tab order.",
+    "tags": ["html", "attribute", "accessibility"]
+  },
+  {
+    "name": "contenteditable",
+    "syntax": "<div contenteditable=\"true\">",
+    "description": "Makes an element's content directly editable by the user in the browser, like a rich-text field.",
+    "parameters": null,
+    "returns": null,
+    "example": "<div contenteditable=\"true\">Click and type here.</div>",
+    "codeLanguage": "html",
+    "notes": "Powers many rich-text editors, but requires care to sanitize user-generated HTML.",
+    "tags": ["html", "attribute", "javascript"]
+  },
+  {
+    "name": "hidden",
+    "syntax": "<div hidden>",
+    "description": "Hides an element from rendering entirely, equivalent to display: none, without removing it from the DOM.",
+    "parameters": null,
+    "returns": null,
+    "example": "<p hidden>This paragraph is not shown.</p>",
+    "codeLanguage": "html",
+    "notes": "A boolean attribute; toggle it via JavaScript (el.hidden = true) to show/hide content.",
+    "tags": ["html", "attribute", "css"]
+  },
+  {
+    "name": "draggable",
+    "syntax": "<div draggable=\"true\">",
+    "description": "Marks whether an element can be dragged using the native HTML Drag and Drop API.",
+    "parameters": null,
+    "returns": null,
+    "example": "<div draggable=\"true\" ondragstart=\"handleDrag(event)\">Drag me</div>",
+    "codeLanguage": "html",
+    "notes": "Most elements aren't draggable by default; images and links are exceptions.",
+    "tags": ["html", "attribute", "javascript"]
+  },
+  {
+    "name": "lang",
+    "syntax": "<html lang=\"en\">",
+    "description": "Declares the natural language of an element's content, helping screen readers use correct pronunciation and browsers offer translation.",
+    "parameters": null,
+    "returns": null,
+    "example": "<p lang=\"fr\">Bonjour tout le monde</p>",
+    "codeLanguage": "html",
+    "notes": "Should always be set on <html> at minimum.",
+    "tags": ["html", "attribute", "accessibility"]
+  },
+  {
+    "name": "dir",
+    "syntax": "<p dir=\"rtl\">",
+    "description": "Sets the text direction of an element's content — left-to-right or right-to-left — for languages like Arabic or Hebrew.",
+    "parameters": "ltr (default), rtl, auto.",
+    "returns": null,
+    "example": "<p dir=\"rtl\">مرحبا بالعالم</p>",
+    "codeLanguage": "html",
+    "notes": null,
+    "tags": ["html", "attribute", "accessibility"]
+  },
+  {
+    "name": "spellcheck",
+    "syntax": "<textarea spellcheck=\"false\">",
+    "description": "Controls whether the browser checks the spelling and grammar of editable text content.",
+    "parameters": null,
+    "returns": null,
+    "example": "<input type=\"text\" spellcheck=\"false\" />",
+    "codeLanguage": "html",
+    "notes": "Useful to disable on fields like usernames, codes or emails where spellcheck underlines are noise.",
+    "tags": ["html", "attribute", "forms"]
+  },
+  {
+    "name": "download",
+    "syntax": "<a href=\"file.pdf\" download>",
+    "description": "Tells the browser to download the linked resource as a file instead of navigating to it, optionally with a custom filename.",
+    "parameters": null,
+    "returns": null,
+    "example": "<a href=\"/report.pdf\" download=\"annual-report.pdf\">Download report</a>",
+    "codeLanguage": "html",
+    "notes": "Only works for same-origin URLs (or ones with appropriate CORS headers).",
+    "tags": ["html", "attribute", "navigation"]
+  }
+]

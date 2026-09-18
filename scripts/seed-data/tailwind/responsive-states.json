@@ -1,0 +1,322 @@
+[
+  {
+    "question": "What does \"mobile-first\" mean in Tailwind's responsive design system, and how do the breakpoint prefixes work?",
+    "answer": "Unstyled (unprefixed) utilities apply at all screen sizes as the base style, and breakpoint prefixes like `md:` or `lg:` apply as `min-width` media queries that override the base style from that width upward. This means you design for the smallest screen first and layer on adjustments for larger viewports, rather than starting from desktop and overriding down.",
+    "example": null,
+    "code": "<div class=\"text-sm md:text-base lg:text-lg\">Responsive text</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "breakpoints"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you make a sidebar hidden on small screens but visible as a flex container from the `md` breakpoint up?",
+    "answer": "You apply the base utility for the smallest screens and prefix the override with the breakpoint at which it should change — `hidden` as the default and `md:flex` to switch to a flex layout once the viewport reaches the `md` breakpoint, since `md:` only adds its declarations at `min-width: 768px` and above.",
+    "example": null,
+    "code": "<aside class=\"hidden md:flex md:w-64 md:flex-col\">Sidebar</aside>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "breakpoints"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you apply a style only within a specific range of viewport widths, such as only between `md` and `lg`?",
+    "answer": "Tailwind's named breakpoints are min-width only, so to cap the upper end you combine a `min-*` (or default) breakpoint prefix with a `max-*` variant, e.g. `md:max-lg:flex-row` applies only from `md` up to just below `lg`. In Tailwind v4, `max-*` variants for every breakpoint are built in for exactly this use case.",
+    "example": null,
+    "code": "<div class=\"flex-col md:max-lg:flex-row lg:flex-col\">Range-specific layout</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "breakpoints"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you style an element's hover state with Tailwind?",
+    "answer": "Prefix any utility with `hover:` and it's compiled into a CSS rule scoped to the `:hover` pseudo-class, so `hover:bg-blue-700` only applies when the pointer is over that specific element. Multiple hover utilities can be combined freely, just like any other variant.",
+    "example": null,
+    "code": "<button class=\"bg-blue-600 hover:bg-blue-700 transition-colors\">Hover me</button>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "hover"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the `focus:` and `focus-visible:` variants?",
+    "answer": "`focus:` maps to the `:focus` pseudo-class and applies whenever an element has focus, whether reached by mouse click or keyboard. `focus-visible:` maps to `:focus-visible`, which browsers only trigger when focus should be visibly indicated — typically keyboard navigation — so it avoids showing a focus ring on a mouse click while still supporting keyboard accessibility.",
+    "example": null,
+    "code": "<button class=\"focus-visible:ring-2 focus-visible:ring-blue-500 focus:outline-none\">Accessible focus</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "focus"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `active:` variant do, and how does it differ from `focus:`?",
+    "answer": "`active:` maps to the `:active` pseudo-class, which applies only while the element is being actively pressed (e.g. mouse button down or during a tap), and stops applying the moment it's released. `focus:` persists as long as the element retains keyboard/programmatic focus, which can be much longer than the brief active press state.",
+    "example": null,
+    "code": "<button class=\"bg-indigo-600 active:bg-indigo-800\">Press me</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "active"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the `disabled:` variant work, and what selector does it target?",
+    "answer": "`disabled:` compiles to a rule scoped with `:disabled`, so it applies automatically to form elements like `<button>` or `<input>` that have the HTML `disabled` attribute set, letting you style dimmed backgrounds, a not-allowed cursor, or muted text without writing any conditional class logic in JavaScript.",
+    "example": null,
+    "code": "<button disabled class=\"bg-gray-300 text-gray-500 disabled:cursor-not-allowed disabled:opacity-60\">Submit</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "disabled"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you style an element differently in dark mode using the `dark:` variant?",
+    "answer": "Once `darkMode` is configured (either `media`, following OS preference, or `class`/`selector`, toggled manually), prefixing a utility with `dark:` scopes it to apply only when dark mode is active, letting you pair a light-mode value with its dark-mode counterpart directly in the markup, e.g. `bg-white dark:bg-gray-900`.",
+    "example": null,
+    "code": "<div class=\"bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100\">Themed card</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "dark-mode"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Can you stack the `dark:` variant with a state variant like `hover:`, and what would that look like?",
+    "answer": "Yes — variants can be freely chained in any order, such as `dark:hover:bg-gray-700`, which only applies the background when the element is both hovered and dark mode is active, letting you fine-tune interactive states independently per theme.",
+    "example": null,
+    "code": "<button class=\"hover:bg-gray-100 dark:hover:bg-gray-700\">Themed hover</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "dark-mode"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the `first:`, `last:`, `odd:`, and `even:` variants target?",
+    "answer": "`first:` and `last:` map to `:first-child`/`:last-child`, and `odd:`/`even:` map to `:nth-child(odd)`/`:nth-child(even)`, which together are commonly used to style table rows with alternating background colors or to remove a border only on the last item in a list without adding extra wrapper markup.",
+    "example": null,
+    "code": "<ul>\n  <li class=\"border-b last:border-b-0 odd:bg-gray-50\">Row</li>\n</ul>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you style the placeholder text color of an input using Tailwind?",
+    "answer": "The `placeholder:` variant targets the `::placeholder` pseudo-element, letting you apply text color, opacity, or other typography utilities specifically to placeholder text without affecting the actual entered value's styling.",
+    "example": null,
+    "code": "<input placeholder=\"Search...\" class=\"placeholder:text-gray-400 placeholder:italic\" />",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "placeholder"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `file:` variant let you style, and why is it needed?",
+    "answer": "The `file:` variant targets the `::file-selector-button` pseudo-element, which is the browser-generated \"Choose file\" button inside a `<input type=\"file\">` element. Since that button isn't a normal element you can select with a class, Tailwind needs this dedicated variant to restyle it consistently across browsers.",
+    "example": null,
+    "code": "<input type=\"file\" class=\"file:mr-4 file:rounded file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-blue-700\" />",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are `motion-safe:` and `motion-reduce:` variants used for?",
+    "answer": "They map to the `prefers-reduced-motion` media query, letting you conditionally apply animation/transition utilities only when the user hasn't requested reduced motion (`motion-safe:`) or apply alternate, simplified styles when they have (`motion-reduce:`), which is important for accessibility compliance for users sensitive to motion.",
+    "example": null,
+    "code": "<div class=\"motion-safe:animate-bounce motion-reduce:animate-none\">Notification</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `print:` variant do?",
+    "answer": "`print:` scopes a utility to the `@media print` query, so you can hide navigation/interactive chrome or adjust colors/spacing specifically for a printed version of the page, e.g. `print:hidden` on a sidebar or `print:text-black` to force readable ink colors.",
+    "example": null,
+    "code": "<nav class=\"print:hidden\">Site navigation</nav>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "print"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do ARIA state variants like `aria-checked:` or `aria-expanded:` work in Tailwind?",
+    "answer": "These variants target elements based on their ARIA attribute value, e.g. `aria-expanded:rotate-180` applies only when the element has `aria-expanded=\"true\"`, which is especially useful for accessible custom components (accordions, comboboxes) where visual state should stay in sync with the ARIA state that assistive technology reads, rather than a separate class toggled by JavaScript.",
+    "example": null,
+    "code": "<button aria-expanded=\"true\" class=\"transition-transform aria-expanded:rotate-180\">\n  <svg>...</svg>\n</button>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "aria"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do data-attribute variants like `data-[state=open]:` work in Tailwind?",
+    "answer": "Data attribute variants let you style an element conditionally based on the value of a `data-*` attribute using arbitrary variant syntax, which is extremely common when integrating with headless UI libraries (Radix, Headless UI) that expose component state through data attributes like `data-state=\"open\"` instead of classes.",
+    "example": null,
+    "code": "<div data-state=\"open\" class=\"hidden data-[state=open]:block\">Panel content</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "data-attributes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `has-*` variant do, and what CSS feature does it rely on?",
+    "answer": "`has-[selector]:` maps to the modern CSS `:has()` relational pseudo-class, letting a parent element style itself based on the state of its descendants — for example, highlighting a label when its nested checkbox is checked — without needing a sibling-only `peer` setup or JavaScript. It requires a browser that supports `:has()`.",
+    "example": null,
+    "code": "<label class=\"has-[:checked]:bg-blue-50 has-[:checked]:ring-1 has-[:checked]:ring-blue-400\">\n  <input type=\"checkbox\" class=\"mr-2\" /> Option\n</label>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "has-variant"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Besides `group-hover:`, what other `group-*` state variants are commonly available?",
+    "answer": "Any state variant Tailwind supports can be combined with `group-`, including `group-focus:`, `group-active:`, `group-disabled:`, and `group-invalid:`, all of which react to the parent element (marked with `group`) reaching that pseudo-class/attribute state, not the element they're applied to.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "group"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you style a custom label based on whether its sibling checkbox is checked, using `peer-checked:`?",
+    "answer": "Mark the checkbox input with `peer`, then any following sibling element can use `peer-checked:` to react to that checkbox's `:checked` state, which is the standard CSS-only pattern for building toggle switches or custom checkboxes without JavaScript.",
+    "example": null,
+    "code": "<input type=\"checkbox\" class=\"peer sr-only\" />\n<div class=\"h-6 w-11 rounded-full bg-gray-300 peer-checked:bg-green-500\"></div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "peer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you disambiguate multiple nested `group` or `peer` elements so a variant targets the right ancestor?",
+    "answer": "You can name a group or peer with `group/{name}` (or `peer/{name}`) and then reference that specific name in the variant, like `group-hover/card:opacity-100`, which prevents the wrong nested group from accidentally triggering the style when groups are nested inside each other.",
+    "example": null,
+    "code": "<div class=\"group/card\">\n  <div class=\"group/icon\">\n    <span class=\"opacity-0 group-hover/card:opacity-100\">Card hover</span>\n  </div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "group"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "In what order can responsive, dark mode, and state variants be stacked, e.g. `dark:md:hover:bg-gray-700`?",
+    "answer": "Tailwind allows variants to be chained in any order you write them, and it resolves to the same final selector regardless of the order in the class name — internally Tailwind sorts and generates the equivalent nested media query and pseudo-class combination. Convention favors a consistent order (often responsive, then dark, then state) purely for team readability, not because the order changes behavior.",
+    "example": null,
+    "code": "<button class=\"bg-gray-100 dark:md:hover:bg-gray-700\">Multi-variant</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "variants"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do arbitrary variants work, such as `[&:nth-child(3)]:bg-red-500`?",
+    "answer": "Arbitrary variant syntax lets you write a raw CSS selector fragment inside square brackets, with `&` representing the element itself, so you can target selectors Tailwind doesn't ship a named variant for (like a specific `:nth-child`, a sibling combinator, or a custom attribute selector) without writing separate custom CSS.",
+    "example": null,
+    "code": "<li class=\"[&:nth-child(3)]:font-bold\">Third item</li>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "arbitrary-variants"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `not-` prefix do when combined with another variant, like `not-disabled:hover:bg-blue-700`?",
+    "answer": "`not-` negates the following pseudo-class or feature check, compiling to a `:not()` wrapper, so `not-disabled:hover:` only applies the hover style when the element is NOT disabled — useful for making sure a hover effect doesn't visually apply (or apply inconsistently) on elements that are currently disabled.",
+    "example": null,
+    "code": "<button class=\"not-disabled:hover:bg-blue-700\">Hover-aware button</button>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "variants"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `supports-[...]` variant do?",
+    "answer": "`supports-[property:value]:` wraps the utility in an `@supports` feature query, applying it only in browsers that support the given CSS feature — handy for progressively enhancing a layout with something like `backdrop-filter` while providing a sane fallback for browsers that don't support it.",
+    "example": null,
+    "code": "<div class=\"bg-white supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:backdrop-blur\">Panel</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "feature-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `visited:` variant style, and where is it typically used?",
+    "answer": "`visited:` maps to the `:visited` pseudo-class and applies only to `<a>` elements the user has already navigated to, most commonly used to change a visited link's text color, though browsers restrict which CSS properties can actually be styled via `:visited` for privacy reasons.",
+    "example": null,
+    "code": "<a href=\"/docs\" class=\"text-blue-600 visited:text-purple-600\">Documentation</a>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "links"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between `focus:` and `focus-within:`?",
+    "answer": "`focus:` only applies when the exact element it's on receives focus. `focus-within:` applies to an element when it or ANY of its descendants has focus, which is useful for highlighting an entire form field wrapper (border, background) when the input inside it is focused, without needing the wrapper itself to be focusable.",
+    "example": null,
+    "code": "<div class=\"border focus-within:border-blue-500\">\n  <input class=\"outline-none\" />\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "focus"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do form validation state variants like `required:`, `invalid:`, and `valid:` work?",
+    "answer": "These map directly to the native `:required`, `:invalid`, and `:valid` CSS pseudo-classes on form elements, letting you style a field's border or background based on HTML5 constraint validation state (like a required field, or a `type=\"email\"` input with malformed content) without writing any custom validation-state JavaScript.",
+    "example": null,
+    "code": "<input type=\"email\" required class=\"border-gray-300 invalid:border-red-500 valid:border-green-500\" />",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are container queries in Tailwind, and how do they differ from the standard responsive breakpoint variants?",
+    "answer": "Container queries (via the `@container` utility on a wrapper and `@sm:`/`@md:`-style variants on children, built into Tailwind v4 and available as a plugin in v3) style an element based on the size of its nearest container rather than the viewport, which is essential for components that need to adapt their layout regardless of where they're placed on the page — a sidebar widget versus the same component in a full-width main area.",
+    "example": null,
+    "code": "<div class=\"@container\">\n  <div class=\"flex flex-col @md:flex-row\">Card content</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "container-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `selection:` variant style?",
+    "answer": "`selection:` targets the `::selection` pseudo-element, letting you customize the background and text color of text the user highlights with their cursor, which is a nice branding touch that's otherwise awkward to apply consistently without a global CSS rule.",
+    "example": null,
+    "code": "<p class=\"selection:bg-yellow-200 selection:text-black\">Try selecting this text.</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "selection"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you add pseudo-element content using the `before:` and `after:` variants?",
+    "answer": "`before:` and `after:` generate `::before`/`::after` pseudo-elements, and because CSS requires a `content` property for them to render at all, Tailwind requires you to also set the `content-['...']` utility (or `content-none`) alongside them, after which normal utilities can style that pseudo-element's positioning, color, and size.",
+    "example": null,
+    "code": "<span class=\"relative before:absolute before:-left-3 before:content-['*'] before:text-red-500\">Required field</span>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "responsive", "pseudo-elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does `md:text-lg` also apply at the `lg` and `xl` breakpoints, and how would you make it apply only at `md`?",
+    "answer": "Because responsive prefixes are `min-width` media queries, `md:text-lg` means \"apply from `md` upward,\" so it stays in effect at every larger breakpoint unless a later, larger prefix (like `lg:text-xl`) overrides it. To scope a style to *only* the `md` range, pair it with a `max-*` variant, e.g. `md:max-lg:text-lg`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "responsive", "breakpoints"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you hide an element only below a custom, one-off breakpoint without adding a new named breakpoint to the config?",
+    "answer": "You can use an arbitrary value inside the `max-` variant, such as `max-[850px]:hidden`, which generates a one-off `max-width: 850px` media query inline without needing to register a permanent named breakpoint in `tailwind.config.js` — useful for a single component with an unusual layout threshold.",
+    "example": null,
+    "code": "<div class=\"max-[850px]:hidden\">Wide-screen-only content</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "responsive", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  }
+]

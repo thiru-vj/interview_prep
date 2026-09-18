@@ -1,0 +1,342 @@
+[
+  {
+    "question": "What is Node.js, and how does it differ from running JavaScript in a browser?",
+    "answer": "Node.js is a runtime that executes JavaScript outside the browser, built on Chrome's V8 engine plus a set of C++ bindings (libuv) that expose OS-level capabilities like the filesystem, networking, and processes. Unlike a browser, it has no DOM, window, or document; instead it provides APIs like fs, http, and process, along with a CommonJS/ESM module system for organizing code across files.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "runtime"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What role does V8 play in Node.js, and what does Node add on top of it?",
+    "answer": "V8 is Google's open-source JavaScript engine that parses and executes JS code and manages memory/garbage collection; it's the same engine used in Chrome. Node embeds V8 and adds libuv for the event loop and async I/O, plus built-in modules (fs, http, path, etc.) and a module-loading system, none of which V8 itself provides.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "v8"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is libuv and why is it important to Node.js?",
+    "answer": "libuv is a C library that provides Node's event loop, thread pool, and cross-platform abstractions for asynchronous I/O like file access, DNS lookups, and networking. It's what lets Node perform non-blocking operations on operating systems that don't natively support async I/O for everything, by offloading blocking work to a background thread pool and notifying the event loop via callbacks when it completes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "libuv"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is Node.js single-threaded? Explain what that actually means in practice.",
+    "answer": "Node's JavaScript execution runs on a single main thread, so only one piece of JS code runs at a time and there's no shared-memory multithreading of your application logic by default. However, Node itself isn't single-threaded overall: libuv maintains a background thread pool for certain blocking operations (like some fs and crypto calls), and I/O like networking is handled by the OS kernel asynchronously, so the single JS thread isn't blocked waiting on them.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "concurrency"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the global object in Node.js, and how does it differ from window in a browser?",
+    "answer": "In Node, the global object is called `global` (accessible everywhere without an import), analogous to `window` in browsers, and it holds globally available functions like setTimeout, and objects like process and Buffer. Unlike browser globals, variables declared at the top level of a CommonJS module are scoped to that module, not attached to `global`, because each file is wrapped in its own function during module loading.",
+    "example": null,
+    "code": "console.log(globalThis === global); // true in Node",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "globals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the process object, and what are some of its commonly used properties or methods?",
+    "answer": "process is a global object that provides information about, and control over, the currently running Node process. Common members include process.argv (CLI arguments), process.env (environment variables), process.exit() (to terminate the process), process.cwd() (current working directory), and process.on('uncaughtException'/'exit') for lifecycle hooks.",
+    "example": null,
+    "code": "console.log(process.argv);\nconsole.log(process.env.NODE_ENV);\nprocess.exit(1);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between process.nextTick() and setImmediate()?",
+    "answer": "process.nextTick() queues a callback to run immediately after the current operation completes, before the event loop continues to any phase — it has its own queue processed even before microtasks like promise callbacks in older Node versions, and fully drains before I/O events are processed. setImmediate() schedules a callback to run in the 'check' phase of the event loop, after I/O callbacks in the current iteration, so it generally runs later than nextTick but is a better choice for yielding after I/O without starving the loop.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "process", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read command-line arguments and environment variables in a Node.js script?",
+    "answer": "Command-line arguments are available in process.argv, an array where the first two entries are the node executable path and the script path, so user-supplied arguments start at index 2. Environment variables are read from process.env, a plain object of string key-value pairs populated from the shell environment (or a .env file loaded via a library like dotenv).",
+    "example": null,
+    "code": "// node script.js --port=3000\nconst arg = process.argv[2]; // '--port=3000'\nconst port = process.env.PORT || 3000;",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between CommonJS and ES Modules at a conceptual level?",
+    "answer": "CommonJS is Node's original, synchronous module system using require() and module.exports, resolved and loaded at runtime. ES Modules (import/export) are the standardized JS module system, statically analyzable (imports are resolved before execution) and loaded asynchronously, which enables features like tree-shaking and top-level await. Node supports both, distinguishing them via file extension (.cjs/.mjs) or the \"type\" field in package.json.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the Node.js REPL, and what is it useful for?",
+    "answer": "REPL stands for Read-Eval-Print Loop — it's the interactive shell you get by running `node` with no arguments, letting you type JavaScript expressions and see results immediately. It's useful for quickly testing snippets, exploring an API, or debugging small pieces of logic without creating a script file.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "cli"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Node's built-in (core) modules, and how do you use one?",
+    "answer": "Core modules are modules bundled with Node itself, like fs, path, http, os, and crypto, that don't need to be installed via npm. You load them with require('fs') in CommonJS or import fs from 'node:fs' in ESM; prefixing with 'node:' makes it explicit that the import refers to a core module rather than a package of the same name.",
+    "example": null,
+    "code": "const fs = require('fs');\n// or\nimport fs from 'node:fs';",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between __dirname/__filename and import.meta.url?",
+    "answer": "__dirname and __filename are CommonJS-only globals giving the absolute path of the current module's directory and file, respectively — they don't exist in ES Modules. In ESM, the equivalent information comes from import.meta.url (a file:// URL), which is typically converted to a filesystem path using fileURLToPath from the 'url' module.",
+    "example": null,
+    "code": "import { fileURLToPath } from 'node:url';\nimport { dirname } from 'node:path';\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = dirname(__filename);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the 'main' field in package.json?",
+    "answer": "The \"main\" field specifies the entry-point file that's loaded when another package (or Node itself, in some resolution paths) does require('your-package') or imports it by name. If omitted, Node defaults to looking for index.js in the package root. Modern packages often also define an \"exports\" field, which gives finer-grained control over what subpaths are importable and can differ between CommonJS and ESM consumers.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Node.js determine whether a .js file should be parsed as CommonJS or ESM?",
+    "answer": "By default, .js files are treated as CommonJS unless the nearest parent package.json has \"type\": \"module\", in which case .js files are treated as ES Modules. Regardless of that setting, .cjs files are always CommonJS and .mjs files are always ESM, letting a project mix both module systems explicitly when needed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules", "package-json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a Node.js runtime and a JavaScript engine?",
+    "answer": "A JavaScript engine, like V8, is purely responsible for parsing and executing JS code according to the ECMAScript spec — it has no concept of files, networking, or the operating system. A runtime like Node wraps an engine and adds host-provided APIs (filesystem, networking, timers, process control) and a module system, turning a language into a platform capable of running standalone programs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "v8", "runtime"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Node.js and Deno (or Bun), at a high level?",
+    "answer": "Deno and Bun are newer JavaScript runtimes that address perceived shortcomings of Node: Deno ships with secure-by-default permissions, native TypeScript support, and standardized ESM/URL-based imports without a separate package manager, while Bun focuses on speed by implementing its own JS engine (JavaScriptCore) and bundling a package manager, bundler, and test runner in one binary. Node remains the most widely adopted, with the largest ecosystem and long-term production track record.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "runtime"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Buffer in Node.js and why does it exist?",
+    "answer": "Buffer is a global class for handling raw binary data directly in memory, outside V8's usual string encoding, which is essential for working with things like file contents, network packets, or TCP streams before they're interpreted as text. It predates JavaScript's standardized Uint8Array/TypedArray support and today is implemented as a subclass of Uint8Array with extra Node-specific convenience methods.",
+    "example": null,
+    "code": "const buf = Buffer.from('hello', 'utf8');\nconsole.log(buf); // <Buffer 68 65 6c 6c 6f>",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "buffer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you handle uncaught exceptions and unhandled promise rejections at the process level in Node?",
+    "answer": "You can listen for process.on('uncaughtException', handler) to catch synchronous errors that weren't caught anywhere else, and process.on('unhandledRejection', handler) for promises that rejected without a .catch(). Both are generally treated as last-resort safety nets for logging and a graceful shutdown, not a substitute for proper try/catch and .catch() handling, since the process is often left in an undefined state after an uncaught exception.",
+    "example": null,
+    "code": "process.on('uncaughtException', (err) => {\n  console.error('Fatal:', err);\n  process.exit(1);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "process", "error-handling"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does it mean that Node.js is 'non-blocking' and 'event-driven'?",
+    "answer": "Event-driven means Node's architecture centers around emitting and reacting to events (like a request arriving or a file finishing a read) rather than polling or waiting synchronously. Non-blocking means I/O operations are initiated and then control returns immediately to continue other work, with a callback, promise, or event firing later when the operation completes, instead of the thread sitting idle until the operation finishes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "runtime", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the EventEmitter class, and why is it central to Node's core APIs?",
+    "answer": "EventEmitter is a core class (from the 'events' module) that implements the publish/subscribe pattern: objects can emit named events, and listeners registered with .on() are invoked synchronously in registration order when that event fires. Many core Node APIs — streams, HTTP servers, child processes — extend EventEmitter internally, making 'listen for an event' the standard idiom for handling async occurrences throughout Node's API surface.",
+    "example": null,
+    "code": "const { EventEmitter } = require('events');\nconst emitter = new EventEmitter();\nemitter.on('greet', (name) => console.log(`Hello ${name}`));\nemitter.emit('greet', 'world');",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "events"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you gracefully shut down a Node.js server on SIGTERM?",
+    "answer": "Listen for the process.on('SIGTERM', handler) signal (sent by process managers or container orchestrators like Docker/Kubernetes on shutdown), stop accepting new connections via server.close(), and finish or cancel in-flight work (like closing a database pool) before calling process.exit(). This avoids abruptly dropping active requests when the process is being terminated deliberately.",
+    "example": null,
+    "code": "process.on('SIGTERM', () => {\n  server.close(() => {\n    db.disconnect().then(() => process.exit(0));\n  });\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between process.exit() and letting a Node process exit naturally?",
+    "answer": "process.exit(code) forces immediate termination, potentially cutting off pending I/O, unflushed console output, or 'exit' event listeners that haven't finished. Letting a process exit naturally means the event loop simply has no more pending callbacks, timers, or open handles to process, so Node terminates cleanly once nothing remains keeping it alive — generally the safer approach when possible.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Node's LTS (Long-Term Support) releases, and why do they matter for production apps?",
+    "answer": "Node follows a release schedule where even-numbered major versions become LTS roughly every two years, receiving critical bug fixes and security patches for an extended period (typically 30 months) without introducing breaking changes. Production applications generally target an LTS version rather than the latest 'Current' release to prioritize stability and predictable upgrade cycles over access to the newest features.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "runtime"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you check the version of Node.js and npm installed, and why does version matter for a project?",
+    "answer": "`node -v` and `npm -v` print the installed versions from the command line. Version matters because different Node versions support different JS/ECMAScript features and core API behaviors (e.g., top-level await, certain fetch/test-runner APIs), and mismatches between the version a project was built against and the version it's deployed on can cause subtle bugs — which is why projects often pin an \"engines\" field in package.json or use a version manager like nvm.",
+    "example": null,
+    "code": "node -v\nnpm -v",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "cli"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the 'os' and 'path' core modules?",
+    "answer": "The 'os' module provides information about the operating system Node is running on, such as CPU count, free memory, and platform name, useful for scaling decisions like how many worker processes to spawn. The 'path' module provides utilities for working with file and directory paths in a cross-platform way (joining, resolving, and parsing paths), avoiding manual string concatenation that would break between Windows and POSIX path separators.",
+    "example": null,
+    "code": "const os = require('os');\nconst path = require('path');\nconsole.log(os.cpus().length);\nconsole.log(path.join('a', 'b', 'c.txt'));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Node.js global objects that don't require an explicit import, and where do they come from?",
+    "answer": "Globals like console, setTimeout, setInterval, Buffer, process, __dirname (CommonJS only), and module/exports (CommonJS only) are automatically available in every module without requiring an import — some are true JS-engine or web-standard globals, while others (like process and Buffer) are injected by Node's runtime specifically. This differs from other core modules like fs or http, which must be explicitly required or imported.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "globals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between npm's 'dependencies' and 'devDependencies' in package.json?",
+    "answer": "\"dependencies\" lists packages required for the application to run in production, and are installed whenever the package is installed as a dependency of another project. \"devDependencies\" lists packages only needed during development or build (like test frameworks, linters, or bundlers), which are skipped when installing with `npm install --production` or `npm ci --omit=dev`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "package-json", "npm"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't you use top-level await in a CommonJS module, but you can in an ES Module?",
+    "answer": "CommonJS require() is synchronous by design — module loading assumes each module fully executes to completion before returning control to its caller, which is incompatible with pausing mid-module for an async operation. ES Modules were designed with asynchronous loading in mind from the start, so the spec allows top-level await directly in a .mjs file (or a .js file under \"type\": \"module\"), pausing that module's evaluation without blocking the whole thread.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is process.env.NODE_ENV commonly used for, and is it a built-in Node feature?",
+    "answer": "NODE_ENV is not a special Node.js built-in — it's simply a widely-adopted convention where developers set an environment variable to 'development', 'production', or 'test' and check it in code (or rely on libraries like Express that use it) to toggle behavior such as verbose logging, error stack traces, or caching. Node itself doesn't set or read NODE_ENV automatically.",
+    "example": null,
+    "code": "if (process.env.NODE_ENV === 'production') {\n  // disable verbose logging\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is module.exports versus exports in CommonJS, and why does confusing them cause bugs?",
+    "answer": "exports is simply a reference to the same object that module.exports initially points to, provided as a shorthand for adding properties (exports.foo = ...). Reassigning exports = something entirely new breaks the link, since it only repoints the local variable, not module.exports — the object Node actually returns from require() — which is a classic source of a module unexpectedly exporting an empty object.",
+    "example": null,
+    "code": "// Wrong: breaks the reference\nexports = { foo: 1 };\n// Correct\nmodule.exports = { foo: 1 };\n// or\nexports.foo = 1;",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is JIT compilation, and how does V8 use it to make JavaScript execution fast?",
+    "answer": "Just-In-Time compilation compiles code to machine code at runtime rather than ahead of time, letting the engine optimize based on how code actually behaves as it runs. V8 starts by interpreting bytecode quickly (via Ignition), then profiles hot functions and recompiles them into highly optimized machine code (via TurboFan) based on observed types and shapes, deoptimizing back to the interpreter if assumptions made during optimization turn out to be wrong.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "v8"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Node.js 'experimental' flags, and how do they relate to feature stability?",
+    "answer": "Node ships some features behind an --experimental- flag (or gated by a warning) before they're considered stable, allowing the API to change or be removed without a major version bump. Production code generally avoids relying on experimental features, or does so cautiously, since their behavior and availability aren't guaranteed to remain stable across minor Node releases.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "runtime"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you determine how much memory a running Node.js process is using?",
+    "answer": "process.memoryUsage() returns an object with figures like rss (total memory allocated for the process), heapTotal and heapUsed (V8's JS heap), and external (memory used by C++ objects bound to JS, like Buffers) — useful for diagnosing memory growth or leaks. Tools like the built-in inspector or clinic.js can provide deeper heap snapshots for investigating specific leaks.",
+    "example": null,
+    "code": "console.log(process.memoryUsage());\n// { rss, heapTotal, heapUsed, external, arrayBuffers }",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "process", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a Node.js script run directly and one run as an npm script?",
+    "answer": "Running `node file.js` directly invokes only that file with the shell's normal PATH. Running it via an npm script (e.g. `npm run start`, defined in package.json's \"scripts\") temporarily prepends node_modules/.bin to the PATH, so locally-installed CLI tools (like a bundler or test runner) can be referenced by name without a global install, and npm also passes along certain environment context like npm_package_* variables.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "npm", "cli"],
+    "isFrequentlyAsked": false
+  }
+]

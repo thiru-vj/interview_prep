@@ -1,0 +1,67 @@
+[
+  {
+    "name": "classList.add()",
+    "syntax": "element.classList.add(...classNames)",
+    "description": "Adds one or more class names to an element without affecting existing classes.",
+    "parameters": "classNames — one or more class name strings.",
+    "returns": "undefined.",
+    "example": "card.classList.add('active', 'highlighted');",
+    "codeLanguage": "javascript",
+    "notes": "Adding a class that's already present has no effect and doesn't create a duplicate.",
+    "tags": ["dom", "classes"]
+  },
+  {
+    "name": "classList.remove()",
+    "syntax": "element.classList.remove(...classNames)",
+    "description": "Removes one or more class names from an element.",
+    "parameters": "classNames — one or more class name strings to remove.",
+    "returns": "undefined.",
+    "example": "card.classList.remove('active');",
+    "codeLanguage": "javascript",
+    "notes": "Removing a class that isn't present is a no-op and does not throw.",
+    "tags": ["dom", "classes"]
+  },
+  {
+    "name": "classList.toggle()",
+    "syntax": "element.classList.toggle(className, force)",
+    "description": "Adds a class if it's absent or removes it if present; an optional force argument makes it behave as a forced add/remove.",
+    "parameters": "className — the class to toggle. force — optional boolean; true always adds, false always removes.",
+    "returns": "true if the class ends up present after the call, false otherwise.",
+    "example": "menuButton.addEventListener('click', () => menu.classList.toggle('open'));",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "classes"]
+  },
+  {
+    "name": "classList.contains()",
+    "syntax": "element.classList.contains(className)",
+    "description": "Checks whether an element currently has a given class.",
+    "parameters": "className — the class name to check for.",
+    "returns": "true if the class is present, false otherwise.",
+    "example": "if (nav.classList.contains('collapsed')) { /* ... */ }",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "classes"]
+  },
+  {
+    "name": "classList.replace()",
+    "syntax": "element.classList.replace(oldClass, newClass)",
+    "description": "Replaces an existing class with a new one in a single call.",
+    "parameters": "oldClass — the class name to remove. newClass — the class name to add in its place.",
+    "returns": "true if oldClass was found and replaced, false otherwise.",
+    "example": "tab.classList.replace('inactive', 'active');",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "classes"]
+  },
+  {
+    "name": "className",
+    "syntax": "element.className",
+    "description": "Gets or sets an element's entire class attribute as a single space-separated string.",
+    "returns": "A string of all class names on the element.",
+    "example": "el.className = 'card active'; // overwrites all existing classes",
+    "codeLanguage": "javascript",
+    "notes": "Assigning to className replaces the whole class list at once — prefer classList methods when you only want to add/remove individual classes.",
+    "tags": ["dom", "classes"]
+  }
+]

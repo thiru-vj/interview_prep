@@ -1,0 +1,322 @@
+[
+  {
+    "question": "What is Tailwind CSS and how does it differ from traditional CSS frameworks?",
+    "answer": "Tailwind CSS is a utility-first CSS framework that provides low-level, single-purpose classes like `flex`, `pt-4`, and `text-center` instead of pre-built components like `.card` or `.btn-primary`. Instead of writing custom CSS or overriding a framework's opinionated components, you compose designs directly in your markup by combining utility classes, which keeps styling colocated with the HTML/JSX it affects.",
+    "example": null,
+    "code": "<button class=\"bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-700\">\n  Save\n</button>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "utility-first"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does \"utility-first\" mean, and how is it different from a component-based framework like Bootstrap?",
+    "answer": "Utility-first means you build UI by composing many small, single-purpose classes directly in markup rather than relying on predefined, multi-property components. Bootstrap gives you semantic components like `.card` or `.navbar` that come with baked-in visual opinions you often have to override; Tailwind gives you unopinionated primitives so you build your own components without fighting existing styles.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "utility-first"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind's utility class naming convention generally work?",
+    "answer": "Most utility names follow a `property-value` pattern, such as `m-4` for margin, `text-lg` for font size, or `bg-red-500` for background color, where the value maps to an entry in the theme (a spacing scale, color palette, or font-size scale). Related properties share prefixes (`p-`, `px-`, `py-`, `pt-`, etc. for padding), which makes the class list predictable once you learn the pattern instead of memorizing arbitrary names.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "naming-convention"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the tradeoffs of using Tailwind utility classes instead of writing custom CSS?",
+    "answer": "Utility classes speed up development since you don't context-switch between HTML and a stylesheet, and they naturally prevent CSS files from growing unbounded because you reuse the same small set of classes everywhere. The tradeoff is more verbose markup and a learning curve around class names, though tools like Prettier's Tailwind plugin and component extraction (React components, `@apply`) mitigate the readability concern.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "tradeoffs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you set up Tailwind CSS in a project, at a high level?",
+    "answer": "You install `tailwindcss` (and `postcss`/`autoprefixer` for older setups) as a dev dependency, generate a config file, and add the `@tailwind base`, `@tailwind components`, and `@tailwind utilities` directives (or the newer single `@import \"tailwindcss\"` in v4) to your main CSS file. You then point Tailwind's `content` option at your template/component files so it knows which files to scan for class names, and import that CSS file once in your app's entry point.",
+    "example": null,
+    "code": "@tailwind base;\n@tailwind components;\n@tailwind utilities;",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "setup"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind's default spacing scale map numbers to actual pixel/rem values?",
+    "answer": "Tailwind's default spacing scale is based on a 0.25rem (4px) increment, so `p-1` is `0.25rem`, `p-4` is `1rem` (16px), and `p-8` is `2rem` (32px). Values are expressed in rem rather than px so spacing scales properly if a user changes their browser's base font size for accessibility.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "spacing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Preflight in Tailwind CSS?",
+    "answer": "Preflight is Tailwind's built-in base-style reset, injected by the `@tailwind base` directive, that normalizes browser inconsistencies before utilities are applied — for example, it removes default margins on headings and paragraphs, sets `box-sizing: border-box` globally, and resets list styles and form element appearance. It's based on modern-normalize but tuned specifically to make utility classes behave predictably across browsers.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "preflight"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does Tailwind remove default margins from headings, paragraphs, and lists via Preflight?",
+    "answer": "Browsers apply inconsistent default margins to elements like `h1` and `p`, which makes spacing unpredictable when you rely purely on utility classes for layout. Preflight zeroes these out so that all spacing is explicit and controlled through margin/padding/gap utilities instead of fighting invisible user-agent defaults.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "preflight"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a simple styled button using only Tailwind utility classes?",
+    "answer": "You stack utilities for each visual concern — background color, text color, padding, border radius, font weight, and interactive states — directly on the element's class attribute. There's no separate CSS rule to write; the combination of classes fully describes the button's appearance and behavior.",
+    "example": null,
+    "code": "<button class=\"inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700 disabled:opacity-50\">\n  Submit\n</button>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "components"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's the difference between using inline styles and Tailwind utility classes for styling?",
+    "answer": "Inline styles (`style=\"...\"`) accept raw CSS values but can't use pseudo-classes like `:hover`, media queries, or your design system's constrained scale, and they have the highest CSS specificity, which makes overriding them hard. Tailwind utilities compile to real CSS classes backed by a constrained theme, so they support responsive prefixes, state variants, and are far easier to override or compose than inline styles.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind's color naming convention work, e.g. `bg-blue-500`?",
+    "answer": "Colors follow a `{property}-{color}-{shade}` pattern, where the shade is a number from 50 (lightest) to 950 (darkest) in steps of 100, giving a consistent, predictable palette across every color. This numeric scale mirrors Material Design–style palettes and makes it easy to pick a slightly lighter or darker variant of the same hue without guessing hex values.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "colors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why doesn't the order of utility classes in the `class` attribute affect the rendered result?",
+    "answer": "Tailwind classes are single-property, single-selector rules, so the order they appear in the `class` attribute in markup has no effect on specificity — specificity is instead determined by the order the underlying CSS rules are generated in the stylesheet, which Tailwind controls internally. The gotcha is when two utilities target the *same* CSS property (like `px-4 px-6`); whichever rule appears later in the compiled stylesheet wins, which may not match the order they're written in the class list.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "basics", "specificity"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do arbitrary values work in Tailwind, such as `w-[137px]`?",
+    "answer": "Square-bracket syntax lets you escape the constrained design scale and supply any raw CSS value directly in the class name, which Tailwind's JIT engine picks up and generates a matching utility for on the fly. This is meant for one-off cases that don't fit the theme scale, not as a replacement for the scale itself.",
+    "example": null,
+    "code": "<div class=\"w-[137px] top-[calc(100%-2rem)] bg-[#1da1f2]\">\n  Custom sizing\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "arbitrary-values"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Tailwind's default responsive breakpoints?",
+    "answer": "By default Tailwind ships with `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), and `2xl` (1536px), each used as a min-width media query prefix like `md:flex`. These are fully customizable in `tailwind.config.js` under `theme.screens` if a project needs different breakpoints.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "breakpoints"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the `space-x` and `space-y` utilities do?",
+    "answer": "`space-x-{n}` and `space-y-{n}` add horizontal or vertical margin between adjacent sibling elements without needing gap on a flex/grid container or manual margins on each child, by applying the margin only to elements after the first via the `> * + *` selector pattern. They're commonly used for simple stacked lists or inline groups before reaching for `gap` on a flex container.",
+    "example": null,
+    "code": "<div class=\"flex space-x-4\">\n  <span>One</span>\n  <span>Two</span>\n  <span>Three</span>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "spacing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between `p-4` and using `px-4 py-4` together?",
+    "answer": "`p-4` sets padding on all four sides to the same value in a single class, while `px-4 py-4` sets horizontal padding and vertical padding separately using two classes — for a uniform value on all sides they produce an identical result, but `px`/`py` (or the individual `pt`/`pr`/`pb`/`pl`) let you diverge horizontal and vertical spacing independently.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "spacing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you apply negative margins in Tailwind, e.g. to pull an element up?",
+    "answer": "Negative spacing utilities are prefixed with a dash before the property, such as `-mt-4` for a negative top margin, rather than a dash before the number. This is commonly used to offset overlapping elements like a badge positioned over the corner of a card.",
+    "example": null,
+    "code": "<div class=\"relative\">\n  <img src=\"/avatar.png\" class=\"rounded-full\" />\n  <span class=\"absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500\"></span>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "spacing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `divide-x` and `divide-y` do in Tailwind?",
+    "answer": "`divide-x-{n}` and `divide-y-{n}` add a border between adjacent children (again via the `> * + *` selector) instead of margin, which is useful for creating dividers in a list or table-like layout without adding an extra element for each separator. `divide-color` utilities like `divide-gray-200` control the border's color.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "borders"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind help enforce visual consistency across a team compared to hand-written CSS?",
+    "answer": "Because utilities are generated from a shared, constrained theme (fixed spacing scale, color palette, font sizes), developers can't accidentally introduce a one-off `margin: 13px` or a slightly-off shade of blue the way they could in free-form CSS. Design decisions are centralized in `tailwind.config.js`, so the whole team draws from the same finite set of values by default.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "design-system"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind compare to CSS-in-JS libraries like styled-components?",
+    "answer": "Styled-components generates scoped CSS at runtime (or build time with compilers) from template literals colocated with component logic, while Tailwind generates a static stylesheet ahead of time from utility classes referenced in markup, avoiding any runtime style-injection cost. Tailwind tends to produce a smaller, more cacheable CSS bundle since styles are deduplicated utility classes rather than per-component generated class names.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "css-in-js"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you conditionally apply Tailwind classes in a React component?",
+    "answer": "Since class names are just strings, you can build them conditionally with template literals, ternaries, or a helper library like `clsx`/`classnames`, which is preferred because it cleanly handles falsy values and object/array syntax. For merging conflicting Tailwind classes (e.g. two different `px-*` values from a prop and a default), `tailwind-merge` is commonly layered on top to keep only the last one.",
+    "example": null,
+    "code": "import clsx from 'clsx';\n\nfunction Button({ variant, className }) {\n  return (\n    <button\n      className={clsx(\n        'rounded px-4 py-2 font-medium',\n        variant === 'primary' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-900',\n        className\n      )}\n    />\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "react"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the main pros and cons of the utility-first approach?",
+    "answer": "Pros: no naming CSS classes, no dead CSS to prune since unused utilities are never generated, consistent design tokens, and fast iteration without switching files. Cons: more verbose and repetitive markup, a real learning curve for the class vocabulary, and a risk of scattering the same combination of classes across many components without an extraction step (a component or `@apply`).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "tradeoffs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you reference a Tailwind theme value from within custom CSS using the `theme()` function?",
+    "answer": "The `theme()` function lets you pull a value out of your Tailwind config's theme object directly inside a custom CSS rule, using dot notation to the token, so custom styles stay in sync with the same design tokens utilities use. It's most useful for one-off custom CSS that utilities can't express, like a complex `background-image` gradient using theme colors.",
+    "example": ".gradient-brand {\n  background-image: linear-gradient(to right, theme('colors.indigo.500'), theme('colors.purple.500'));\n}",
+    "code": ".gradient-brand {\n  background-image: linear-gradient(to right, theme('colors.indigo.500'), theme('colors.purple.500'));\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["tailwind", "basics", "theme-function"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you truncate overflowing text with a single Tailwind utility?",
+    "answer": "The `truncate` utility applies `overflow: hidden`, `text-overflow: ellipsis`, and `white-space: nowrap` together to clip single-line text with an ellipsis. For multi-line clamping, Tailwind provides `line-clamp-{n}` utilities that rely on the `-webkit-line-clamp` property.",
+    "example": null,
+    "code": "<p class=\"truncate w-48\">This is a very long line of text that will be cut off</p>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "typography"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `group` class do, and how is it typically used?",
+    "answer": "Adding `group` to a parent element lets descendant elements react to that parent's state using variants like `group-hover:`, `group-focus:`, or `group-disabled:`, which is essential when you want hovering a card to also change the appearance of an icon or text nested inside it, since CSS has no native parent-selector for pseudo-classes.",
+    "example": null,
+    "code": "<a href=\"#\" class=\"group flex items-center gap-2\">\n  <span class=\"text-gray-700 group-hover:text-blue-600\">Read more</span>\n  <svg class=\"h-4 w-4 text-gray-400 group-hover:translate-x-1 transition\"></svg>\n</a>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "group"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the `peer` class used for in Tailwind?",
+    "answer": "`peer` marks an element so that a *sibling* (not descendant) can style itself based on that element's state using `peer-{variant}:` classes, commonly used for styling a label or helper text based on an input's `:focus`, `:invalid`, or `:checked` state without JavaScript.",
+    "example": null,
+    "code": "<input type=\"email\" class=\"peer border border-gray-300\" required />\n<p class=\"invisible peer-invalid:visible text-sm text-red-500\">Enter a valid email</p>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "peer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Do you need to worry about vendor prefixes when writing Tailwind utility classes?",
+    "answer": "No — Tailwind runs your compiled CSS through Autoprefixer (or an equivalent built-in Lightning CSS step in v4) as part of its build pipeline, so vendor-prefixed properties like `-webkit-line-clamp` or older flexbox prefixes are added automatically based on your configured browser support targets. You never write prefixes by hand in either your utility usage or in `@apply` blocks.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "basics", "autoprefixer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is Tailwind's utility class markup hard to learn, and how do teams typically ramp up?",
+    "answer": "There's a genuine initial learning curve since you're memorizing a large but consistent vocabulary instead of writing arbitrary CSS, but most developers become productive within days because the naming follows predictable patterns and editor tooling (the official IntelliSense extension) provides autocomplete and hover previews. Teams often pair it with a documented set of extracted components so the vocabulary only needs to be learned once, at the component layer.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "developer-experience"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the `@tailwind base`, `@tailwind components`, and `@tailwind utilities` directives each inject?",
+    "answer": "`@tailwind base` injects Preflight and other base element styles, `@tailwind components` injects any component classes registered via plugins or `@layer components` (empty by default), and `@tailwind utilities` injects all the generated utility classes, which must come last so utilities can override component styles when both are present.",
+    "example": null,
+    "code": "@tailwind base;\n@tailwind components;\n@tailwind utilities;",
+    "codeLanguage": "css",
+    "difficulty": "easy",
+    "tags": ["tailwind", "basics", "directives"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you force a utility to override another style using the important modifier?",
+    "answer": "Prefixing a utility with `!` (e.g. `!text-red-500`) appends `!important` to that specific declaration, which is useful for overriding a third-party library's inline styles or a stubborn specificity conflict without disabling Tailwind's important strategy globally. It should be used sparingly since relying on it broadly usually signals a deeper specificity problem.",
+    "example": null,
+    "code": "<input class=\"text-gray-900 !text-red-500\" />",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "basics", "important-modifier"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does using many utility classes make markup less semantic, and how do teams address that concern?",
+    "answer": "Utility classes don't affect the semantic meaning of HTML elements themselves — you still choose `<button>`, `<nav>`, or `<article>` appropriately — but long class lists can make markup harder to scan visually. Teams manage this by extracting repeated utility combinations into framework components (a React `<Button>`), using `@apply` for genuinely reusable low-level classes, and relying on editor formatting/class-sorting plugins to keep class lists organized.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "basics", "semantics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does Tailwind avoid the specificity wars that plague large hand-written CSS or BEM-based codebases?",
+    "answer": "Because nearly every utility class is a single, flat CSS selector targeting one property, all utilities share the same low specificity, so conflicts are resolved by source order in the generated stylesheet rather than escalating specificity battles (extra classes, IDs, or nested selectors) the way large BEM/SCSS codebases often do. This flat specificity is also why Tailwind explicitly orders variants like `hover:` and `focus:` later in the stylesheet so they reliably override the base utility.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "basics", "specificity"],
+    "isFrequentlyAsked": false
+  }
+]

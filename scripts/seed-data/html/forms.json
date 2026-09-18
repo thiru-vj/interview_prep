@@ -1,0 +1,312 @@
+[
+  {
+    "question": "What is the purpose of the <form> element's action and method attributes?",
+    "answer": "action specifies the URL the form's data is submitted to, and method specifies the HTTP method used — typically GET (appends data as a query string, suitable for searches/filters) or POST (sends data in the request body, suitable for submissions that create or modify data). If action is omitted, the form submits to the current page's URL.",
+    "example": null,
+    "code": "<form action=\"/submit\" method=\"post\">\n  <input type=\"text\" name=\"username\">\n  <button type=\"submit\">Send</button>\n</form>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why is the name attribute required on form inputs, and how does it relate to the id attribute?",
+    "answer": "The name attribute determines the key used when the input's value is serialized and submitted with the form (e.g. name=\"email\" produces email=... in the request). id is unrelated to submission — it's used for referencing the element in CSS, JavaScript, or associating it with a <label> via the label's for attribute — an input can have one without the other, though most have both.",
+    "example": null,
+    "code": "<label for=\"email-input\">Email</label>\n<input id=\"email-input\" name=\"email\" type=\"email\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should every form input have an associated <label>?",
+    "answer": "A properly associated <label> gives the input an accessible name that screen readers announce, and clicking the label text focuses or activates the input, which is especially helpful for small targets like checkboxes and radio buttons. Association is done either by wrapping the input inside the label, or by matching the label's for attribute to the input's id.",
+    "example": null,
+    "code": "<label>\n  <input type=\"checkbox\" name=\"subscribe\"> Subscribe to newsletter\n</label>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between GET and POST as form submission methods, beyond how they pass data?",
+    "answer": "GET requests are idempotent and cacheable, and data appears visibly in the URL, so they should never be used for sensitive data or operations with side effects. POST requests are not cached or bookmarked by default, don't expose data in the URL, and can carry a much larger and more complex payload, including file uploads, making them appropriate for state-changing operations.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are some of the newer HTML5 input types and what do they provide over a plain text input?",
+    "answer": "HTML5 added types like email, url, tel, number, date, time, color, range, and search, which enable appropriate mobile keyboards, built-in browser validation, and native UI widgets (like a date picker or color swatch) without any JavaScript. They degrade gracefully to a plain text input in browsers that don't support a specific type.",
+    "example": null,
+    "code": "<input type=\"email\" name=\"email\" required>\n<input type=\"date\" name=\"dob\">\n<input type=\"range\" min=\"0\" max=\"100\" value=\"50\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the required attribute enable native form validation, and what happens when a required field is empty on submit?",
+    "answer": "Adding required to an input tells the browser to block form submission and display a native validation message (styleable to a limited degree, and positioned by the browser) pointing at the offending field, using the built-in Constraint Validation API. It only runs on submission attempts (or explicit checkValidity() calls), not on every keystroke.",
+    "example": null,
+    "code": "<input type=\"text\" name=\"username\" required>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the pattern, min, max, and maxlength attributes used for in form validation?",
+    "answer": "pattern provides a regular expression the input's value must match (for text-like inputs). min and max constrain numeric or date-like input values to a range. maxlength (and minlength) constrain the character count of text input. All of these trigger native browser validation and the :invalid CSS pseudo-class when violated.",
+    "example": null,
+    "code": "<input type=\"text\" pattern=\"[A-Za-z]{3,}\" title=\"At least 3 letters\">\n<input type=\"number\" min=\"1\" max=\"10\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is client-side HTML form validation not sufficient on its own for securing an application?",
+    "answer": "Client-side validation (required, pattern, type=\"email\", etc.) runs entirely in the browser and can be trivially bypassed by disabling JavaScript, editing the DOM, or sending a raw HTTP request directly to the server. It's a UX improvement for immediate feedback, but the server must always re-validate and sanitize every submitted value independently.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the <select> element's single-select and multiple attribute modes?",
+    "answer": "By default a <select> renders a dropdown allowing exactly one <option> to be chosen. Adding the multiple attribute changes it into a scrollable list box where the user can select several options at once (typically via Ctrl/Cmd+click), and its submitted value becomes an array-like set of all selected options rather than a single value.",
+    "example": null,
+    "code": "<select name=\"tags\" multiple>\n  <option value=\"js\">JavaScript</option>\n  <option value=\"css\">CSS</option>\n</select>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of <fieldset> and <legend> in a form?",
+    "answer": "<fieldset> groups a set of related form controls, such as a set of radio buttons for the same question, and <legend> provides a caption/label for that whole group. Screen readers announce the legend text before each control's own label as the user tabs into the group, which gives crucial context that individual labels alone might not convey.",
+    "example": null,
+    "code": "<fieldset>\n  <legend>Shipping Method</legend>\n  <label><input type=\"radio\" name=\"ship\" value=\"standard\"> Standard</label>\n  <label><input type=\"radio\" name=\"ship\" value=\"express\"> Express</label>\n</fieldset>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a controlled radio button group and independent checkboxes?",
+    "answer": "Radio buttons sharing the same name attribute form a mutually exclusive group where only one can be checked at a time, representing a single choice from a set. Checkboxes are independent of each other even when they share a name (which instead lets the server receive multiple values for that key), representing zero or more selections.",
+    "example": null,
+    "code": "<input type=\"radio\" name=\"size\" value=\"s\"> Small\n<input type=\"radio\" name=\"size\" value=\"m\"> Medium\n<input type=\"checkbox\" name=\"toppings\" value=\"cheese\"> Cheese\n<input type=\"checkbox\" name=\"toppings\" value=\"olives\"> Olives",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a <button type=\"submit\">, a <button type=\"button\">, and a <button type=\"reset\">?",
+    "answer": "type=\"submit\" (the default inside a <form>, even if omitted) triggers form submission when clicked. type=\"button\" does nothing on its own and is meant for attaching custom JavaScript behavior. type=\"reset\" resets all fields in the form back to their initial default values. A common bug is forgetting to set type=\"button\" on a button meant only to trigger a script, causing it to unintentionally submit the form.",
+    "example": null,
+    "code": "<button type=\"button\" onclick=\"doSomething()\">Preview</button>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you handle file uploads in an HTML form, and why does it require a special enctype?",
+    "answer": "A file input is created with <input type=\"file\">, and the enclosing <form> must set enctype=\"multipart/form-data\" (with method=\"post\") because the default encoding, application/x-www-form-urlencoded, can't represent binary file data. Without the correct enctype, the file's contents are not sent, only its filename.",
+    "example": null,
+    "code": "<form method=\"post\" enctype=\"multipart/form-data\">\n  <input type=\"file\" name=\"avatar\" accept=\"image/*\">\n</form>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the accept attribute do on a file input?",
+    "answer": "The accept attribute is a hint that filters which file types the browser's file picker shows or allows selecting, specified as MIME types (image/*), file extensions (.pdf), or a mix. It is only a UX convenience — it doesn't enforce anything server-side, so the backend must still validate the actual uploaded file's type and content.",
+    "example": null,
+    "code": "<input type=\"file\" accept=\".jpg,.png,image/*\">",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the placeholder attribute and a <label>, and why can't placeholder replace a label?",
+    "answer": "placeholder shows hint text inside an empty input that disappears once the user starts typing, and it's not reliably announced or treated as an accessible name by all assistive technology. A <label> persists visually and is the standards-based accessible name, so relying on placeholder alone leaves users without context once they start typing or if they use a screen reader.",
+    "example": null,
+    "code": "<label for=\"search\">Search</label>\n<input id=\"search\" type=\"search\" placeholder=\"e.g. running shoes\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms", "accessibility"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the purpose of the autocomplete attribute?",
+    "answer": "autocomplete hints to the browser whether and how it should offer to autofill an input, using standardized tokens like \"email\", \"given-name\", \"current-password\", or \"new-password\". Setting it correctly speeds up form completion via browser-remembered data and password managers, and setting autocomplete=\"off\" can be used to opt out for sensitive one-time fields, though browsers may not always honor it.",
+    "example": null,
+    "code": "<input type=\"email\" name=\"email\" autocomplete=\"email\">\n<input type=\"password\" name=\"new-password\" autocomplete=\"new-password\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the datalist element and how does it enhance a text input?",
+    "answer": "<datalist> provides a set of predefined <option> suggestions for an <input> it's linked to via the input's list attribute, giving an autocomplete-style dropdown while still allowing the user to type any free-form value (unlike <select>, which restricts to the listed options only).",
+    "example": null,
+    "code": "<input list=\"browsers\" name=\"browser\">\n<datalist id=\"browsers\">\n  <option value=\"Chrome\">\n  <option value=\"Firefox\">\n</datalist>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between readonly and disabled on a form input?",
+    "answer": "readonly prevents the user from editing the value but the input remains focusable, is still included in form submission, and still receives styling as an enabled field. disabled prevents both editing and focus, is visually greyed out by default, and — crucially — its value is excluded entirely from the submitted form data.",
+    "example": null,
+    "code": "<input type=\"text\" value=\"Locked but submitted\" readonly>\n<input type=\"text\" value=\"Not submitted\" disabled>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does novalidate do on a form, and when might you use it?",
+    "answer": "Adding novalidate to a <form> disables the browser's built-in constraint validation on submit, which is useful when you want to implement fully custom validation logic and error messaging in JavaScript instead of relying on the browser's default validation bubbles and behavior.",
+    "example": null,
+    "code": "<form novalidate>\n  <input type=\"email\" required>\n</form>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the Constraint Validation API let you customize native validation messages in JavaScript?",
+    "answer": "Each form control exposes a validity object (ValidityState) with boolean flags like valueMissing or typeMismatch, and calling setCustomValidity('message') on the element overrides the browser's default validation message with your own text, which is then shown when checkValidity() or reportValidity() runs.",
+    "example": null,
+    "code": "const input = document.querySelector('input');\ninput.addEventListener('invalid', () => {\n  input.setCustomValidity('Please enter a valid company email.');\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the formaction, formmethod, and form attributes on a submit button?",
+    "answer": "These attributes let a single <button> or <input type=\"submit\"> override the enclosing form's action, method, or even target a different <form> entirely (via the form attribute referencing that form's id), which is handy when one form has multiple submit buttons that need to POST to different endpoints.",
+    "example": null,
+    "code": "<form id=\"checkout\" action=\"/save-draft\" method=\"post\">\n  <button type=\"submit\">Save Draft</button>\n  <button type=\"submit\" formaction=\"/checkout\">Place Order</button>\n</form>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an <input> and a <textarea> for text entry?",
+    "answer": "<input type=\"text\"> is a single-line text field. <textarea> is a resizable, multi-line plain-text field whose content is placed between its opening and closing tags (rather than a value attribute), and it supports rows/cols attributes to hint at its default size.",
+    "example": null,
+    "code": "<textarea name=\"bio\" rows=\"4\" cols=\"40\">Default bio text</textarea>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can you submit a form without JavaScript, and what happens to the page when you do?",
+    "answer": "Yes — a plain HTML form submission via a submit button is native browser behavior that triggers a full page navigation to the action URL using the specified method, no JavaScript required. This is the foundation progressive enhancement builds on: JavaScript can intercept submit and call event.preventDefault() to handle it asynchronously instead, but the form still works as a fallback if scripts fail.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the step attribute's effect on number, range, and date inputs?",
+    "answer": "step defines the granularity of valid values relative to the min (or a default base), constraining values to increments of the step — for example step=\"5\" on a number input only allows multiples of 5 from the min. It applies similarly to range and date-related input types (e.g. step=\"7\" on a date input to only allow weekly increments), and the default step for number inputs is 1.",
+    "example": null,
+    "code": "<input type=\"number\" min=\"0\" max=\"100\" step=\"5\">",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the input event and the change event on a text input?",
+    "answer": "The input event fires synchronously on every value change, including every keystroke, paste, or programmatic input via user interaction. The change event fires only after the value has been committed and the element loses focus (for text inputs), or immediately on selection for things like checkboxes and <select>. input is preferred for live validation/filtering; change is preferred when you only care about the final committed value.",
+    "example": null,
+    "code": "input.addEventListener('input', () => console.log('every keystroke'));\ninput.addEventListener('change', () => console.log('after blur'));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you group multiple related checkboxes so they're announced together to screen reader users, similar to radio buttons?",
+    "answer": "Wrap the checkboxes in a <fieldset> with a <legend> describing the group as a whole (e.g. 'Select your interests'), just as you would for radio buttons — this gives assistive technology the group context even though, unlike radios, each checkbox is independently toggleable and doesn't need to share a name to be grouped this way.",
+    "example": null,
+    "code": "<fieldset>\n  <legend>Interests</legend>\n  <label><input type=\"checkbox\" name=\"interests\" value=\"sports\"> Sports</label>\n  <label><input type=\"checkbox\" name=\"interests\" value=\"music\"> Music</label>\n</fieldset>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens to unchecked checkboxes and radio buttons during form submission?",
+    "answer": "Unlike text inputs, an unchecked checkbox or radio button contributes nothing to the submitted form data at all — its name/value pair simply isn't included. This is why server-side code often needs to treat a missing key as 'false' rather than expecting an explicit false value, and why a hidden input with the same name is sometimes added as a fallback default.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the <optgroup> element inside a <select>?",
+    "answer": "<optgroup> groups related <option> elements under a shared, non-selectable label within a dropdown, improving scannability for long lists — for example grouping country options by continent. The group's label is exposed to assistive technology, but the <optgroup> itself can't be selected, only its child options.",
+    "example": null,
+    "code": "<select name=\"country\">\n  <optgroup label=\"Europe\">\n    <option value=\"fr\">France</option>\n    <option value=\"de\">Germany</option>\n  </optgroup>\n</select>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the HTML5 email input type's built-in validation differ from validating an email address with a custom regex?",
+    "answer": "type=\"email\" validates against a permissive pattern defined by the HTML spec (roughly matching the general shape of an address with an @ and a domain), which intentionally does not fully enforce RFC 5322 email syntax rules, favoring simplicity over strict correctness. Real-world email validation is famously hard to get fully right with regex, so most production systems still verify addresses by sending a confirmation email.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "forms", "validation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why would you use the inputmode attribute alongside type=\"text\" instead of just relying on the input's type?",
+    "answer": "inputmode hints which virtual keyboard layout a mobile device should show (like \"numeric\" or \"decimal\") without changing the input's actual value type or triggering type-specific validation/UI, which is useful when you need numeric-looking input (like a credit card number) but still want it treated and formatted as plain text rather than a number.",
+    "example": null,
+    "code": "<input type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]*\" name=\"zip\">",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["html", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are some common accessibility pitfalls in HTML forms besides missing labels?",
+    "answer": "Common pitfalls include relying only on color to indicate an error state, not associating error messages with their input via aria-describedby, using placeholder as the only label, not grouping related controls with fieldset/legend, and building custom dropdowns or checkboxes from <div>s without proper keyboard support and ARIA roles instead of using native form elements.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["html", "forms", "accessibility"],
+    "isFrequentlyAsked": false
+  }
+]

@@ -1,0 +1,322 @@
+[
+  {
+    "question": "What's the difference between the `flex` and `inline-flex` display utilities?",
+    "answer": "`flex` sets `display: flex`, making the element a block-level flex container that takes up the full available width like a normal block element. `inline-flex` sets `display: inline-flex`, making the flex container itself behave like an inline element, sizing to its content and flowing alongside surrounding inline content — commonly used for small inline widgets like a button with an icon.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you control the main axis direction of a flex container in Tailwind?",
+    "answer": "`flex-row` (the default) lays children out horizontally, `flex-col` stacks them vertically, and `flex-row-reverse`/`flex-col-reverse` reverse the order along that axis — all mapping directly to the CSS `flex-direction` property.",
+    "example": null,
+    "code": "<div class=\"flex flex-col md:flex-row gap-4\">\n  <div>Item A</div>\n  <div>Item B</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `justify-start`, `justify-center`, `justify-between`, and `justify-around` control in a flex container?",
+    "answer": "These map to `justify-content` and control how children are distributed along the flex container's main axis: `justify-start` packs them at the beginning, `justify-center` centers the group, `justify-between` spreads them with equal space between items (none at the edges), and `justify-around` adds equal space around each item, including at the edges.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `items-start`, `items-center`, and `items-stretch` control in a flex container?",
+    "answer": "These map to `align-items` and control alignment along the flex container's cross axis (perpendicular to the main axis): `items-start` aligns children to the start of the cross axis, `items-center` centers them, and `items-stretch` (the default) stretches children to fill the container's cross-axis size if they don't have an explicit height/width set.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the practical difference between `justify-content` and `align-items` utilities in a flex layout?",
+    "answer": "`justify-*` utilities always act along the main axis (the direction items flow — horizontal by default, or vertical with `flex-col`), while `items-*` (align-items) always act along the cross axis, perpendicular to the main axis. Swapping `flex-row` for `flex-col` effectively swaps which physical direction each set of utilities affects, since the main and cross axes rotate with it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `flex-wrap` utility do, and when would you use it?",
+    "answer": "`flex-wrap` sets `flex-wrap: wrap`, allowing flex children to wrap onto multiple lines instead of shrinking or overflowing when they don't fit on a single row — commonly combined with `gap` for building tag lists or responsive card grids that reflow naturally as the container width changes. `flex-nowrap` (the default) forces everything onto one line.",
+    "example": "<div class=\"flex flex-wrap gap-2\">...</div>",
+    "code": "<div class=\"flex flex-wrap gap-2\">\n  <span class=\"px-2 py-1 bg-gray-100 rounded\">Tag 1</span>\n  <span class=\"px-2 py-1 bg-gray-100 rounded\">Tag 2</span>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the `gap` utility differ from `space-x`/`space-y` for spacing flex or grid children?",
+    "answer": "`gap-{n}` maps directly to the CSS `gap` property, which works natively in both flex and grid containers and adds spacing between items without affecting the container's own edges or requiring a `> * + *` selector trick. `space-x`/`space-y` only work reliably in flex/block contexts (not grid) and apply margin instead, which can interact awkwardly with wrapping — `gap` is generally the more modern, predictable choice.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "gap"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `flex-1`, `flex-auto`, and `flex-none` do, and how do they relate to `flex-grow`/`flex-shrink`/`flex-basis`?",
+    "answer": "These are shorthand utilities combining the three flex properties: `flex-1` sets `flex: 1 1 0%` (grow and shrink equally, ignoring content size), `flex-auto` sets `flex: 1 1 auto` (grow and shrink based on content size), and `flex-none` sets `flex: none` (item won't grow or shrink at all, sizing purely from its own width/height). `flex-1` is the most common choice for making a sidebar's main content area fill remaining space.",
+    "example": null,
+    "code": "<div class=\"flex\">\n  <aside class=\"flex-none w-48\">Sidebar</aside>\n  <main class=\"flex-1\">Main content fills remaining space</main>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you turn an element into a CSS Grid container in Tailwind?",
+    "answer": "Applying `grid` sets `display: grid`, turning the element into a grid container whose children become grid items by default, after which you define the track structure with utilities like `grid-cols-{n}` and `grid-rows-{n}`.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-3 gap-4\">\n  <div>1</div><div>2</div><div>3</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does `grid-cols-{n}` work, and what CSS does it generate?",
+    "answer": "`grid-cols-{n}` sets `grid-template-columns: repeat(n, minmax(0, 1fr))`, creating `n` equal-width columns. The `minmax(0, 1fr)` (rather than just `1fr`) is important because it prevents grid items with long unbreakable content, like a long word or a wide image, from forcing the column wider than intended.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `col-span-{n}` and `row-span-{n}` do in a grid layout?",
+    "answer": "`col-span-{n}` makes a grid item span `n` columns instead of the default one, and `row-span-{n}` does the same for rows, both mapping to `grid-column: span n / span n` (and the row equivalent) — useful for featured items that should visually take up more space than a standard grid cell.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-3 gap-4\">\n  <div class=\"col-span-2\">Wide item</div>\n  <div>Normal item</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you set the number of rows in a grid, and when is it necessary versus letting content define row count?",
+    "answer": "`grid-rows-{n}` sets `grid-template-rows: repeat(n, minmax(0, 1fr))`, which is only necessary when you need explicit control over a fixed number of equal-height rows (like a calendar or a dashboard grid); most grids don't set an explicit row count and instead let rows form implicitly based on however many items wrap, sized by `grid-auto-rows`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you set different horizontal and vertical gaps in a grid layout?",
+    "answer": "`gap-x-{n}` controls column gap and `gap-y-{n}` controls row gap independently, while plain `gap-{n}` sets both to the same value — useful when a grid's rows need tighter spacing than its columns or vice versa.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-3 gap-x-6 gap-y-2\">...</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a responsive grid that automatically fits as many columns as space allows, each at least 200px wide, without media queries?",
+    "answer": "Since Tailwind's numeric `grid-cols-{n}` utilities are fixed counts, this pattern requires an arbitrary value that passes raw CSS `repeat(auto-fit, minmax(200px, 1fr))` to `grid-template-columns`, which lets the browser compute the column count dynamically based on available width — no breakpoint-specific classes needed.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4\">\n  <div>Card</div>\n  <div>Card</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do `place-items`, `place-content`, and `place-self` do?",
+    "answer": "These are shorthand utilities that set both the row and column alignment in one class: `place-items-{value}` combines `align-items` + `justify-items` for all grid/flex items at once, `place-content-{value}` combines `align-content` + `justify-content` for the whole content area, and `place-self-{value}` overrides alignment for a single item along both axes.",
+    "example": null,
+    "code": "<div class=\"grid h-40 place-items-center\">\n  <span>Centered both ways</span>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between `align-self` and `justify-self` utilities on an individual grid or flex item?",
+    "answer": "`self-{value}` (align-self) overrides the cross-axis alignment for a single flex item, or the block-axis (row) alignment for a single grid item, independent of the container's `items-*` setting. `justify-self-{value}` similarly overrides the inline-axis (column) alignment for one grid item — `justify-self` has no effect in a flex container since flex only has a single cross axis controlled by `align-self`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the `order` utility do, and does it change the underlying DOM order?",
+    "answer": "`order-{n}` maps to the CSS `order` property, changing the *visual* order in which flex or grid items are rendered without touching the actual DOM/source order, which matters for accessibility and keyboard/screen-reader navigation since assistive tech and tab order typically still follow DOM order, not visual order.",
+    "example": null,
+    "code": "<div class=\"flex\">\n  <div class=\"order-2\">Renders second visually</div>\n  <div class=\"order-1\">Renders first visually</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When would you choose Flexbox over Grid, and vice versa, for a layout?",
+    "answer": "Flexbox is one-dimensional and excels at distributing items along a single row or column, like a navbar, a button group, or a card's internal content stack. Grid is two-dimensional and better suited for layouts where you need explicit control over both rows and columns simultaneously, like a page shell, dashboard, or photo gallery — many real UIs use both together, Grid for the page structure and Flexbox for alignment within individual components.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do `col-start-{n}` and `col-end-{n}` allow explicit grid item placement?",
+    "answer": "`col-start-{n}` and `col-end-{n}` map to `grid-column-start`/`grid-column-end`, letting you place an item at an exact track line number rather than relying on the automatic flow order — useful for layouts where certain items need to occupy specific, non-sequential positions in the grid, like a hero banner that starts at column 2.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-4 gap-4\">\n  <div class=\"col-start-2 col-end-4\">Positioned item</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between the explicit and implicit grid, and how do `grid-auto-rows`/`grid-auto-flow` utilities relate to it?",
+    "answer": "The explicit grid is the track structure you define with `grid-cols-*`/`grid-rows-*`; the implicit grid consists of extra rows or columns the browser automatically generates to fit items that overflow the explicit definition. `grid-auto-rows-{value}` / `grid-auto-cols-{value}` control the sizing of those auto-generated tracks, and `grid-auto-flow-{row|col|dense}` controls whether extra items flow by filling rows or columns first, with `dense` allowing the algorithm to backfill earlier empty cells.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a responsive top navigation bar with a logo on the left and links on the right using Flexbox utilities?",
+    "answer": "You make the nav a flex container with `justify-between` to push the logo and link group to opposite ends, `items-center` to vertically align them, and `gap-*` inside the link group for spacing between individual links.",
+    "example": null,
+    "code": "<nav class=\"flex items-center justify-between px-6 py-4\">\n  <span class=\"font-bold\">Logo</span>\n  <div class=\"flex gap-6\">\n    <a href=\"#\">Home</a>\n    <a href=\"#\">About</a>\n  </div>\n</nav>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a responsive card grid that shows 1 column on mobile, 2 on tablet, and 3 on desktop?",
+    "answer": "Combine a base `grid-cols-1` with responsive overrides, e.g. `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`, following the mobile-first cascade so each breakpoint only needs to specify what changes from the previous one, plus a `gap-*` utility for consistent spacing between cards.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3\">\n  <div class=\"rounded-lg border p-4\">Card</div>\n  <div class=\"rounded-lg border p-4\">Card</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you center a single element both horizontally and vertically inside its parent using Flexbox?",
+    "answer": "Make the parent a flex container and apply `justify-center` to center along the main axis and `items-center` to center along the cross axis, which together center the child in both directions regardless of `flex-row`/`flex-col` orientation.",
+    "example": null,
+    "code": "<div class=\"flex h-screen items-center justify-center\">\n  <div class=\"rounded bg-white p-8 shadow\">Centered modal</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you center content using Grid instead of Flexbox?",
+    "answer": "Applying `grid` plus `place-items-center` on the parent centers a single child both horizontally and vertically in one utility, which is a slightly more concise equivalent to the `flex items-center justify-center` pattern when you only need to center one item and don't need any other flex-specific behavior.",
+    "example": null,
+    "code": "<div class=\"grid h-screen place-items-center\">\n  <div>Centered content</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between using `flex-1` and `w-full` to make an element fill available horizontal space in a flex row?",
+    "answer": "`w-full` sets a fixed width of 100% of the parent, which in a flex row context actually means 100% of the *flex container's* width regardless of siblings, often causing overflow if there are other items. `flex-1` instead tells the item to grow and shrink to fill whatever space remains after accounting for sibling items, which is almost always what you want for a flexible column alongside a fixed-width sidebar.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is CSS subgrid, and how do you use it with Tailwind's `grid-cols-subgrid`/`grid-rows-subgrid` utilities?",
+    "answer": "Subgrid lets a nested grid item inherit its parent grid's track sizing instead of defining its own independent tracks, which solves the long-standing problem of aligning nested grid content (like card titles across multiple cards) to a shared outer grid. `col-span-{n} grid-cols-subgrid` on a nested grid container makes its columns line up exactly with the parent's corresponding column tracks.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-4\">\n  <div class=\"col-span-2 grid grid-cols-subgrid\">\n    <div class=\"col-start-1\">Aligned to parent column 1</div>\n  </div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "hard",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you maintain a fixed aspect ratio for a responsive element, like an embedded video, using Tailwind?",
+    "answer": "The `aspect-{ratio}` utility (e.g. `aspect-video` for 16/9, `aspect-square` for 1/1, or an arbitrary `aspect-[4/3]`) maps to the CSS `aspect-ratio` property, letting an element automatically compute its height from its width (or vice versa) to preserve the ratio as the container resizes, without the older padding-hack technique.",
+    "example": null,
+    "code": "<div class=\"aspect-video w-full overflow-hidden rounded\">\n  <iframe src=\"...\" class=\"h-full w-full\"></iframe>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "aspect-ratio"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you center a fixed-max-width page layout horizontally using Tailwind?",
+    "answer": "The `container` utility sets a `max-width` matching the current breakpoint, and combined with `mx-auto` (equal auto left/right margins) it horizontally centers that fixed-width block in the viewport — a very common pattern for a page wrapper that shouldn't stretch edge-to-edge on wide screens.",
+    "example": null,
+    "code": "<div class=\"container mx-auto px-4\">\n  Page content constrained and centered\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "easy",
+    "tags": ["tailwind", "layout", "container"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you position an element absolutely within a relatively positioned flex parent using Tailwind's inset utilities?",
+    "answer": "Give the parent `relative` so it establishes a positioning context, then give the child `absolute` plus inset utilities like `top-0`, `right-0`, or the shorthand `inset-0` (all four sides) to position it precisely relative to that parent — a common pattern for overlay badges, close buttons, or full-cover loading spinners inside a flex/grid item.",
+    "example": null,
+    "code": "<div class=\"relative flex\">\n  <img src=\"/thumb.jpg\" class=\"h-24 w-24\" />\n  <span class=\"absolute -right-1 -top-1 rounded-full bg-red-500 px-1.5 text-xs text-white\">3</span>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "positioning"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do flex items achieve equal height columns automatically, without any explicit height utility?",
+    "answer": "The default `align-items: stretch` behavior of flex containers means that unless a flex item has an explicit height (or `items-start`/`self-start` is applied), each item stretches to match the height of the tallest sibling in the row automatically, which is why simple `flex` rows of cards naturally end up equal height with no extra CSS.",
+    "example": null,
+    "code": "<div class=\"flex gap-4\">\n  <div class=\"flex-1 rounded border p-4\">Short content</div>\n  <div class=\"flex-1 rounded border p-4\">Much longer content that wraps onto several lines</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "If both a `w-*` utility and a `basis-*` (flex-basis) utility are applied to the same flex item, which one wins?",
+    "answer": "`flex-basis` takes priority over `width` for sizing along the main axis of a flex container per the CSS spec, so if both are set on the same item in a `flex-row` context, `basis-*` determines the initial main-size before growing/shrinking is applied, while `width` is effectively ignored for that axis (though it would still apply if the item were in a `flex-col` container, since `width` then governs the cross axis).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["tailwind", "layout", "flexbox"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between `grid-cols-3` and an arbitrary value like `grid-cols-[1fr_2fr_1fr]`?",
+    "answer": "`grid-cols-3` generates three equal-width tracks via `repeat(3, minmax(0, 1fr))`. The arbitrary value `grid-cols-[1fr_2fr_1fr]` (underscores stand in for spaces inside the brackets) defines three tracks with different proportional widths directly, giving you full control over unequal column ratios that the standard numeric scale can't express.",
+    "example": null,
+    "code": "<div class=\"grid grid-cols-[1fr_2fr_1fr] gap-4\">\n  <div>Sidebar</div>\n  <div>Main</div>\n  <div>Aside</div>\n</div>",
+    "codeLanguage": "html",
+    "difficulty": "medium",
+    "tags": ["tailwind", "layout", "grid"],
+    "isFrequentlyAsked": false
+  }
+]

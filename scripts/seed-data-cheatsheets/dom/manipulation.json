@@ -1,0 +1,129 @@
+[
+  {
+    "name": "createElement()",
+    "syntax": "document.createElement(tagName)",
+    "description": "Creates a new, detached element node of the given tag name that can be configured and inserted into the DOM.",
+    "parameters": "tagName — the HTML tag name to create, e.g. 'div'.",
+    "returns": "The newly created Element, not yet attached to the document.",
+    "example": "const li = document.createElement('li');\nli.textContent = 'New item';",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "manipulation", "creation"]
+  },
+  {
+    "name": "appendChild()",
+    "syntax": "parent.appendChild(node)",
+    "description": "Adds a node as the last child of a parent element.",
+    "parameters": "node — the Node to append.",
+    "returns": "The appended Node.",
+    "example": "list.appendChild(li);",
+    "codeLanguage": "javascript",
+    "notes": "If the node already exists elsewhere in the DOM, it is moved rather than duplicated. Only accepts a single Node — use append() for multiple nodes or strings.",
+    "tags": ["dom", "manipulation", "creation"]
+  },
+  {
+    "name": "append() / prepend()",
+    "syntax": "parent.append(...nodesOrStrings)\nparent.prepend(...nodesOrStrings)",
+    "description": "Insert one or more nodes or plain text strings at the end (append) or beginning (prepend) of a parent's children.",
+    "parameters": "nodesOrStrings — any number of Node objects and/or strings.",
+    "returns": "undefined.",
+    "example": "list.append('Plain text', document.createElement('li'));",
+    "codeLanguage": "javascript",
+    "notes": "More flexible than appendChild()/insertBefore() since it accepts multiple arguments and raw text, but it does not return the inserted node.",
+    "tags": ["dom", "manipulation", "creation"]
+  },
+  {
+    "name": "removeChild() / remove()",
+    "syntax": "parent.removeChild(child)\nelement.remove()",
+    "description": "Removes a node from the DOM. removeChild() is called on the parent with the child to remove; remove() is called directly on the element itself.",
+    "parameters": "child — the child Node to remove (removeChild() only).",
+    "returns": "removeChild() returns the removed node; remove() returns undefined.",
+    "example": "item.remove(); // modern, no parent reference needed",
+    "codeLanguage": "javascript",
+    "notes": "remove() is the simpler modern API and doesn't require a reference to the parent node.",
+    "tags": ["dom", "manipulation"]
+  },
+  {
+    "name": "replaceChild()",
+    "syntax": "parent.replaceChild(newNode, oldNode)",
+    "description": "Replaces an existing child node of a parent with a new node.",
+    "parameters": "newNode — the node to insert. oldNode — the existing child being replaced.",
+    "returns": "The removed (old) node.",
+    "example": "parent.replaceChild(newSpan, oldSpan);",
+    "codeLanguage": "javascript",
+    "notes": "element.replaceWith(newNode) is a more modern alternative called directly on the node to replace.",
+    "tags": ["dom", "manipulation"]
+  },
+  {
+    "name": "innerHTML",
+    "syntax": "element.innerHTML",
+    "description": "Gets or sets the HTML markup contained within an element, parsing any assigned string as HTML.",
+    "returns": "A string of the element's inner HTML markup.",
+    "example": "box.innerHTML = '<strong>Bold</strong> text';",
+    "codeLanguage": "javascript",
+    "notes": "Assigning user-supplied content via innerHTML can introduce XSS vulnerabilities — sanitize input or use textContent instead.",
+    "tags": ["dom", "manipulation", "security"]
+  },
+  {
+    "name": "textContent vs innerText",
+    "description": "textContent returns/sets all text within an element including hidden elements and without triggering layout, while innerText is layout-aware — it respects CSS styling (e.g. excludes display:none text) and triggers a reflow to compute.",
+    "example": "el.textContent = '<b>safe</b>'; // inserted as literal text, not parsed as HTML",
+    "codeLanguage": "javascript",
+    "notes": "Prefer textContent for performance and for safely inserting plain text without HTML injection risk.",
+    "tags": ["dom", "manipulation", "text"]
+  },
+  {
+    "name": "insertBefore()",
+    "syntax": "parent.insertBefore(newNode, referenceNode)",
+    "description": "Inserts a new node into a parent's children immediately before a specified reference node.",
+    "parameters": "newNode — node to insert. referenceNode — existing child to insert before; null appends at the end.",
+    "returns": "The inserted node.",
+    "example": "list.insertBefore(newLi, list.children[1]);",
+    "codeLanguage": "javascript",
+    "notes": "element.before(newNode) is a simpler modern alternative that doesn't require the parent.",
+    "tags": ["dom", "manipulation", "creation"]
+  },
+  {
+    "name": "insertAdjacentHTML()",
+    "syntax": "element.insertAdjacentHTML(position, text)",
+    "description": "Parses an HTML string and inserts the resulting nodes at a specified position relative to the element, without touching existing content.",
+    "parameters": "position — one of 'beforebegin', 'afterbegin', 'beforeend', 'afterend'. text — the HTML string to parse and insert.",
+    "returns": "undefined.",
+    "example": "list.insertAdjacentHTML('beforeend', '<li>Item</li>');",
+    "codeLanguage": "javascript",
+    "notes": "More efficient than reassigning innerHTML since it avoids re-parsing and re-rendering existing content.",
+    "tags": ["dom", "manipulation"]
+  },
+  {
+    "name": "cloneNode()",
+    "syntax": "element.cloneNode(deep)",
+    "description": "Creates a copy of a node, optionally including all of its descendants.",
+    "parameters": "deep — boolean; true clones the element and its entire subtree, false clones only the element itself.",
+    "returns": "The cloned Node, detached from the document.",
+    "example": "const copy = template.cloneNode(true);",
+    "codeLanguage": "javascript",
+    "notes": "Event listeners attached via addEventListener() are not copied to the clone.",
+    "tags": ["dom", "manipulation", "creation"]
+  },
+  {
+    "name": "setAttribute() for content",
+    "syntax": "element.setAttribute(name, value)",
+    "description": "Changing certain attributes such as value, src or href via setAttribute() updates what the element displays or loads, effectively manipulating its rendered content.",
+    "parameters": "name — attribute name. value — attribute value, coerced to a string.",
+    "returns": "undefined.",
+    "example": "img.setAttribute('src', '/images/new-photo.jpg');",
+    "codeLanguage": "javascript",
+    "notes": "For form controls, prefer setting the .value property directly since setAttribute('value', ...) only changes the default value, not the live one.",
+    "tags": ["dom", "manipulation", "attributes"]
+  },
+  {
+    "name": "DocumentFragment",
+    "syntax": "document.createDocumentFragment()",
+    "description": "Creates a lightweight, memory-only container for building a group of nodes off-DOM before inserting them all at once, avoiding multiple reflows.",
+    "returns": "An empty DocumentFragment node.",
+    "example": "const frag = document.createDocumentFragment();\nitems.forEach(i => frag.appendChild(makeLi(i)));\nlist.appendChild(frag);",
+    "codeLanguage": "javascript",
+    "notes": "Appending a fragment to the DOM moves its children into place and leaves the fragment itself empty — useful for batch-inserting many elements efficiently.",
+    "tags": ["dom", "manipulation", "performance"]
+  }
+]

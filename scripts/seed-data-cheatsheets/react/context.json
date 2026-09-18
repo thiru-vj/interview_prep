@@ -1,0 +1,68 @@
+[
+  {
+    "name": "createContext()",
+    "syntax": "const MyContext = createContext(defaultValue);",
+    "description": "Creates a Context object that components can provide a value to and read from, without passing that value explicitly through every level of props.",
+    "parameters": "defaultValue — the value used by consumers when no matching Provider is found above them in the tree.",
+    "returns": "A Context object with .Provider and .Consumer components.",
+    "example": "const ThemeContext = createContext('light');",
+    "codeLanguage": "jsx",
+    "notes": "The default value is only used when a component reads the context without any Provider above it — it does not act as a global fallback once a Provider exists.",
+    "tags": ["react", "context", "fundamentals"]
+  },
+  {
+    "name": "Context.Provider",
+    "syntax": "<MyContext.Provider value={value}>{children}</MyContext.Provider>",
+    "description": "The component that supplies a context's value to all descendant components, overriding the default value for that subtree.",
+    "parameters": "value — the current value to make available to consuming components.",
+    "returns": null,
+    "example": "function App() {\n  const [theme, setTheme] = useState('dark');\n  return (\n    <ThemeContext.Provider value={theme}>\n      <Toolbar />\n    </ThemeContext.Provider>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Every descendant that reads this context re-renders whenever `value` changes (by reference), regardless of how deeply nested it is.",
+    "tags": ["react", "context", "provider"]
+  },
+  {
+    "name": "Context.Consumer",
+    "syntax": "<MyContext.Consumer>{value => <div>{value}</div>}</MyContext.Consumer>",
+    "description": "A component that subscribes to a context using a render-prop function, for reading context inside class components or where useContext isn't available.",
+    "parameters": null,
+    "returns": null,
+    "example": "class Toolbar extends React.Component {\n  render() {\n    return (\n      <ThemeContext.Consumer>\n        {theme => <div className={theme}>Toolbar</div>}\n      </ThemeContext.Consumer>\n    );\n  }\n}",
+    "codeLanguage": "jsx",
+    "notes": "In function components, useContext() is simpler and preferred; Consumer is mainly needed in class components.",
+    "tags": ["react", "context", "class-components"]
+  },
+  {
+    "name": "Context vs Prop Drilling",
+    "syntax": null,
+    "description": "Context is best reserved for genuinely global or widely-shared data (theme, auth user, locale); for data used by only a couple of nearby components, passing props is usually simpler and easier to trace.",
+    "parameters": null,
+    "returns": null,
+    "example": null,
+    "codeLanguage": "jsx",
+    "notes": "Overusing Context for everything can make data flow harder to follow than straightforward prop passing.",
+    "tags": ["react", "context", "patterns"]
+  },
+  {
+    "name": "Context Performance Considerations",
+    "syntax": null,
+    "description": "Every component consuming a context re-renders whenever the Provider's value reference changes, even if the component only cares about part of that value — so unmemoized objects passed as value cause frequent re-renders.",
+    "parameters": null,
+    "returns": null,
+    "example": "// re-creates a new object every render, re-rendering all consumers\n<MyContext.Provider value={{ user, theme }}>\n\n// better: memoize the value\nconst value = useMemo(() => ({ user, theme }), [user, theme]);\n<MyContext.Provider value={value}>",
+    "codeLanguage": "jsx",
+    "notes": "Splitting frequently- and rarely-changing data into separate contexts, or memoizing the value, reduces unnecessary re-renders.",
+    "tags": ["react", "context", "performance"]
+  },
+  {
+    "name": "Combining Multiple Contexts",
+    "syntax": "<AuthContext.Provider value={auth}>\n  <ThemeContext.Provider value={theme}>\n    {children}\n  </ThemeContext.Provider>\n</AuthContext.Provider>",
+    "description": "Nesting several Provider components to make multiple independent pieces of context data available at once, keeping each concern in its own context.",
+    "parameters": null,
+    "returns": null,
+    "example": "function AppProviders({ children }) {\n  return (\n    <AuthProvider>\n      <ThemeProvider>{children}</ThemeProvider>\n    </AuthProvider>\n  );\n}",
+    "codeLanguage": "jsx",
+    "notes": "Wrapping the nested providers in a single 'AppProviders' component keeps the app's root tree readable as the number of contexts grows.",
+    "tags": ["react", "context", "composition"]
+  }
+]

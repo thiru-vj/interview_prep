@@ -1,0 +1,83 @@
+[
+  {
+    "name": "var vs let vs const",
+    "syntax": "var x; let y; const z = 1;",
+    "description": "The three ways to declare a variable in JavaScript: var is function-scoped and hoisted, while let and const are block-scoped and cannot be redeclared in the same scope.",
+    "example": "if (true) { var a = 1; let b = 2; } console.log(a); // 1, b is not defined here",
+    "codeLanguage": "javascript",
+    "notes": "Modern code generally avoids var in favor of let (for reassignable values) and const (the default choice).",
+    "tags": ["javascript", "variables", "scope"]
+  },
+  {
+    "name": "Primitive Data Types",
+    "description": "JavaScript has seven primitive types: string, number, boolean, undefined, null, bigint, and symbol. Primitives are immutable and compared by value.",
+    "example": "typeof 'hi'; // 'string'\ntypeof 42; // 'number'\ntypeof true; // 'boolean'",
+    "codeLanguage": "javascript",
+    "notes": "typeof null returns 'object' — a long-standing quirk of the language, not a sign that null is a reference type.",
+    "tags": ["javascript", "data-types", "primitives"]
+  },
+  {
+    "name": "Reference Types (Objects)",
+    "description": "Non-primitive values — objects, arrays, and functions — are reference types. Variables holding them store a reference to the value in memory, not the value itself.",
+    "example": "const a = { x: 1 }; const b = a; b.x = 2; console.log(a.x); // 2, same object",
+    "codeLanguage": "javascript",
+    "notes": "Assigning or passing an object copies the reference, not the data — use spread or structuredClone() to copy the actual contents.",
+    "tags": ["javascript", "data-types", "objects"]
+  },
+  {
+    "name": "Type Coercion",
+    "description": "JavaScript's automatic or implicit conversion of values from one data type to another, such as during comparisons or arithmetic with mixed types.",
+    "example": "'5' + 1; // '51' (number coerced to string)\n'5' - 1; // 4 (string coerced to number)",
+    "codeLanguage": "javascript",
+    "notes": "Use === instead of == to avoid unexpected coercion during comparisons.",
+    "tags": ["javascript", "data-types", "coercion"]
+  },
+  {
+    "name": "Truthy and Falsy Values",
+    "description": "In boolean contexts, every value is either truthy or falsy. The falsy values are false, 0, -0, '', null, undefined, and NaN — everything else is truthy.",
+    "example": "if ('') { } // does not run, '' is falsy\nif ('0') { } // runs, non-empty string is truthy",
+    "codeLanguage": "javascript",
+    "notes": "An empty array [] and empty object {} are both truthy, which surprises many developers coming from other languages.",
+    "tags": ["javascript", "data-types", "conditionals"]
+  },
+  {
+    "name": "NaN",
+    "description": "\"Not a Number\" — a special numeric value representing the result of an invalid or undefined mathematical operation.",
+    "example": "0 / 0; // NaN\nNaN === NaN; // false",
+    "codeLanguage": "javascript",
+    "notes": "Use Number.isNaN(value) rather than isNaN(value) to avoid unwanted type coercion of non-numeric input.",
+    "tags": ["javascript", "data-types", "numbers"]
+  },
+  {
+    "name": "undefined vs null",
+    "description": "undefined means a variable has been declared but not assigned a value; null is an explicit assignment representing \"no value\" or \"empty\", set intentionally by a developer.",
+    "example": "let a; console.log(a); // undefined\nlet b = null; console.log(b); // null",
+    "codeLanguage": "javascript",
+    "notes": "undefined == null is true, but undefined === null is false — they are distinct types.",
+    "tags": ["javascript", "data-types", "null"]
+  },
+  {
+    "name": "Dynamic Typing",
+    "description": "JavaScript variables are not bound to a specific type; the same variable can hold a string, then a number, then an object, over its lifetime.",
+    "example": "let x = 'hello'; x = 42; x = { a: 1 }; // all valid",
+    "codeLanguage": "javascript",
+    "notes": "TypeScript adds static typing on top of JavaScript's dynamic typing to catch these kinds of mismatches at compile time.",
+    "tags": ["javascript", "data-types", "typing"]
+  },
+  {
+    "name": "Number Precision (Floating Point)",
+    "description": "JavaScript represents all numbers as 64-bit floating point (IEEE 754), which can cause small rounding errors in decimal arithmetic.",
+    "example": "0.1 + 0.2; // 0.30000000000000004",
+    "codeLanguage": "javascript",
+    "notes": "For exact decimal math (e.g. currency), round with toFixed(), scale to integers, or use a dedicated decimal library.",
+    "tags": ["javascript", "numbers", "precision"]
+  },
+  {
+    "name": "Global Scope",
+    "description": "Variables and functions declared outside any function or block live in the global scope and are accessible from anywhere in the program.",
+    "example": "var globalVar = 'I am global'; function show() { console.log(globalVar); }",
+    "codeLanguage": "javascript",
+    "notes": "Excessive use of global scope increases the risk of naming collisions — ES modules scope top-level declarations to the module instead.",
+    "tags": ["javascript", "variables", "scope"]
+  }
+]

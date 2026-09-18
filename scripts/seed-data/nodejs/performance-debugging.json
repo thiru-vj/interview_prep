@@ -1,0 +1,332 @@
+[
+  {
+    "question": "Why would you use the cluster module in Node.js, and what problem does it solve?",
+    "answer": "Since a single Node process runs JavaScript on one thread and can't natively use multiple CPU cores, the cluster module lets you fork multiple worker processes (typically one per CPU core) that all share the same server port, letting the OS distribute incoming connections across them. This improves throughput for CPU-bound or high-concurrency workloads by using all available cores instead of leaving one process to handle everything alone.",
+    "example": null,
+    "code": "const cluster = require('cluster');\nconst os = require('os');\nif (cluster.isPrimary) {\n  os.cpus().forEach(() => cluster.fork());\n} else {\n  require('./server');\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "cluster"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the cluster module distribute incoming connections across worker processes?",
+    "answer": "On most platforms, the primary process listens on the shared port and distributes incoming connections to workers using a round-robin scheduling algorithm (the default on non-Windows platforms since Node 4), handing each new connection to the next worker in rotation. Alternatively, worker processes can share the listening socket directly (OS-level load balancing) which was the older/default behavior and remains an option via cluster.schedulingPolicy.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "cluster"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the cluster module and worker_threads in Node.js?",
+    "answer": "cluster forks entirely separate OS processes, each with its own memory space and its own event loop, communicating only via IPC (message passing) or a shared listening socket — well-suited to scaling a stateless HTTP server across CPU cores. worker_threads run actual threads within the same process, which can share memory directly via SharedArrayBuffer and have lower overhead to spawn, making them better suited to offloading CPU-intensive computation (like image processing or heavy parsing) without duplicating the whole process.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "worker-threads", "cluster"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "When would you choose worker_threads over spawning a child process for CPU-intensive work?",
+    "answer": "worker_threads are preferable when you need to offload a CPU-bound task (like image resizing, complex data transformation, or hashing) from the main event loop but want lower overhead than a full separate process, and potentially need to share memory efficiently via SharedArrayBuffer/Atomics. A child process is more appropriate when you need process-level isolation (e.g. running an untrusted or crash-prone task, or a completely different executable/language), since a worker thread crash can still be more tightly coupled to the parent than a fully separate process.",
+    "example": null,
+    "code": "const { Worker } = require('worker_threads');\nconst worker = new Worker('./heavy-task.js', { workerData: { input: 42 } });\nworker.on('message', (result) => console.log(result));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "worker-threads"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do worker threads communicate with the main thread in Node.js?",
+    "answer": "Communication happens via message passing using postMessage() and the 'message' event, similar to Web Workers in browsers — data passed this way is structured-cloned (copied) by default, though SharedArrayBuffer instances can be transferred to allow actual shared memory access between threads for performance-sensitive cases. workerData lets you pass initial data when a worker is created, without needing a separate message round-trip.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "worker-threads"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a memory leak in a Node.js application, and what are some common causes?",
+    "answer": "A memory leak occurs when memory that's no longer needed isn't released because something still holds a reference to it, causing heap usage to grow steadily over time until the process eventually crashes (often with an out-of-memory error) or performance degrades from excessive garbage collection. Common causes include global variables/caches that grow unbounded, event listeners or timers that are never removed/cleared, closures unintentionally retaining large objects, and accumulating references in long-lived collections like arrays or Maps.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "memory"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you take and analyze a heap snapshot to diagnose a memory leak in a Node.js app?",
+    "answer": "You can generate a heap snapshot using the built-in inspector (node --inspect, then triggering a snapshot from Chrome DevTools' Memory tab) or programmatically via the v8 module's writeHeapSnapshot(). Comparing snapshots taken at different points in time — especially after triggering garbage collection — lets you identify object types whose retained count keeps growing, then trace their retainer chains in DevTools to find what's holding onto them.",
+    "example": null,
+    "code": "const v8 = require('v8');\nv8.writeHeapSnapshot('heap.heapsnapshot');",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "memory", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you attach a debugger to a running Node.js process?",
+    "answer": "Run the process with node --inspect (or --inspect-brk to pause immediately at the first line) to start a debugging WebSocket server, then connect either through Chrome DevTools (chrome://inspect) or an IDE like VS Code that supports the Node inspector protocol, letting you set breakpoints, step through code, and inspect variables in the running process.",
+    "example": null,
+    "code": "node --inspect-brk index.js",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is CPU profiling in Node.js, and how would you generate and read a CPU profile?",
+    "answer": "CPU profiling samples the call stack at regular intervals while your program runs, building a picture of where time is actually spent — useful for finding unexpectedly hot functions. You can generate one with node --prof (producing a v8 log processed by node --prof-process), or interactively via the Profiler tab in Chrome DevTools when connected through --inspect, which shows a flame graph highlighting functions consuming the most CPU time.",
+    "example": null,
+    "code": "node --prof app.js\nnode --prof-process isolate-*.log > profile.txt",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "profiling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is V8's garbage collector, and how does the generational hypothesis influence its design?",
+    "answer": "V8's garbage collector automatically reclaims memory no longer reachable from the program's roots. It splits the heap into a 'young generation' (new space, for recently allocated objects) collected frequently with a fast scavenge algorithm, and an 'old generation' for objects that survive multiple collections, collected less often with a more thorough mark-and-sweep/mark-compact algorithm — based on the generational hypothesis that most objects die young, so it's efficient to focus frequent, cheap collection effort there.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "v8", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does a 'JavaScript heap out of memory' crash mean, and how would you address it?",
+    "answer": "It means V8's heap grew to hit its size limit (by default a few GB, tunable) and the garbage collector couldn't free enough memory to satisfy an allocation, so the process aborts. Fixes include increasing the heap limit with --max-old-space-size if the workload genuinely needs more memory, but more often it signals an actual leak or an inefficient pattern (like loading an entire huge dataset into memory) that should be fixed by streaming data, paginating, or eliminating retained references, rather than just raising the limit as a band-aid.",
+    "example": null,
+    "code": "node --max-old-space-size=4096 app.js",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "memory", "v8"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you diagnose why a Node.js server's response times are degrading under load?",
+    "answer": "You'd typically start with metrics (CPU usage, event loop lag, memory, GC pauses) to narrow down whether it's CPU-bound (a hot synchronous function blocking the loop), memory-bound (excessive GC pauses from high memory pressure), or I/O-bound (slow downstream calls or database queries) — tools like clinic.js, 0x (flame graphs), or APM products (like New Relic/Datadog) help visualize where time is actually going, rather than guessing.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'event loop lag' (or event loop delay), and why is it a useful metric to monitor in production?",
+    "answer": "Event loop lag measures how much longer a scheduled callback (like a timer) takes to actually fire compared to its expected delay, which reveals how 'busy' the event loop is with synchronous work — high lag means requests are queuing up behind blocking code, directly hurting latency for every concurrent request. Node exposes perf_hooks.monitorEventLoopDelay() for measuring this, and many APM tools track it as a key health indicator for Node services.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you keep a Node.js process running reliably in production, automatically restarting it if it crashes?",
+    "answer": "Rather than relying on the raw `node` command, production deployments use a process manager — like PM2, systemd, or the container orchestrator's own restart policy (e.g. Kubernetes' restartPolicy) — that monitors the process, restarts it automatically on crash, can manage log output, and often supports zero-downtime restarts and clustering built in, none of which the bare Node runtime provides on its own.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "deployment", "process"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a subtle way that a Node.js server can leak memory via Express or a similar framework, related to closures?",
+    "answer": "A common pattern is a middleware or route handler that captures a large object (like a full request payload, or a reference to a large cache) in a closure that then gets attached to something long-lived — like an event listener registered once at startup, or a timer callback that keeps rescheduling itself — so that object (and everything it references) is never eligible for garbage collection even after the request that created it has long finished.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "memory", "express"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you profile and fix a slow synchronous function that's blocking the Node.js event loop?",
+    "answer": "First confirm the culprit via CPU profiling (or by measuring event loop lag spiking during that operation), then address it either by optimizing the algorithm itself (e.g. avoiding O(n²) patterns, reducing unnecessary work), breaking the computation into smaller chunks interleaved with setImmediate/setTimeout so the loop gets a chance to process other events, or offloading it entirely to a worker thread if it's genuinely CPU-heavy and can't be optimized further.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "performance", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is graceful shutdown in the context of a clustered/multi-process Node.js deployment, and why does it matter?",
+    "answer": "Graceful shutdown means a process stops accepting new work, finishes in-flight requests, closes connections/resources cleanly (like database pools), and only then exits — rather than terminating abruptly and dropping active requests or leaving connections in a bad state. In a clustered deployment, this typically involves the primary process signaling workers individually (often on a rolling basis) so the whole fleet doesn't go down simultaneously during a deploy.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "cluster", "deployment"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the --max-old-space-size flag control, and why might you need to adjust it in a containerized environment?",
+    "answer": "It sets the maximum size (in MB) V8's old generation heap can grow to before triggering aggressive garbage collection and eventually an out-of-memory crash. In containers, V8's default heap size historically wasn't aware of the container's actual memory limit (only the host's), so a process could either crash prematurely or, conversely, be OOM-killed by the container runtime before V8's own limit kicked in — explicitly setting it (or ensuring a recent Node version that detects cgroup limits) helps align V8's behavior with the container's actual memory budget.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "v8", "deployment"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you use console.time()/console.timeEnd() versus a proper profiler, and when is each appropriate?",
+    "answer": "console.time(label) / console.timeEnd(label) gives a quick wall-clock duration for a specific block of code, useful for a fast sanity check on how long something takes during development. A proper profiler (CPU profile, flame graph) is needed when you don't already know where the bottleneck is, since it samples the entire call stack over time and shows relative time spent across many functions, rather than requiring you to manually instrument each suspect.",
+    "example": null,
+    "code": "console.time('parse');\nconst data = JSON.parse(largeString);\nconsole.timeEnd('parse'); // parse: 42.123ms",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "debugging", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the node --inspect flag versus the built-in debugger statement?",
+    "answer": "node --inspect starts the V8 inspector protocol server, allowing an external tool like Chrome DevTools or VS Code to connect and debug the whole running process interactively. The debugger statement, when placed in code, pauses execution at that exact line if a debugger is already attached (similar to a manual breakpoint) — it has no effect at all if nothing is inspecting the process, so it's typically used together with --inspect rather than as a standalone tool.",
+    "example": null,
+    "code": "function process(data) {\n  debugger; // pauses here if a debugger is attached\n  return transform(data);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["nodejs", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does inter-process communication (IPC) work between a cluster primary and its workers?",
+    "answer": "When a worker is forked via cluster.fork() (or child_process.fork()), Node automatically sets up an IPC channel between parent and child, letting them exchange messages with .send()/on('message') without manually managing sockets or pipes. This is how the primary process can, for example, broadcast a shutdown signal to all workers, or workers can report their status back to the primary.",
+    "example": null,
+    "code": "// primary\nworker.send({ cmd: 'shutdown' });\n// worker\nprocess.on('message', (msg) => { if (msg.cmd === 'shutdown') gracefulExit(); });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "cluster", "ipc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a downside of using the cluster module for scaling a stateful application (e.g. one relying on in-memory session storage)?",
+    "answer": "Since each cluster worker is a separate process with its own memory, in-memory state (like a session store, cache, or websocket connection registry) isn't automatically shared across workers — a request handled by worker A won't see state stored by worker B, which can cause inconsistent behavior (like session data appearing to randomly disappear) unless that state is moved to a shared external store like Redis, or requests are pinned ('sticky sessions') to a specific worker.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "cluster", "architecture"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you detect and fix an event listener leak (Node's 'MaxListenersExceededWarning')?",
+    "answer": "Node's EventEmitter warns by default if more than 10 listeners are attached to a single event on one emitter, which usually signals listeners are being added repeatedly (e.g. inside a function called on every request) without ever being removed. The fix is typically to register the listener once at an appropriate scope rather than per-call, or explicitly remove it with .removeListener()/.off() when it's no longer needed; if a higher limit is genuinely intentional, emitter.setMaxListeners(n) suppresses the warning.",
+    "example": null,
+    "code": "emitter.setMaxListeners(20); // only if genuinely needed, not to silence a real leak",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["nodejs", "memory", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What tools or techniques would you use to generate a flame graph for a Node.js application?",
+    "answer": "The 0x tool wraps your app, records a CPU profile while it runs, and generates an interactive flame graph automatically. Alternatively, Chrome DevTools' Profiler tab (connected via --inspect) can record a CPU profile and render it as a flame chart directly. Flame graphs are useful for quickly spotting which function call stacks consume disproportionate CPU time, visualized by the width of each stack frame.",
+    "example": null,
+    "code": "npx 0x app.js",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "profiling", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is JSON.parse()/JSON.stringify() on very large objects potentially a performance concern in Node.js?",
+    "answer": "Both are synchronous operations that block the event loop for their entire duration, and for a sufficiently large object/string, that duration can be significant (tens to hundreds of milliseconds or more), freezing the whole process for every concurrent request during that time. For very large payloads, options include streaming JSON parsers, splitting into smaller chunks, or offloading the operation to a worker thread.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between vertical and horizontal scaling for a Node.js application, and which does clustering help with?",
+    "answer": "Vertical scaling means giving a single instance more resources (a bigger CPU/more memory), while horizontal scaling means running more instances (processes or machines) and distributing load across them. The cluster module addresses a specific gap in vertical scaling — using multiple cores on a single machine that a single Node process couldn't otherwise use — while true horizontal scaling across multiple machines still requires an external load balancer in front of multiple deployed instances.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["nodejs", "cluster", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you use async_hooks or the perf_hooks module to trace performance across asynchronous operations?",
+    "answer": "perf_hooks provides a Performance Timeline API (performance.mark()/performance.measure(), similar to the browser equivalent) for timing arbitrary spans of code, including across await boundaries, and exposes utilities like monitorEventLoopDelay(). async_hooks is a lower-level API for tracking the lifecycle of async resources (their creation, before/after execution, and destruction), which is powerful for building tracing/context-propagation tools but is more complex and has historically carried some performance overhead, so it's often used indirectly via higher-level libraries (like AsyncLocalStorage, which is itself built on it) rather than directly.",
+    "example": null,
+    "code": "const { performance } = require('perf_hooks');\nperformance.mark('start');\nawait doWork();\nperformance.mark('end');\nperformance.measure('doWork', 'start', 'end');",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["nodejs", "profiling", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a 'zombie' or orphaned child process in Node.js, and how can it happen?",
+    "answer": "It happens when a Node process spawns a child process (via child_process.spawn/exec/fork) but exits or crashes without properly waiting for or cleaning up that child, leaving the child running independently — or, in Unix terms, a 'zombie' process if the child has exited but its exit status was never reaped by the parent. Guarding against it typically means listening for the child's 'exit' event, killing children explicitly on the parent's shutdown handlers, and not ignoring unhandled errors that could cause an unclean parent exit.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "process", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you decide whether a performance problem should be solved with caching versus with clustering/scaling?",
+    "answer": "Caching addresses redundant work — if the same expensive computation or database query is repeated for the same input, storing and reusing the result (in memory, or an external store like Redis) avoids paying that cost again, which reduces load without adding infrastructure. Clustering/scaling addresses raw capacity — when the workload is inherently diverse (different inputs each time) or CPU-bound in a way caching can't help, adding more processes/instances is the appropriate lever instead. In practice, both are often combined, but caching is usually the cheaper first optimization to reach for.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "cluster"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'warm-up' latency in Node.js applications, and why might the first few requests after startup be slower?",
+    "answer": "V8's JIT compiler starts by interpreting code and only optimizes ('warms up') functions after observing them run repeatedly with consistent argument types, so the very first executions of any given code path run less optimized than they will after a few iterations. Additionally, lazy-initialized resources (database connection pools, cached configuration, first-time module loading) commonly add extra latency to the first requests specifically, which is why production deployments sometimes include a warm-up phase or health-check delay before routing real traffic to a fresh instance.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "v8", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you find which npm dependency is responsible for a slow application startup time?",
+    "answer": "You can run the script with node --prof and inspect the processed log for time spent during module initialization, or more simply, wrap require() calls with console.time()/console.timeEnd() around suspect imports to isolate which one is slow — often caused by a package doing heavy synchronous work (like reading large files or compiling something) at import time rather than lazily. Tools like the require-so-slow or clinic.js doctor can also visualize module load time directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "performance", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a memory leak and simply high (but stable) memory usage in a Node.js process?",
+    "answer": "High but stable memory usage means the process's memory grows to a certain level and then plateaus, fluctuating within a consistent range as the garbage collector reclaims and reuses memory normally — this can be totally fine, just reflecting the app's genuine working set. A true leak shows memory climbing steadily over time without ever returning to a stable baseline, even after forced garbage collection and during periods of low load, indicating something is retaining references that should have been released.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["nodejs", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it generally discouraged to call global.gc() to manually trigger garbage collection in production code?",
+    "answer": "Forcing garbage collection (only available at all when Node is run with the --expose-gc flag) is a blocking, potentially expensive synchronous operation that pauses the event loop, and V8's own automatic GC heuristics are generally well-tuned to balance memory usage against pause times better than manual intervention would. Manually forcing it in application logic (as opposed to using it as a diagnostic tool during profiling) tends to mask an underlying leak rather than fix it, while also actively hurting latency.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["nodejs", "memory", "v8"],
+    "isFrequentlyAsked": false
+  }
+]

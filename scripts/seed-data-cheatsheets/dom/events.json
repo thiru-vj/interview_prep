@@ -1,0 +1,100 @@
+[
+  {
+    "name": "addEventListener()",
+    "syntax": "target.addEventListener(type, listener, options)",
+    "description": "Registers a function to be called whenever the specified event fires on the target.",
+    "parameters": "type — event name, e.g. 'click'. listener — the callback function. options — optional object with capture, once, passive, signal.",
+    "returns": "undefined.",
+    "example": "button.addEventListener('click', () => console.log('clicked'));",
+    "codeLanguage": "javascript",
+    "notes": "Multiple listeners can be attached to the same event without overwriting each other, unlike onclick assignment.",
+    "tags": ["dom", "events"]
+  },
+  {
+    "name": "removeEventListener()",
+    "syntax": "target.removeEventListener(type, listener, options)",
+    "description": "Unregisters an event listener previously added with addEventListener().",
+    "parameters": "type — event name. listener — reference to the exact function passed to addEventListener(). options — must match capture value used when adding.",
+    "returns": "undefined.",
+    "example": "function onClick() {}\nbutton.addEventListener('click', onClick);\nbutton.removeEventListener('click', onClick);",
+    "codeLanguage": "javascript",
+    "notes": "Anonymous/inline arrow functions can't be removed since removeEventListener() needs a reference to the same function instance.",
+    "tags": ["dom", "events"]
+  },
+  {
+    "name": "Event object properties",
+    "description": "The event object passed to a listener carries details about what happened, such as target (element the event originated on), currentTarget (element the listener is attached to), type, and timeStamp.",
+    "example": "el.addEventListener('click', (e) => {\n  console.log(e.target, e.currentTarget, e.type);\n});",
+    "codeLanguage": "javascript",
+    "notes": "target and currentTarget can differ when an event bubbles up from a descendant to an ancestor listener.",
+    "tags": ["dom", "events"]
+  },
+  {
+    "name": "Event bubbling vs capturing",
+    "description": "Events travel in three phases: capturing (from window down to the target), target, then bubbling (from the target back up to window). addEventListener() listens on the bubbling phase by default.",
+    "example": "parent.addEventListener('click', handler, { capture: true }); // fires during capture phase",
+    "codeLanguage": "javascript",
+    "notes": "Pass { capture: true } as the third argument to listen during the capture phase instead of bubbling.",
+    "tags": ["dom", "events", "propagation"]
+  },
+  {
+    "name": "Event delegation",
+    "description": "A pattern where a single listener is attached to a common ancestor instead of many descendants, using event.target to determine which descendant triggered it.",
+    "example": "list.addEventListener('click', (e) => {\n  if (e.target.matches('li')) console.log(e.target.textContent);\n});",
+    "codeLanguage": "javascript",
+    "notes": "Reduces memory usage and automatically handles dynamically added children that never had their own listener attached.",
+    "tags": ["dom", "events", "performance"]
+  },
+  {
+    "name": "preventDefault()",
+    "syntax": "event.preventDefault()",
+    "description": "Cancels the browser's default action for an event, such as following a link or submitting a form.",
+    "returns": "undefined.",
+    "example": "form.addEventListener('submit', (e) => e.preventDefault());",
+    "codeLanguage": "javascript",
+    "notes": "Only works if the event's cancelable property is true; does not stop the event from propagating to other listeners.",
+    "tags": ["dom", "events"]
+  },
+  {
+    "name": "stopPropagation()",
+    "syntax": "event.stopPropagation()",
+    "description": "Stops an event from continuing to propagate to ancestor (or descendant) elements in the capturing/bubbling chain.",
+    "returns": "undefined.",
+    "example": "child.addEventListener('click', (e) => e.stopPropagation());",
+    "codeLanguage": "javascript",
+    "notes": "stopImmediatePropagation() additionally prevents other listeners registered on the same element for the same event from running.",
+    "tags": ["dom", "events", "propagation"]
+  },
+  {
+    "name": "once / passive options",
+    "syntax": "target.addEventListener(type, listener, { once: true, passive: true })",
+    "description": "Options passed to addEventListener(): once automatically removes the listener after it fires a single time; passive tells the browser the listener won't call preventDefault(), allowing smoother scroll performance.",
+    "parameters": "once — boolean. passive — boolean.",
+    "example": "window.addEventListener('scroll', onScroll, { passive: true });",
+    "codeLanguage": "javascript",
+    "notes": "Use passive: true on scroll/touch listeners to avoid blocking the browser's compositor thread.",
+    "tags": ["dom", "events", "performance"]
+  },
+  {
+    "name": "CustomEvent",
+    "syntax": "new CustomEvent(type, { detail, bubbles, cancelable })",
+    "description": "Creates a custom, application-defined event that can carry arbitrary data and be dispatched on any DOM element.",
+    "parameters": "type — event name. detail — any data to attach. bubbles/cancelable — booleans controlling propagation behavior.",
+    "returns": "A new CustomEvent instance.",
+    "example": "el.dispatchEvent(new CustomEvent('item-added', { detail: { id: 1 }, bubbles: true }));",
+    "codeLanguage": "javascript",
+    "notes": "Listen for it like any built-in event with addEventListener('item-added', handler); data is read from event.detail.",
+    "tags": ["dom", "events", "custom-events"]
+  },
+  {
+    "name": "dispatchEvent()",
+    "syntax": "target.dispatchEvent(event)",
+    "description": "Synchronously triggers an event on a target, invoking all matching listeners, most commonly used with CustomEvent.",
+    "parameters": "event — an Event or CustomEvent instance.",
+    "returns": "false if any listener called preventDefault(), true otherwise.",
+    "example": "input.dispatchEvent(new Event('change'));",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "events", "custom-events"]
+  }
+]

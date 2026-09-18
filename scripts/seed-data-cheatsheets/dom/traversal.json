@@ -1,0 +1,100 @@
+[
+  {
+    "name": "parentNode vs parentElement",
+    "description": "parentNode returns the immediate parent of any node type (which could be a Document or DocumentFragment), while parentElement returns the parent only if it is itself an Element, otherwise null.",
+    "example": "document.documentElement.parentNode; // document\ndocument.documentElement.parentElement; // null",
+    "codeLanguage": "javascript",
+    "notes": "parentElement is usually preferred in application code since it's guaranteed to be an Element or null.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "children vs childNodes",
+    "description": "children returns only element children (an HTMLCollection), while childNodes returns every node type including text nodes and comments (a NodeList).",
+    "example": "// <div>Hi <span>there</span></div>\ndiv.children.length; // 1 (just <span>)\ndiv.childNodes.length; // 2 (text node + <span>)",
+    "codeLanguage": "javascript",
+    "notes": "Use children when you only care about elements — childNodes often includes unexpected whitespace text nodes from formatting.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "firstElementChild / lastElementChild",
+    "syntax": "parent.firstElementChild\nparent.lastElementChild",
+    "description": "Return the first or last child that is an element, skipping over text and comment nodes.",
+    "returns": "An Element, or null if there are no element children.",
+    "example": "list.firstElementChild.classList.add('first');",
+    "codeLanguage": "javascript",
+    "notes": "Prefer these over firstChild/lastChild, which can return text nodes created by whitespace in the markup.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "nextElementSibling / previousElementSibling",
+    "syntax": "element.nextElementSibling\nelement.previousElementSibling",
+    "description": "Return the next or previous sibling that is an element, skipping text and comment nodes.",
+    "returns": "An Element, or null if there is no such sibling.",
+    "example": "const nextItem = currentItem.nextElementSibling;",
+    "codeLanguage": "javascript",
+    "notes": "Their non-Element counterparts (nextSibling/previousSibling) commonly return whitespace text nodes and are rarely what you want.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "closest()",
+    "syntax": "element.closest(selectors)",
+    "description": "Walks up from an element through its ancestors (including itself) and returns the first one matching a CSS selector.",
+    "parameters": "selectors — a valid CSS selector string.",
+    "returns": "The matching Element, or null if no ancestor matches.",
+    "example": "e.target.closest('.card');",
+    "codeLanguage": "javascript",
+    "notes": "The standard way to find a meaningful ancestor in an event-delegation handler.",
+    "tags": ["dom", "traversal", "events"]
+  },
+  {
+    "name": "contains()",
+    "syntax": "node.contains(otherNode)",
+    "description": "Checks whether a node is a descendant of another node (or the same node).",
+    "parameters": "otherNode — the node to test.",
+    "returns": "true if otherNode is the node itself or one of its descendants, false otherwise.",
+    "example": "if (!modal.contains(e.target)) closeModal();",
+    "codeLanguage": "javascript",
+    "notes": "A common pattern for detecting 'click outside' a component.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "childElementCount",
+    "syntax": "parent.childElementCount",
+    "description": "Returns the number of child elements a node has, ignoring text and comment nodes.",
+    "returns": "A non-negative integer.",
+    "example": "if (list.childElementCount === 0) showEmptyState();",
+    "codeLanguage": "javascript",
+    "notes": "Equivalent to but faster than element.children.length.",
+    "tags": ["dom", "traversal"]
+  },
+  {
+    "name": "querySelector() for descendant traversal",
+    "syntax": "element.querySelector(selectors)",
+    "description": "Scoping querySelector()/querySelectorAll() to a specific element restricts the search to its descendants, providing flexible downward traversal beyond direct children.",
+    "example": "card.querySelector('.price');",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "traversal", "css-selectors"]
+  },
+  {
+    "name": "matches()",
+    "syntax": "element.matches(selectors)",
+    "description": "Tests whether an element itself would be selected by a given CSS selector, without traversing anywhere.",
+    "parameters": "selectors — a valid CSS selector string.",
+    "returns": "true if the element matches, false otherwise.",
+    "example": "if (e.target.matches('button.danger')) { /* ... */ }",
+    "codeLanguage": "javascript",
+    "notes": "Frequently paired with closest() and event delegation to filter which descendant triggered an event.",
+    "tags": ["dom", "traversal", "events"]
+  },
+  {
+    "name": "Node.ELEMENT_NODE vs nodeType",
+    "syntax": "node.nodeType",
+    "description": "Every node has a nodeType constant identifying what kind of node it is, such as 1 for elements (Node.ELEMENT_NODE) or 3 for text nodes (Node.TEXT_NODE), useful when filtering childNodes.",
+    "returns": "An integer node type constant.",
+    "example": "[...el.childNodes].filter(n => n.nodeType === Node.TEXT_NODE);",
+    "codeLanguage": "javascript",
+    "notes": null,
+    "tags": ["dom", "traversal"]
+  }
+]

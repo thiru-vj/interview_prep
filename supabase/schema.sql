@@ -192,3 +192,99 @@ create policy "Public can read questions"
 -- No insert/update/delete policies are defined for anon/authenticated roles,
 -- so those operations are denied by default now that RLS is enabled.
 -- Content is managed exclusively via the Supabase SQL Editor / service role.
+
+-- =============================================================================
+-- Cheatsheets — quick-reference methods/tags/concepts per technology.
+-- Deliberately separate from languages/topics/questions: technologies here
+-- (e.g. Redux, Zustand, DOM) aren't "languages" and shouldn't appear in the
+-- interview-question browsing flow, even where the same technology also has
+-- a `languages` row (e.g. JavaScript, React).
+-- =============================================================================
+create table if not exists public.cheatsheet_technologies (
+  id            uuid primary key default gen_random_uuid(),
+  name          text not null,
+  slug          text not null unique,
+  description   text,
+  icon          text,
+  display_order integer not null default 0,
+  created_at    timestamptz not null default now()
+);
+
+comment on table public.cheatsheet_technologies is 'Top-level technologies for the cheatsheet feature (JavaScript, HTML, CSS, React, Redux, Zustand, DOM, ...).';
+
+create table if not exists public.cheatsheet_categories (
+  id            uuid primary key default gen_random_uuid(),
+  technology_id uuid not null references public.cheatsheet_technologies(id) on delete cascade,
+  name          text not null,
+  slug          text not null,
+  description   text,
+  display_order integer not null default 0,
+  created_at    timestamptz not null default now(),
+  constraint cheatsheet_categories_technology_slug_unique unique (technology_id, slug)
+);
+
+comment on table public.cheatsheet_categories is 'Sub-categories belonging to a single cheatsheet technology (e.g. Array Methods under JavaScript).';
+
+create table if not exists public.cheatsheet_items (
+  id            uuid primary key default gen_random_uuid(),
+  category_id   uuid not null references public.cheatsheet_categories(id) on delete cascade,
+  -- Denormalized alongside category_id (mirrors questions.language_id + topic_id) so a
+  -- technology's entire cheatsheet can be fetched with a single eq(technology_id) query.
+  technology_id uuid not null references public.cheatsheet_technologies(id) on delete cascade,
+  name          text not null,
+  slug          text not null unique,
+  syntax        text,
+  description   text not null,
+  parameters    text,
+  returns       text,
+  example       text,
+  code_language text,
+  notes         text,
+  tags          text[],
+  display_order integer not null default 0,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
+comment on table public.cheatsheet_items is 'Individual cheatsheet entries (a method, tag, or concept) belonging to a technology and category.';
+
+drop trigger if exists set_cheatsheet_items_updated_at on public.cheatsheet_items;
+create trigger set_cheatsheet_items_updated_at
+  before update on public.cheatsheet_items
+  for each row
+  execute function public.set_updated_at();
+
+create index if not exists idx_cheatsheet_technologies_slug on public.cheatsheet_technologies (slug);
+create index if not exists idx_cheatsheet_categories_technology_id on public.cheatsheet_categories (technology_id);
+create index if not exists idx_cheatsheet_categories_slug on public.cheatsheet_categories (slug);
+create index if not exists idx_cheatsheet_items_technology_id on public.cheatsheet_items (technology_id);
+create index if not exists idx_cheatsheet_items_category_id on public.cheatsheet_items (category_id);
+create index if not exists idx_cheatsheet_items_slug on public.cheatsheet_items (slug);
+
+alter table public.cheatsheet_technologies enable row level security;
+alter table public.cheatsheet_categories enable row level security;
+alter table public.cheatsheet_items enable row level security;
+
+drop policy if exists "Public can read cheatsheet technologies" on public.cheatsheet_technologies;
+create policy "Public can read cheatsheet technologies"
+  on public.cheatsheet_technologies
+  for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Public can read cheatsheet categories" on public.cheatsheet_categories;
+create policy "Public can read cheatsheet categories"
+  on public.cheatsheet_categories
+  for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Public can read cheatsheet items" on public.cheatsheet_items;
+create policy "Public can read cheatsheet items"
+  on public.cheatsheet_items
+  for select
+  to anon, authenticated
+  using (true);
+
+-- No insert/update/delete policies for anon/authenticated here either — same
+-- SQL-Editor-only content management model as languages/topics/questions.

@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is CSS specificity and how would you rank the specificity of an ID selector, a class selector, and a type selector?",
+    "answer": "Specificity determines which rule wins when multiple selectors match the same element and target the same property. Ranked from highest to lowest: inline styles beat ID selectors, ID selectors beat class/attribute/pseudo-class selectors, and those beat type (element) selectors and pseudo-elements — a single ID always outweighs any number of classes.",
+    "example": null,
+    "code": "#nav { color: blue; }     /* specificity: 1,0,0 */\n.link { color: red; }     /* specificity: 0,1,0 */\na { color: green; }       /* specificity: 0,0,1 */",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "specificity"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the CSS cascade layers feature (@layer) and what problem does it solve?",
+    "answer": "@layer lets you explicitly group CSS rules into named layers with a defined priority order, so that specificity conflicts are resolved by layer order first, before falling back to normal specificity within a layer. This solves the long-standing problem of needing to fight specificity wars (like overriding a third-party library's high-specificity selectors) by simply declaring your own layer to come after theirs.",
+    "example": null,
+    "code": "@layer reset, base, components, utilities;\n\n@layer base {\n  h1 { font-size: 2rem; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade-layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are CSS container queries and what CSS properties are required to use them?",
+    "answer": "Container queries let an element's styles respond to the size of a containing ancestor rather than the viewport, enabling truly reusable, context-aware components. To use them, you mark an ancestor as a query container with container-type (inline-size for width-based queries) and optionally container-name, then write rules inside an @container block targeting that container.",
+    "example": null,
+    "code": ".card-wrapper {\n  container-type: inline-size;\n}\n\n@container (min-width: 300px) {\n  .card { display: flex; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "container-queries"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the CSS :is() pseudo-class do, and how does it affect specificity?",
+    "answer": ":is() accepts a comma-separated selector list and matches any element that matches at least one of them, letting you write compact selectors instead of repeating a common ancestor path for each variant. Its specificity is equal to that of its most specific argument, not the sum of all arguments, and an invalid selector in the list doesn't invalidate the whole rule.",
+    "example": null,
+    "code": ":is(header, main, footer) a {\n  color: blue;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between :is() and :where() in terms of specificity?",
+    "answer": ":is() takes on the specificity of its most specific argument, so it still contributes real specificity weight to the overall selector. :where() behaves identically in terms of matching but always contributes zero specificity, regardless of what's inside it, making it useful for writing easily-overridable base styles, like in a CSS reset.",
+    "example": null,
+    "code": ":where(h1, h2, h3) { margin: 0; } /* specificity 0 — trivially overridable */",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "selectors"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS :has() pseudo-class do, and why was it significant when it shipped?",
+    "answer": ":has() matches an element if it contains a descendant (or sibling, depending on the combinator used) matching the given selector — effectively a 'parent selector'. It was significant because CSS previously had no way to style an element based on its children or following siblings, a limitation that required JavaScript to work around for years.",
+    "example": null,
+    "code": "form:has(input:invalid) {\n  border-color: red;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "selectors"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between the CSS ::before/::after pseudo-elements and the ::marker pseudo-element?",
+    "answer": "::before and ::after insert generated content as a child before or after an element's actual content. ::marker specifically targets the marker box of a list item (the bullet or number), letting you style or customize it — like its color or content — separately from the list item's own text, which was previously difficult without wrapping the text in an extra span.",
+    "example": null,
+    "code": "li::marker {\n  color: tomato;\n  content: \"→ \";\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "pseudo-elements"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the order of !important declarations interact with cascade layers?",
+    "answer": "Normally, later layers win over earlier ones. But for declarations marked !important, this priority order reverses — an !important declaration in an earlier layer beats an !important declaration in a later layer, and any !important declaration beats a non-important one regardless of layer, which is a deliberate design choice to keep layers from being trivially subverted.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade-layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the @supports at-rule and a browser feature-detection JavaScript library like Modernizr?",
+    "answer": "@supports lets you write conditional CSS directly, applying a block of styles only if the browser supports a given property/value pair (or a combination via and/or/not), all evaluated natively by the CSS engine with no JavaScript or extra network request required. Modernizr and similar tools run JavaScript feature tests and add classes to the document that CSS then targets, which is more flexible for testing JS APIs but adds a runtime dependency.",
+    "example": null,
+    "code": "@supports (display: grid) {\n  .layout { display: grid; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "supports"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are CSS logical properties, and how do they differ from physical properties like margin-left?",
+    "answer": "Physical properties (margin-left, border-top) always refer to a fixed visual direction regardless of writing mode. Logical properties (margin-inline-start, border-block-end) refer to direction relative to the text's writing mode and direction (e.g. left-to-right vs. right-to-left), so the same rule automatically adapts correctly when a page is localized into an RTL language like Arabic, without needing separate RTL overrides.",
+    "example": null,
+    "code": ".card {\n  margin-inline-start: 1rem;\n  padding-block: 0.5rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "logical-properties"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How is specificity calculated for combined selectors, such as an attribute selector combined with a pseudo-class?",
+    "answer": "Specificity is computed by summing counts across three tiers regardless of how selectors are combined: ID selectors (highest tier), classes/attribute-selectors/pseudo-classes (middle tier), and type-selectors/pseudo-elements (lowest tier). A selector like `input[type=\"text\"]:focus` has one attribute selector and one pseudo-class, both counting in the middle tier, giving it a specificity of (0, 2, 0).",
+    "example": null,
+    "code": "input[type=\"text\"]:focus { border-color: blue; } /* specificity 0,2,0 */",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "specificity"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS all property's initial, inherit, unset, and revert keyword values?",
+    "answer": "all: initial resets every property on the element to its specification default, ignoring inheritance entirely. all: inherit forces every property to take its parent's computed value. all: unset acts as inherit for naturally-inherited properties and initial for non-inherited ones. all: revert resets properties to the value they would have had from the user-agent stylesheet (or user stylesheet), effectively undoing author-level styles while preserving browser defaults.",
+    "example": null,
+    "code": ".widget {\n  all: unset;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does CSS scoping with the @scope at-rule work?",
+    "answer": "@scope lets you limit a block of styles to apply only within a specific DOM subtree, defined by a scoping root, and optionally a scoping limit (a boundary selector beyond which the styles no longer apply). This provides native style encapsulation similar to what CSS Modules or Shadow DOM offer, without needing a build step or Shadow DOM's stricter isolation.",
+    "example": null,
+    "code": "@scope (.card) to (.card-footer) {\n  p { color: gray; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the :first-child, :first-of-type, and :only-child pseudo-classes?",
+    "answer": ":first-child matches an element only if it's the very first child of its parent, regardless of tag type. :first-of-type matches an element if it's the first sibling of its specific tag type, even if other different-tag siblings come before it. :only-child matches an element only if it's the sole child of its parent, with no other siblings of any type.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the shadow DOM affect CSS style encapsulation, and how can styles cross that boundary intentionally?",
+    "answer": "Styles defined inside a shadow root don't leak out to the main document, and outer page styles don't leak in by default, giving web components strong style isolation. CSS custom properties are a deliberate exception — they pierce the shadow boundary and inherit into shadow trees, making them the standard mechanism for theming web components from outside.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the CSS Object Model (CSSOM), and how does it relate to the DOM during rendering?",
+    "answer": "The CSSOM is the browser's in-memory tree representation of all parsed CSS rules, analogous to how the DOM represents parsed HTML. The rendering engine combines the DOM and CSSOM to produce the render tree, which determines what's actually painted to the screen — CSS parsing can block rendering because the browser must have the full CSSOM before it can compute final styles.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS :focus-visible pseudo-class solve compared to plain :focus?",
+    "answer": ":focus matches whenever an element has focus, including after a mouse click, which often produces an unwanted focus ring for pointer users. :focus-visible only matches when the browser's heuristics determine the focus indicator should be shown — typically for keyboard navigation — letting you style visible focus rings for accessibility without showing them on every mouse click.",
+    "example": null,
+    "code": "button:focus-visible {\n  outline: 2px solid blue;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the :nth-child(An+B) formula's An and B parts, and how would you select every 3rd item starting from the 2nd?",
+    "answer": "In the An+B syntax, A is the cycle size (repeat every A elements) and B is the offset (starting point). `:nth-child(3n+2)` selects every 3rd element starting at the 2nd (matching positions 2, 5, 8, ...), which is useful for styling repeating patterns in grids or tables like alternating row groups.",
+    "example": null,
+    "code": "li:nth-child(3n + 2) { background: #f5f5f5; }",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does CSS handle unknown or invalid property values — does an entire rule fail if one declaration is invalid?",
+    "answer": "CSS parsing is fault-tolerant at the declaration level: an individual invalid declaration (unrecognized property or malformed value) is simply discarded and ignored, but the rest of the rule block and stylesheet continues to parse and apply normally. This graceful degradation is why adding a newer property alongside an older fallback (declared first) is a safe progressive enhancement technique.",
+    "example": null,
+    "code": ".box {\n  display: flex;\n  display: grid; /* wins in browsers that support it; ignored otherwise if unsupported... actually both are valid, so this line demonstrates fallback ordering, not invalid parsing */\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between @media and @container queries when it comes to what CSS properties can be conditioned on?",
+    "answer": "@media conditions on characteristics of the whole browsing environment — viewport size, orientation, color scheme, resolution, etc. — regardless of any particular element. @container conditions on the size (or, more recently, style via container-query style queries) of a specific nearby ancestor that's opted in as a query container, making it scoped to a component rather than the whole page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "container-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a CSS custom media query, and how does @custom-media (or its successor proposals) aim to improve maintainability?",
+    "answer": "Custom media queries let you name a reusable media condition once (like --small-viewport: (max-width: 600px)) and reference that name across multiple @media rules, similar to how custom properties centralize values. This avoids repeating and risking inconsistent breakpoint values throughout a stylesheet — it's currently available via PostCSS plugins and is part of ongoing CSS Media Queries Level 5 proposals.",
+    "example": null,
+    "code": "@custom-media --small-viewport (max-width: 600px);\n\n@media (--small-viewport) {\n  .nav { flex-direction: column; }\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "media-queries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS :target pseudo-class do?",
+    "answer": ":target matches an element whose id matches the current URL fragment identifier (the part after #), letting you style content differently when it's been linked to directly — commonly used for CSS-only tabs, accordions, or highlighting a jumped-to section without any JavaScript.",
+    "example": null,
+    "code": "section:target {\n  background: yellow;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS cascade order (origin and importance) work across user-agent styles, author styles, and user styles?",
+    "answer": "From lowest to highest priority: user-agent (browser default) styles, then user styles (set by the person browsing, rare today), then author styles (the page's own CSS) — each with a normal and an !important variant, where every !important declaration across all origins outranks every normal declaration, but user !important actually outranks author !important, giving end users ultimate override power for accessibility needs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between CSS Modules and cascade layers (@layer) as approaches to avoiding style collisions?",
+    "answer": "CSS Modules solve collisions at build time by automatically generating unique class names scoped per file, so identical class names in different files never clash, but this requires a bundler/build step. Cascade layers solve a different problem — controlling which group of rules wins in the cascade regardless of specificity — and work natively in the browser without any build tooling, but don't rename classes or prevent naming collisions themselves.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade-layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the CSS @font-face at-rule do, and what does font-display control?",
+    "answer": "@font-face lets you define and load a custom web font by specifying its source file(s) and giving it a family name to reference elsewhere. font-display controls how the browser handles the loading gap before the font is ready — swap immediately shows a fallback font and swaps once the custom font loads, block briefly hides text until the font loads (or times out), and optional/fallback offer intermediate strategies balancing layout stability against custom font usage.",
+    "example": null,
+    "code": "@font-face {\n  font-family: 'Inter';\n  src: url('inter.woff2') format('woff2');\n  font-display: swap;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "fonts"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the CSS content-visibility property improve rendering performance for long pages?",
+    "answer": "content-visibility: auto lets the browser skip layout, style, and paint work for elements that are off-screen, only rendering them once they're about to become visible (similar to native lazy-rendering), which can dramatically speed up initial render of very long pages. It's typically paired with contain-intrinsic-size to give off-screen elements a placeholder size so the page doesn't jump as content becomes visible and its real size is calculated.",
+    "example": null,
+    "code": ".section {\n  content-visibility: auto;\n  contain-intrinsic-size: 500px;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS contain property's layout, paint, size, and style values?",
+    "answer": "contain lets you tell the browser that an element's internals don't affect the rest of the page in certain ways, enabling performance optimizations. layout isolates layout calculations so the element's internal layout doesn't affect external layout. paint clips rendering to the element's bounds and skips painting when off-screen. size ensures the element's size can be determined without examining its children's content. style contains the scope of counter/quote style changes.",
+    "example": null,
+    "code": ".widget {\n  contain: layout paint;\n}",
+    "codeLanguage": "css",
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the CSS :empty pseudo-class and checking for an element with no visible text via JavaScript?",
+    "answer": ":empty matches an element that has absolutely no children at all — not even whitespace text nodes — making it strict about literal DOM emptiness rather than visible content. A JavaScript check can trim whitespace, check computed rendered dimensions, or account for elements that contain only comments (which :empty does allow), giving more nuanced 'is this visually empty' detection than the CSS pseudo-class alone provides.",
+    "example": null,
+    "code": "p:empty {\n  display: none;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "pseudo-classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do CSS custom properties interact with cascade layers — which one takes priority when both are involved in a conflict?",
+    "answer": "Custom properties follow the same cascade rules as any other property, so their resolved value is determined by cascade layer order, specificity, and source order just like a normal declaration such as color. A custom property set in a later layer overrides the same custom property set in an earlier layer, following the same layer-priority-before-specificity rule that applies to all cascade layer resolution.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["css", "advanced-css", "cascade-layers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common real-world use case for the CSS :has() pseudo-class beyond simple parent selection?",
+    "answer": "A frequently cited use case is styling a form group differently when it contains an invalid input, or dimming a card layout when it contains no image, without adding any JavaScript-driven conditional classes: `.card:has(img)` versus `.card:not(:has(img))`. It effectively replaces many previously JS-only 'style based on children's state' patterns with pure, declarative CSS.",
+    "example": null,
+    "code": ".card:not(:has(img)) {\n  padding-top: 2rem;\n}",
+    "codeLanguage": "css",
+    "difficulty": "medium",
+    "tags": ["css", "advanced-css", "selectors"],
+    "isFrequentlyAsked": false
+  }
+]
