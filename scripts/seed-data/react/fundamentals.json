@@ -1,0 +1,502 @@
+[
+  {
+    "question": "What does it mean that React uses a declarative programming model?",
+    "answer": "In a declarative model you describe what the UI should look like for a given state, and React figures out how to update the DOM to match. This contrasts with an imperative model, where you manually write step-by-step instructions to create, update, and remove DOM nodes yourself.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is meant by React's component tree and unidirectional data flow?",
+    "answer": "A React application is structured as a tree of nested components, with data (props) flowing from parent to child in one direction only. A child cannot directly modify data owned by a parent; it can only request a change by calling a function the parent passed down, which keeps data flow predictable and easy to trace.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "data-flow"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does JSX actually compile down to?",
+    "answer": "JSX is syntactic sugar that a build tool (Babel or the Vite/SWC compiler) transforms into plain JavaScript function calls before it runs in the browser. Historically it compiled to React.createElement() calls; since the 'automatic' JSX runtime (React 17+), it compiles to calls into react/jsx-runtime instead, which is slightly more efficient and no longer requires importing React just to use JSX.",
+    "example": null,
+    "code": "// JSX\nconst el = <h1 className=\"title\">Hello</h1>;\n\n// Compiles to (classic runtime)\nconst el = React.createElement('h1', { className: 'title' }, 'Hello');",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are React Fragments and why do they matter?",
+    "answer": "A Fragment (<React.Fragment> or the <>...</> shorthand) lets a component return multiple sibling elements without wrapping them in an extra DOM node. Before fragments existed, every component had to return a single root element, which often forced unnecessary wrapper divs that could break CSS layouts like flexbox or grid.",
+    "example": null,
+    "code": "function Row() {\n  return (\n    <>\n      <td>Name</td>\n      <td>Age</td>\n    </>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's a common pitfall when using the && operator for conditional rendering?",
+    "answer": "If the left-hand value is a falsy number like 0 (e.g. items.length && <List />), React renders the literal 0 to the screen instead of nothing, because 0 is a valid renderable child, not just a 'falsy' value that gets skipped. The fix is to coerce to a boolean first, e.g. items.length > 0 && <List />.",
+    "example": null,
+    "code": "// Bug: renders \"0\" when the array is empty\n{items.length && <List items={items} />}\n\n// Fixed\n{items.length > 0 && <List items={items} />}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "jsx", "gotcha"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the common ways to do conditional rendering in React?",
+    "answer": "Common patterns include the && operator for 'render this or nothing', the ternary operator for 'render this or that', and an early return statement inside the component function when an entire branch of markup should be skipped. Which one to use is mostly a readability choice based on how many conditions and how much markup are involved.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you render a list of items in React?",
+    "answer": "Call .map() on an array to transform each item into a JSX element, and return the resulting array directly inside your JSX — React renders arrays of elements automatically. Each element in the resulting array needs a unique key prop so React can track it correctly across re-renders.",
+    "example": null,
+    "code": "<ul>\n  {users.map((user) => (\n    <li key={user.id}>{user.name}</li>\n  ))}\n</ul>",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "lists"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does React.StrictMode do, and why does it double-invoke things in development?",
+    "answer": "StrictMode is a wrapper component that opts a subtree into extra development-only checks, such as warning about deprecated APIs and unsafe lifecycle methods. In development it intentionally double-invokes things like component function bodies and some effects to help surface side effects that aren't properly cleaned up — it has no effect in production builds.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "strict-mode"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "At a conceptual level, how does React's reconciliation algorithm decide what to update?",
+    "answer": "Reconciliation is the process where React compares a newly rendered tree of elements against the previous one to compute the minimal set of real DOM changes needed. It uses heuristics to keep this fast: elements of different types are treated as entirely different subtrees and rebuilt from scratch, while elements of the same type at the same position are diffed prop-by-prop and their children are reconciled recursively, using keys to match items in a list across renders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "reconciliation", "internals"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does React fit into building a single-page application (SPA)?",
+    "answer": "React itself only handles rendering the view layer for a given piece of state — it doesn't include routing or data fetching out of the box. Building a full SPA typically means combining React with a router (like React Router) to handle client-side navigation without full page reloads, plus a data-fetching strategy, since React alone is just the UI library at the core.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "spa"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is React's synthetic event system?",
+    "answer": "React wraps native browser DOM events in a cross-browser SyntheticEvent object that normalizes differences between browsers and exposes the same API everywhere. Since React 17, these events are attached at the root of the rendered tree rather than on document, which made it easier to embed multiple React versions on the same page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Conceptually, why does reconciliation need keys at all?",
+    "answer": "Without keys, React has no reliable way to tell whether an item in a list was added, removed, or reordered versus simply changed — it would have to guess based on position alone, which can mismatch component state to the wrong data after a list changes. A stable, unique key gives React an explicit identity to match old and new elements against, independent of their position in the array.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "reconciliation", "keys"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What can you inspect using React DevTools?",
+    "answer": "React DevTools is a browser extension that adds Components and Profiler tabs to your dev tools. The Components tab lets you browse the live component tree, inspect and edit props/state/hooks values, and see which component owns a given DOM node; the Profiler tab records renders over time and helps identify unnecessary or expensive re-renders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "tooling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the react and react-dom packages?",
+    "answer": "The react package contains the core APIs for defining components and managing state/hooks, independent of any particular rendering target. react-dom contains the renderer that knows how to translate React's output into actual browser DOM operations — other renderers, like React Native, swap in a different rendering package while reusing the same react core.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "packages"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between createRoot and the legacy ReactDOM.render?",
+    "answer": "createRoot (React 18+) creates a root that opts an app into React's concurrent rendering features, such as automatic batching and transitions. The older ReactDOM.render (deprecated in React 18) always ran in the legacy synchronous rendering mode and does not support those concurrent features.",
+    "example": null,
+    "code": "import { createRoot } from 'react-dom/client';\n\nconst root = createRoot(document.getElementById('root'));\nroot.render(<App />);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "react-18"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does it mean that React 18 batches state updates automatically?",
+    "answer": "When multiple setState calls happen within the same event handler, React groups them into a single re-render instead of re-rendering after each one, which improves performance. Before React 18, this automatic batching only happened inside React event handlers; React 18 extends it to updates inside promises, timeouts, and native event handlers too.",
+    "example": null,
+    "code": "function handleClick() {\n  setCount(c => c + 1);\n  setFlag(f => !f);\n  // Only one re-render happens, not two\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "react-18", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "At a high level, what are React 18's concurrent rendering features?",
+    "answer": "Concurrent rendering lets React prepare multiple versions of the UI in memory and interrupt, pause, or discard a render in progress if something more urgent (like user input) comes in, rather than always finishing one render before starting the next. Features built on this include automatic batching, transitions (useTransition, marking updates as non-urgent), and streaming server rendering with Suspense.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "react-18", "concurrent"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does a React element actually look like under the hood?",
+    "answer": "A React element is a plain, lightweight JavaScript object describing a piece of UI — it has a type (a tag name string or a component function/class), a props object, and a key. Elements are not the actual rendered DOM nodes; React reads these objects to figure out what real DOM to create or update.",
+    "example": null,
+    "code": "// Roughly what <h1 className=\"x\">Hi</h1> becomes\n{\n  type: 'h1',\n  props: { className: 'x', children: 'Hi' },\n  key: null\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "internals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does React discourage directly manipulating the DOM yourself?",
+    "answer": "React maintains its own internal representation of the UI to efficiently compute and batch updates; if you manually change a DOM node React manages, React's internal model goes out of sync with reality, which can cause bugs or have your change silently overwritten on the next render. When you truly need direct DOM access (e.g. focusing an input), you should do it through a ref rather than querySelector-style code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does building a counter in React compare to doing it with vanilla JS DOM manipulation?",
+    "answer": "In vanilla JS you'd manually select the counter element, keep a variable for the count, and imperatively update textContent on every click. In React you keep the count in state and describe what the counter should render for any given count value — clicking the button just updates state, and React handles updating the actual text on screen for you.",
+    "example": null,
+    "code": "// React\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does using semantic HTML still matter inside JSX?",
+    "answer": "JSX ultimately renders real DOM elements, so using semantic tags like <button>, <nav>, and <main> instead of generic <div>s with click handlers still matters for accessibility, keyboard navigation, and SEO, exactly as it would in plain HTML. React doesn't add any semantics on its own — it just gives you a more convenient way to describe the same DOM tree.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does spreading props with {...props} do?",
+    "answer": "The spread syntax {...props} expands all key-value pairs of a props object onto a JSX element as individual attributes, which is a concise way to forward a whole set of props through to an underlying element or component without listing each one manually.",
+    "example": null,
+    "code": "function Wrapper(props) {\n  return <input {...props} className=\"styled\" />;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is props.children and where does it come from?",
+    "answer": "props.children holds whatever JSX (or text) was nested between a component's opening and closing tags when it was used. It's just a regular prop under the hood, automatically populated by JSX rather than something you have to pass explicitly.",
+    "example": null,
+    "code": "function Card({ children }) {\n  return <div className=\"card\">{children}</div>;\n}\n\n<Card>\n  <p>Nested content</p>\n</Card>",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "props", "children"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does a parent re-rendering affect its child components?",
+    "answer": "By default, when a component re-renders, React also re-renders all of its child components regardless of whether their own props actually changed — it's just usually cheap because React only commits real DOM changes where something differs. This is why techniques like React.memo exist: to let a specific child opt out of re-rendering when its props are unchanged.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why do React apps typically need a bundler like Vite or webpack?",
+    "answer": "Browsers don't understand JSX or, historically, ES modules with bare package imports, so a bundler transforms JSX into plain JavaScript, resolves and bundles dependencies from node_modules, and produces optimized output (code splitting, minification) for production. Vite additionally provides a fast dev server with hot module replacement during development.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "tooling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between client-side rendering and hydration?",
+    "answer": "In pure client-side rendering, the browser downloads a near-empty HTML shell and JavaScript builds the entire UI after the page loads. Hydration is what happens when the server already sent fully-rendered HTML for the initial view, and React attaches event listeners and internal state to that existing markup on the client instead of re-creating the DOM from scratch, making the page interactive.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "ssr", "hydration"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does a tool like Vite or Create React App play in a React project?",
+    "answer": "These are project scaffolding and build tooling setups that wire together a dev server, JSX/TypeScript compilation, bundling, and sensible defaults so you don't have to hand-configure a bundler yourself. Vite has largely replaced Create React App (now unmaintained) because of its much faster dev server startup and hot reload, using native ES modules during development.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "tooling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do PropTypes and TypeScript compare for type-checking props?",
+    "answer": "PropTypes is a runtime library that checks prop types while the app is running in development and logs a console warning on mismatch, but it has no effect on production behavior and doesn't catch errors until the component actually renders with bad data. TypeScript checks prop types statically at compile time, catching many mismatches before the code ever runs, which is why most modern React projects use TypeScript instead of, or in addition to, PropTypes.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "typescript"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'lifting state up' and why is it one of the first patterns React developers learn?",
+    "answer": "Lifting state up means moving state from a component into its closest common ancestor when two or more sibling components need to read or react to the same value. It's foundational because it's the simplest way to keep multiple components in sync without any extra library — later patterns like Context exist to avoid lifting state so far up that it has to be threaded through many layers of props.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What actually causes a React component to re-render?",
+    "answer": "A component re-renders when its own state changes, when the props passed to it change, when a context value it consumes changes, or when its parent re-renders (regardless of whether that parent's re-render was caused by something relevant to the child). Understanding this is the starting point for diagnosing unnecessary re-renders and applying memoization correctly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does declarative UI actually buy you compared to jQuery-style DOM scripting?",
+    "answer": "With jQuery-style code, every possible state transition needs its own hand-written sequence of DOM mutations, and it gets exponentially harder to reason about as the number of states grows. With React's declarative model, you only describe the UI for each state once, and React's diffing handles figuring out the transition between any two states for you, which scales far better as an application grows in complexity.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why did early React require every component to return a single root element?",
+    "answer": "React.createElement (and the underlying rendering model) originally worked with a single element tree per call, so a component's render output had to be one element with everything else nested inside it. Fragments were added later specifically to lift this restriction without requiring an extra wrapper DOM node.",
+    "example": null,
+    "code": "// Not allowed without a Fragment/wrapper\nfunction Bad() {\n  return (\n    <li>One</li>\n    <li>Two</li>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean that 'JSX is just JavaScript'?",
+    "answer": "Because JSX compiles down to regular function calls, any valid JavaScript expression can be embedded inside curly braces {} within JSX — variables, function calls, ternaries, array methods, and so on. This means you don't need a separate templating language or special syntax to express logic in your markup; it's the same language throughout.",
+    "example": null,
+    "code": "const name = 'Sam';\nconst el = <p>Hello, {name.toUpperCase()}!</p>;",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't a component return multiple sibling elements without a wrapper?",
+    "answer": "A component's return value must be a single value in JavaScript, and JSX compiles to a single nested element tree — you can't return two independent element trees from one function call. A Fragment (or any wrapping element) solves this by giving the multiple elements a single, if invisible, parent to be returned as one unit.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do JSX prop names differ from standard HTML attribute names?",
+    "answer": "Some JSX props are renamed because they'd otherwise collide with reserved JavaScript words or don't map cleanly to the DOM property: class becomes className, for becomes htmlFor, and most attributes use camelCase (onclick becomes onClick, tabindex becomes tabIndex) to match JavaScript naming conventions rather than HTML's lowercase-only attributes.",
+    "example": null,
+    "code": "<label htmlFor=\"email\" className=\"label\">Email</label>",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does JSX render boolean, null, and undefined values?",
+    "answer": "React treats false, true, null, and undefined as 'nothing to render' when they appear as JSX children, so they simply produce no output rather than an error or the literal text. This is what makes the {condition && <Component />} pattern work: when condition is false, JSX renders nothing.",
+    "example": null,
+    "code": "<div>{null}{undefined}{false}{true}</div> // renders an empty div",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean that React is 'a UI library, not an application framework'?",
+    "answer": "React only concerns itself with turning state into rendered UI and handling events — it deliberately doesn't prescribe how to do routing, data fetching, or global state management, unlike a full framework such as Angular. Teams choose and assemble their own supporting libraries (React Router, TanStack Query, Redux/Zustand, etc.), which gives flexibility at the cost of more setup decisions.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between React's render phase and commit phase?",
+    "answer": "The render phase is where React calls your component functions to figure out what the new tree of elements should look like and diffs it against the previous tree — this phase can be paused, aborted, or restarted by React and must be free of side effects. The commit phase is where React actually applies the computed DOM mutations and runs effects like useEffect/componentDidMount, and this phase always runs synchronously to completion once started.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "internals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What actually triggers a component's render phase to begin?",
+    "answer": "A render is triggered by a state update (via a state setter), a prop change coming from a re-rendering parent, or a context value update for a component subscribed to that context. React schedules and may batch several triggers together before actually running the render phase once.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "fundamentals", "internals", "rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "At a fundamentals level, why must hooks always be called in the same order on every render?",
+    "answer": "React associates each hook call with internal state purely by the order it was called in during a render, not by name — there's no other identifier. If a hook is called conditionally so the order changes between renders, React would attach the wrong stored state to the wrong hook call, corrupting component state in subtle ways.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do refs differ from React's normal declarative rendering model?",
+    "answer": "Refs (useRef, or a DOM ref returned from forwardRef) give you an 'escape hatch' to imperatively read or mutate a DOM node or hold a mutable value directly, bypassing the render-based data flow. They're meant for cases the declarative model doesn't cover well, like focusing an input or measuring an element's size, not as a general substitute for state.",
+    "example": null,
+    "code": "const inputRef = useRef(null);\n// Imperative: directly call a DOM method\ninputRef.current.focus();",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "refs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does React decide what to do when a JSX child is a plain string, number, or object?",
+    "answer": "Strings and numbers are rendered directly as text nodes. Plain objects (other than valid React elements or arrays of children) are not valid as a React child and will throw an error at runtime — you'd need to convert the object to a string or extract the specific fields you want to render.",
+    "example": null,
+    "code": "<div>{42}</div>       // renders \"42\"\n<div>{{ a: 1 }}</div> // throws: Objects are not valid as a React child",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What kinds of JavaScript expressions are NOT allowed inside JSX curly braces?",
+    "answer": "Curly braces in JSX must contain an expression that produces a value, not a statement — so if/else blocks, for loops, and variable declarations (let/const) can't go directly inside {}. You work around this by computing the value beforehand (outside the JSX) or using expression-based alternatives like the ternary operator or .map().",
+    "example": null,
+    "code": "// Invalid: if is a statement, not an expression\n{if (loggedIn) { <p>Hi</p> }}\n\n// Valid: ternary is an expression\n{loggedIn ? <p>Hi</p> : null}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between a React application and a React component library?",
+    "answer": "A React application is a deployable product with routing, pages, and business logic built on top of React. A component library is a reusable package of components (and often hooks/utilities) meant to be installed as a dependency of other applications, typically published with its own build step, type definitions, and documentation rather than a running app.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is onClick={() => doSomething()} usually correct while onClick={doSomething()} is usually a bug?",
+    "answer": "onClick={doSomething()} calls doSomething immediately during render and passes whatever it returns as the handler, instead of passing a function to run later on click. Wrapping it in an arrow function, onClick={() => doSomething()}, defers the call until the click actually happens, and also lets you pass arguments that plain onClick={doSomething} (without parentheses) wouldn't allow.",
+    "example": null,
+    "code": "// Bug: runs on every render, not on click\n<button onClick={deleteItem(id)}>Delete</button>\n\n// Correct: runs only when clicked\n<button onClick={() => deleteItem(id)}>Delete</button>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "events", "gotcha"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does a key prop need to be unique across the whole app, or just somewhere specific?",
+    "answer": "A key only needs to be unique among its immediate siblings within the same array being rendered — it does not need to be globally unique across the entire component tree. Using the same key value in two unrelated lists elsewhere in the app causes no conflict at all.",
+    "example": null,
+    "code": "// Both lists can safely reuse key=\"1\", key=\"2\" independently\n<ul>{users.map(u => <li key={u.id}>{u.name}</li>)}</ul>\n<ul>{posts.map(p => <li key={p.id}>{p.title}</li>)}</ul>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "keys"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'one-way data binding' mean, and how does it differ from two-way binding?",
+    "answer": "In one-way binding, data flows from state into the UI in a single direction, and any change originating from the UI (like typing in an input) has to explicitly call a function to update state, which then flows back down to re-render the UI. Two-way binding, common in frameworks like older Angular or Vue's v-model, automatically syncs a form input's value back into a bound variable without the developer wiring an explicit handler.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "data-flow"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the role of the index.html file in a Vite-based React app?",
+    "answer": "index.html is the actual entry point Vite serves — it contains a script tag pointing at your main JavaScript/TypeScript entry file (e.g. src/main.jsx) and typically a single empty <div id=\"root\">. React then mounts the entire application into that div at runtime; almost none of the visible UI is written directly in this file.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "tooling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When can't you use the <>...</> Fragment shorthand and need React.Fragment explicitly instead?",
+    "answer": "The shorthand syntax <>...</> cannot accept any props, including a key. If you're rendering a list of fragments (for example, grouping multiple elements per array item without an extra wrapper), you need the explicit <React.Fragment key={...}> form so each fragment can carry the required key.",
+    "example": null,
+    "code": "{items.map(item => (\n  <React.Fragment key={item.id}>\n    <dt>{item.term}</dt>\n    <dd>{item.description}</dd>\n  </React.Fragment>\n))}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "fundamentals", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is meant by 'component-driven development'?",
+    "answer": "Component-driven development is the practice of building a UI from the bottom up — starting with small, isolated, reusable components (often developed and tested independently, e.g. in Storybook) and composing them into larger features and pages. It encourages thinking in terms of a reusable component library rather than building each page as one large, monolithic piece of markup.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "fundamentals", "design"],
+    "isFrequentlyAsked": false
+  }
+]

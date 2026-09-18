@@ -9,16 +9,17 @@
 -- =============================================================================
 -- Languages
 -- =============================================================================
-insert into public.languages (name, slug, description, icon, display_order)
+insert into public.languages (name, slug, description, icon, category, display_order)
 values
-  ('Java', 'java', 'Practice Core Java, OOP, Collections, exception handling, multithreading and modern Java interview questions.', 'coffee', 1),
-  ('JavaScript', 'javascript', 'Practice JavaScript fundamentals, functions, objects, async programming and ES6+ interview questions.', 'file-code-2', 2),
-  ('React', 'react', 'Practice React fundamentals, components, hooks, state management and performance interview questions.', 'atom', 3),
-  ('SQL', 'sql', 'Practice SQL joins, aggregations, subqueries, CTEs, window functions and transaction interview questions.', 'database', 4)
+  ('Java', 'java', 'Practice Core Java, OOP, Collections, exception handling, multithreading and modern Java interview questions.', 'coffee', 'backend', 1),
+  ('JavaScript', 'javascript', 'Practice JavaScript fundamentals, functions, objects, async programming and ES6+ interview questions.', 'file-code-2', 'frontend', 2),
+  ('React', 'react', 'Practice React fundamentals, components, hooks, state management and performance interview questions.', 'atom', 'frontend', 3),
+  ('SQL', 'sql', 'Practice SQL joins, aggregations, subqueries, CTEs, window functions and transaction interview questions.', 'database', 'database', 4)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
   icon = excluded.icon,
+  category = excluded.category,
   display_order = excluded.display_order;
 
 -- =============================================================================
@@ -85,14 +86,19 @@ from (values
  'What is the difference between == and .equals() in Java?',
  '== compares references for objects (whether two variables point to the same memory location) and compares values for primitives. .equals() is a method that compares the logical content/value of two objects, and its behavior depends on whether the class overrides it. For example, String overrides equals() to compare character sequences instead of references.',
  'new String("hi") == new String("hi") returns false, but .equals() returns true.',
- 'String a = new String("hi");\nString b = new String("hi");\nSystem.out.println(a == b);        // false\nSystem.out.println(a.equals(b));   // true',
+ 'String a = new String("hi");
+String b = new String("hi");
+System.out.println(a == b);        // false
+System.out.println(a.equals(b));   // true',
  'java','easy',ARRAY['java','strings']::text[],2),
 
 ('java','core-java','java-core-java-003',
  'What is the difference between String, StringBuilder, and StringBuffer?',
  'String is immutable — every modification creates a new object, which can be wasteful in loops. StringBuilder is mutable and optimized for single-threaded string manipulation. StringBuffer is also mutable but its methods are synchronized, making it thread-safe at the cost of some performance. In most modern code, StringBuilder is preferred unless multiple threads mutate the same buffer.',
  null,
- 'StringBuilder sb = new StringBuilder();\nsb.append("Hello").append(" ").append("World");\nSystem.out.println(sb.toString());',
+ 'StringBuilder sb = new StringBuilder();
+sb.append("Hello").append(" ").append("World");
+System.out.println(sb.toString());',
  'java','medium',ARRAY['java','strings','performance']::text[],3),
 
 ('java','core-java','java-core-java-004',
@@ -103,7 +109,8 @@ from (values
 ('java','core-java','java-core-java-005',
  'What is autoboxing and unboxing in Java?',
  'Autoboxing is the automatic conversion the compiler performs from a primitive type to its corresponding wrapper object (e.g. int to Integer). Unboxing is the reverse conversion, from a wrapper object back to its primitive type. This happens implicitly when primitives and wrapper types are mixed, such as when adding a primitive int to an Integer in a collection.',
- 'Integer boxed = 10; // autoboxing\nint unboxed = boxed; // unboxing',
+ 'Integer boxed = 10; // autoboxing
+int unboxed = boxed; // unboxing',
  null,null,'easy',ARRAY['java','basics']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -118,7 +125,13 @@ from (values
  'What is the difference between method overloading and overriding?',
  'Overloading occurs when multiple methods in the same class share a name but differ in parameter list (number, type, or order) — it is resolved at compile time. Overriding occurs when a subclass provides a specific implementation of a method already defined in its superclass with the same signature — it is resolved at runtime based on the actual object type.',
  null,
- 'class Animal {\n    void sound() { System.out.println("Animal sound"); }\n}\nclass Dog extends Animal {\n    @Override\n    void sound() { System.out.println("Bark"); } // overriding\n}',
+ 'class Animal {
+    void sound() { System.out.println("Animal sound"); }
+}
+class Dog extends Animal {
+    @Override
+    void sound() { System.out.println("Bark"); } // overriding
+}',
  'java','easy',ARRAY['java','oop']::text[],2),
 
 ('java','oop','java-oop-003',
@@ -159,7 +172,12 @@ from (values
  'What is the difference between Comparable and Comparator?',
  'Comparable is implemented by the class itself to define its "natural ordering" via a single compareTo() method. Comparator is a separate class that defines custom ordering logic via compare(), letting you sort the same objects in multiple different ways without modifying the original class.',
  null,
- 'class Employee implements Comparable<Employee> {\n    int salary;\n    public int compareTo(Employee other) {\n        return this.salary - other.salary;\n    }\n}',
+ 'class Employee implements Comparable<Employee> {
+    int salary;
+    public int compareTo(Employee other) {
+        return this.salary - other.salary;
+    }
+}',
  'java','medium',ARRAY['java','collections','sorting']::text[],4),
 
 ('java','collections','java-collections-005',
@@ -179,13 +197,17 @@ from (values
  'What is the purpose of try-with-resources?',
  'try-with-resources automatically closes any resource that implements AutoCloseable (such as streams or database connections) once the try block finishes, even if an exception occurs. It removes the need for a manual finally block to close resources and helps prevent resource leaks.',
  null,
- 'try (BufferedReader reader = new BufferedReader(new FileReader("file.txt"))) {\n    System.out.println(reader.readLine());\n} // reader is closed automatically',
+ 'try (BufferedReader reader = new BufferedReader(new FileReader("file.txt"))) {
+    System.out.println(reader.readLine());
+} // reader is closed automatically',
  'java','medium',ARRAY['java','exceptions']::text[],2),
 
 ('java','exceptions','java-exceptions-003',
  'What is the difference between throw and throws?',
  'throw is used inside a method body to actually raise an exception instance at a specific point. throws is used in a method signature to declare that the method might propagate one or more checked exceptions to its caller, without handling them itself.',
- 'void readFile() throws IOException {\n    throw new IOException("File not found");\n}',
+ 'void readFile() throws IOException {
+    throw new IOException("File not found");
+}',
  null,null,'easy',ARRAY['java','exceptions']::text[],3),
 
 ('java','exceptions','java-exceptions-004',
@@ -210,7 +232,11 @@ from (values
  'What is the difference between a synchronized method and a synchronized block?',
  'A synchronized method locks the entire method using the object''s (or class''s, for static methods) intrinsic lock for its whole duration. A synchronized block lets you lock only the critical section of code and choose the lock object explicitly, which reduces contention and improves performance by keeping the locked region as small as possible.',
  null,
- 'public void increment() {\n    synchronized (this) {\n        count++;\n    }\n}',
+ 'public void increment() {
+    synchronized (this) {
+        count++;
+    }
+}',
  'java','medium',ARRAY['java','multithreading','concurrency']::text[],2),
 
 ('java','multithreading','java-multithreading-003',
@@ -235,35 +261,48 @@ from (values
  'What are lambda expressions in Java?',
  'Lambda expressions, introduced in Java 8, provide a concise syntax for implementing a functional interface (an interface with a single abstract method) without writing a full anonymous class. They enable a more functional programming style, particularly useful with the Stream API and for passing behavior as arguments.',
  null,
- 'Runnable r = () -> System.out.println("Running");\nlist.forEach(item -> System.out.println(item));',
+ 'Runnable r = () -> System.out.println("Running");
+list.forEach(item -> System.out.println(item));',
  'java','easy',ARRAY['java','java8','lambda']::text[],1),
 
 ('java','java-8','java-java-8-002',
  'What is a functional interface?',
  'A functional interface is an interface with exactly one abstract method, which makes it usable as the target type of a lambda expression or method reference. Java provides built-in ones like Runnable, Comparator, Function, Predicate and Supplier, and you can define your own using the @FunctionalInterface annotation, which lets the compiler enforce the single-abstract-method rule.',
  null,
- '@FunctionalInterface\ninterface Calculator {\n    int operate(int a, int b);\n}\nCalculator add = (a, b) -> a + b;',
+ '@FunctionalInterface
+interface Calculator {
+    int operate(int a, int b);
+}
+Calculator add = (a, b) -> a + b;',
  'java','medium',ARRAY['java','java8']::text[],2),
 
 ('java','java-8','java-java-8-003',
  'What is the Stream API and why is it useful?',
  'The Stream API provides a declarative way to process sequences of elements (from collections, arrays, or I/O) using operations like filter, map, reduce and collect. Streams are lazily evaluated, can be chained fluently, and can run in parallel with minimal code change, making data-processing code more concise and readable than manual loops.',
  null,
- 'List<String> names = List.of("Alice", "Bob", "Charlie");\nList<String> result = names.stream()\n    .filter(n -> n.length() > 3)\n    .map(String::toUpperCase)\n    .collect(Collectors.toList());',
+ 'List<String> names = List.of("Alice", "Bob", "Charlie");
+List<String> result = names.stream()
+    .filter(n -> n.length() > 3)
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());',
  'java','medium',ARRAY['java','java8','streams']::text[],3),
 
 ('java','java-8','java-java-8-004',
  'What is the difference between map() and flatMap() in streams?',
  'map() transforms each element into exactly one new element, producing a stream of the same "shape" (e.g. Stream<String> to Stream<Integer>). flatMap() transforms each element into a stream of elements and then flattens all those streams into a single stream, which is useful when each input maps to zero or more outputs, such as flattening a List<List<String>> into a single Stream<String>.',
  null,
- 'List<List<Integer>> nested = List.of(List.of(1,2), List.of(3,4));\nList<Integer> flat = nested.stream()\n    .flatMap(List::stream)\n    .collect(Collectors.toList()); // [1, 2, 3, 4]',
+ 'List<List<Integer>> nested = List.of(List.of(1,2), List.of(3,4));
+List<Integer> flat = nested.stream()
+    .flatMap(List::stream)
+    .collect(Collectors.toList()); // [1, 2, 3, 4]',
  'java','medium',ARRAY['java','java8','streams']::text[],4),
 
 ('java','java-8','java-java-8-005',
  'What is Optional and what problem does it solve?',
  'Optional<T> is a container object introduced in Java 8 that may or may not hold a non-null value. It forces callers to explicitly handle the "value might be absent" case (via methods like isPresent(), orElse(), or map()) instead of returning null and risking a NullPointerException, making the possibility of a missing value visible in the method''s type signature.',
  null,
- 'Optional<String> name = Optional.ofNullable(getName());\nString result = name.orElse("Unknown");',
+ 'Optional<String> name = Optional.ofNullable(getName());
+String result = name.orElse("Unknown");',
  'java','medium',ARRAY['java','java8']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -278,19 +317,24 @@ from (values
  'What is the difference between var, let, and const?',
  'var is function-scoped, gets hoisted and initialized as undefined, and can be redeclared. let is block-scoped, hoisted but not initialized (temporal dead zone), and can be reassigned but not redeclared in the same scope. const is also block-scoped like let, but cannot be reassigned after initialization — though objects/arrays declared with const can still have their contents mutated.',
  null,
- 'let count = 1;\ncount = 2; // ok\nconst limit = 10;\nlimit = 20; // TypeError',
+ 'let count = 1;
+count = 2; // ok
+const limit = 10;
+limit = 20; // TypeError',
  'javascript','easy',ARRAY['javascript','basics','scope']::text[],2),
 
 ('javascript','basics','javascript-basics-003',
  'What is the difference between == and ===?',
  '=== is the strict equality operator — it compares both value and type without any conversion. == is the loose equality operator — it performs type coercion before comparing, which can lead to surprising results like "0" == 0 being true. Using === is generally recommended to avoid unexpected coercion bugs.',
- '"" == 0        // true (coerced)\n"" === 0       // false (different types)',
+ '"" == 0        // true (coerced)
+"" === 0       // false (different types)',
  null,null,'easy',ARRAY['javascript','basics']::text[],3),
 
 ('javascript','basics','javascript-basics-004',
  'What is hoisting in JavaScript?',
  'Hoisting is JavaScript''s behavior of moving variable and function declarations to the top of their scope during the compile phase, before code executes. Function declarations are fully hoisted (usable before their definition), var declarations are hoisted but initialized as undefined, and let/const are hoisted into a "temporal dead zone" where accessing them before declaration throws a ReferenceError.',
- 'console.log(x); // undefined, not an error\nvar x = 5;',
+ 'console.log(x); // undefined, not an error
+var x = 5;',
  null,null,'medium',ARRAY['javascript','basics']::text[],4),
 
 ('javascript','basics','javascript-basics-005',
@@ -305,7 +349,13 @@ from (values
  'What is a closure in JavaScript?',
  'A closure is formed when a function "remembers" the variables from its enclosing lexical scope even after that outer function has finished executing. This lets an inner function continue to access and manipulate private variables from its outer function, which is commonly used to create private state, memoization, and factory functions.',
  null,
- 'function makeCounter() {\n    let count = 0;\n    return () => ++count;\n}\nconst counter = makeCounter();\ncounter(); // 1\ncounter(); // 2',
+ 'function makeCounter() {
+    let count = 0;
+    return () => ++count;
+}
+const counter = makeCounter();
+counter(); // 1
+counter(); // 2',
  'javascript','medium',ARRAY['javascript','functions','closures']::text[],1),
 
 ('javascript','functions','javascript-functions-002',
@@ -322,14 +372,20 @@ from (values
  'What is currying in JavaScript?',
  'Currying is a technique that transforms a function taking multiple arguments into a sequence of functions that each take a single argument. This enables partial application, where you can fix some arguments early and reuse the resulting function with different remaining arguments.',
  null,
- 'const add = (a) => (b) => a + b;\nconst add5 = add(5);\nadd5(3); // 8',
+ 'const add = (a) => (b) => a + b;
+const add5 = add(5);
+add5(3); // 8',
  'javascript','medium',ARRAY['javascript','functions','functional']::text[],4),
 
 ('javascript','functions','javascript-functions-005',
  'What is the difference between call, apply, and bind?',
  'All three let you explicitly set the value of "this" for a function. call() invokes the function immediately, passing arguments individually. apply() also invokes immediately, but takes arguments as an array. bind() does not invoke the function immediately — it returns a new function with "this" (and optionally some arguments) permanently bound, to be called later.',
  null,
- 'function greet(greeting) { return `${greeting}, ${this.name}`; }\ngreet.call({name: "Amy"}, "Hi");\ngreet.apply({name: "Amy"}, ["Hi"]);\nconst bound = greet.bind({name: "Amy"});\nbound("Hi");',
+ 'function greet(greeting) { return `${greeting}, ${this.name}`; }
+greet.call({name: "Amy"}, "Hi");
+greet.apply({name: "Amy"}, ["Hi"]);
+const bound = greet.bind({name: "Amy"});
+bound("Hi");',
  'javascript','medium',ARRAY['javascript','functions','this']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -349,7 +405,11 @@ from (values
  'What are getters and setters in JavaScript objects?',
  'Getters and setters let you define methods that are accessed like plain properties. A getter runs custom logic when a property is read, and a setter runs custom logic when a property is assigned, which is useful for computed properties or validation without changing how consumers interact with the object.',
  null,
- 'const person = {\n    firstName: "Jane",\n    get fullName() { return `${this.firstName} Doe`; }\n};\nperson.fullName; // "Jane Doe"',
+ 'const person = {
+    firstName: "Jane",
+    get fullName() { return `${this.firstName} Doe`; }
+};
+person.fullName; // "Jane Doe"',
  'javascript','easy',ARRAY['javascript','objects']::text[],3),
 
 ('javascript','objects','javascript-objects-004',
@@ -380,7 +440,10 @@ from (values
  'What is async/await and how does it relate to Promises?',
  'async/await is syntactic sugar built on top of Promises that lets asynchronous code be written and read like synchronous code. An async function always returns a Promise, and await pauses execution within that function until the awaited Promise settles, unwrapping its resolved value or throwing its rejection as a catchable error.',
  null,
- 'async function getUser(id) {\n    const res = await fetch(`/api/users/${id}`);\n    return res.json();\n}',
+ 'async function getUser(id) {
+    const res = await fetch(`/api/users/${id}`);
+    return res.json();
+}',
  'javascript','medium',ARRAY['javascript','async','promises']::text[],3),
 
 ('javascript','async-javascript','javascript-async-javascript-004',
@@ -405,7 +468,8 @@ from (values
 ('javascript','es6-plus','javascript-es6-plus-002',
  'What is the spread operator and how does it differ from rest parameters?',
  'The spread operator (...) expands an iterable (array, string, or object) into individual elements, commonly used to copy or merge arrays/objects or pass array elements as function arguments. Rest parameters use the same ... syntax but do the opposite — they collect multiple individual arguments into a single array within a function signature.',
- 'const arr = [...[1,2], ...[3,4]]; // spread: [1,2,3,4]\nfunction sum(...nums) { return nums.reduce((a,b) => a+b); } // rest',
+ 'const arr = [...[1,2], ...[3,4]]; // spread: [1,2,3,4]
+function sum(...nums) { return nums.reduce((a,b) => a+b); } // rest',
  null,null,'easy',ARRAY['javascript','es6']::text[],2),
 
 ('javascript','es6-plus','javascript-es6-plus-003',
@@ -418,13 +482,19 @@ from (values
  'What are ES6 modules and how do import/export work?',
  'ES6 modules let JavaScript files share code through explicit export and import statements instead of relying on global scope. A module can have named exports (multiple per file) or a single default export, and importing code chooses which bindings to bring into its own scope. Unlike scripts, modules are automatically in strict mode and each module has its own top-level scope.',
  null,
- '// math.js\nexport const add = (a, b) => a + b;\nexport default function multiply(a, b) { return a * b; }\n\n// main.js\nimport multiply, { add } from "./math.js";',
+ '// math.js
+export const add = (a, b) => a + b;
+export default function multiply(a, b) { return a * b; }
+
+// main.js
+import multiply, { add } from "./math.js";',
  'javascript','medium',ARRAY['javascript','es6','modules']::text[],4),
 
 ('javascript','es6-plus','javascript-es6-plus-005',
  'What are default parameters in JavaScript?',
  'Default parameters let a function parameter fall back to a specified value if the caller omits the argument or passes undefined, removing the need for manual "if undefined" checks inside the function body.',
- 'function greet(name = "Guest") { return `Hello, ${name}`; }\ngreet(); // "Hello, Guest"',
+ 'function greet(name = "Guest") { return `Hello, ${name}`; }
+greet(); // "Hello, Guest"',
  null,null,'easy',ARRAY['javascript','es6','functions']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -434,7 +504,11 @@ from (values
  'What is event delegation?',
  'Event delegation is a pattern where a single event listener is attached to a common parent element instead of individual listeners on each child. Because events bubble up the DOM, the parent''s handler can inspect event.target to determine which child triggered it. This reduces memory usage and automatically handles dynamically added children without re-attaching listeners.',
  null,
- 'document.getElementById("list").addEventListener("click", (e) => {\n    if (e.target.tagName === "LI") {\n        console.log("Clicked:", e.target.textContent);\n    }\n});',
+ 'document.getElementById("list").addEventListener("click", (e) => {
+    if (e.target.tagName === "LI") {
+        console.log("Clicked:", e.target.textContent);
+    }
+});',
  'javascript','medium',ARRAY['javascript','dom','events']::text[],1),
 
 ('javascript','dom','javascript-dom-002',
@@ -456,7 +530,13 @@ from (values
  'What is debouncing and throttling?',
  'Debouncing delays invoking a function until a specified time has passed since the last time it was triggered, which is useful for things like search-input handlers where you only want to act once typing pauses. Throttling ensures a function runs at most once per specified time interval regardless of how often it is triggered, which is useful for high-frequency events like scroll or resize.',
  null,
- 'function debounce(fn, delay) {\n    let timer;\n    return (...args) => {\n        clearTimeout(timer);\n        timer = setTimeout(() => fn(...args), delay);\n    };\n}',
+ 'function debounce(fn, delay) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}',
  'javascript','medium',ARRAY['javascript','dom','performance']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -499,7 +579,8 @@ from (values
 ('react','components','react-components-002',
  'What are props in React?',
  'Props (short for properties) are read-only inputs passed from a parent component to a child component, similar to function arguments. They let data flow down the component tree and allow a component to be configured and reused with different values, but a child should never mutate the props it receives.',
- 'function Greeting({ name }) { return <p>Hello, {name}!</p>; }\n<Greeting name="Sam" />',
+ 'function Greeting({ name }) { return <p>Hello, {name}!</p>; }
+<Greeting name="Sam" />',
  null,null,'easy',ARRAY['react','components','props']::text[],2),
 
 ('react','components','react-components-003',
@@ -511,7 +592,9 @@ from (values
  'What is the difference between controlled and uncontrolled components?',
  'A controlled component has its form value driven entirely by React state — the input''s value comes from state and every change updates that state via onChange, making React the "single source of truth." An uncontrolled component keeps its own internal DOM state, and React reads the current value only when needed (e.g. via a ref), which is closer to traditional HTML form behavior.',
  null,
- '// Controlled\nconst [value, setValue] = useState("");\n<input value={value} onChange={(e) => setValue(e.target.value)} />',
+ '// Controlled
+const [value, setValue] = useState("");
+<input value={value} onChange={(e) => setValue(e.target.value)} />',
  'jsx','medium',ARRAY['react','components','forms']::text[],4),
 
 ('react','components','react-components-005',
@@ -528,21 +611,27 @@ from (values
  'What is the useState hook and how does it work?',
  'useState is a hook that adds local state to a functional component. It returns a pair — the current state value and a setter function — and calling the setter schedules a re-render with the updated value. Each call to useState is independent, and React preserves the state between renders based on the order hooks are called in.',
  null,
- 'const [count, setCount] = useState(0);\n<button onClick={() => setCount(count + 1)}>{count}</button>',
+ 'const [count, setCount] = useState(0);
+<button onClick={() => setCount(count + 1)}>{count}</button>',
  'jsx','easy',ARRAY['react','hooks','usestate']::text[],1),
 
 ('react','hooks','react-hooks-002',
  'What is the useEffect hook and when does it run?',
  'useEffect lets you run side effects (data fetching, subscriptions, manually touching the DOM) in a functional component. By default it runs after every render; passing a dependency array limits it to run only when those dependencies change, and an empty array makes it run once after the initial mount. Returning a cleanup function from the effect lets you tear down subscriptions or timers before the effect re-runs or the component unmounts.',
  null,
- 'useEffect(() => {\n    const id = setInterval(() => console.log("tick"), 1000);\n    return () => clearInterval(id);\n}, []);',
+ 'useEffect(() => {
+    const id = setInterval(() => console.log("tick"), 1000);
+    return () => clearInterval(id);
+}, []);',
  'jsx','medium',ARRAY['react','hooks','useeffect']::text[],2),
 
 ('react','hooks','react-hooks-003',
  'What is useRef used for in React?',
  'useRef returns a mutable object with a .current property that persists across renders without causing a re-render when it changes. It is commonly used to hold a direct reference to a DOM element (e.g. to call .focus()) or to store any mutable value, like a previous state or a timer ID, that should not trigger re-rendering when updated.',
  null,
- 'const inputRef = useRef(null);\n<input ref={inputRef} />\ninputRef.current.focus();',
+ 'const inputRef = useRef(null);
+<input ref={inputRef} />
+inputRef.current.focus();',
  'jsx','medium',ARRAY['react','hooks','useref']::text[],3),
 
 ('react','hooks','react-hooks-004',
@@ -572,7 +661,14 @@ from (values
  'What is the Context API and when should you use it?',
  'The Context API lets you share values (like theme, locale, or authenticated user) across a component tree without manually passing props through every level. It is best suited for data that many components at different nesting levels need, such as global UI settings — for frequently changing, high-frequency data, a dedicated state management solution is often a better fit since context updates re-render all consumers.',
  null,
- 'const ThemeContext = createContext("light");\nfunction App() {\n    return (\n        <ThemeContext.Provider value="dark">\n            <Toolbar />\n        </ThemeContext.Provider>\n    );\n}',
+ 'const ThemeContext = createContext("light");
+function App() {
+    return (
+        <ThemeContext.Provider value="dark">
+            <Toolbar />
+        </ThemeContext.Provider>
+    );
+}',
  'jsx','medium',ARRAY['react','state','context']::text[],3),
 
 ('react','state','react-state-004',
@@ -583,7 +679,8 @@ from (values
 ('react','state','react-state-005',
  'Why should you avoid mutating state directly in React?',
  'React determines whether to re-render by comparing state references between renders (especially with React.memo, useMemo, and PureComponent). Mutating an object or array in place keeps the same reference, so React may not detect the change and skip a necessary re-render. Always create a new object/array (e.g. with spread syntax) when updating state so React can correctly detect the change.',
- 'setItems(prev => [...prev, newItem]); // correct\n// items.push(newItem); setItems(items); // incorrect — same reference',
+ 'setItems(prev => [...prev, newItem]); // correct
+// items.push(newItem); setItems(items); // incorrect — same reference',
  null,null,'medium',ARRAY['react','state']::text[],5),
 
 -- ------------------------------------------------------------------
@@ -598,14 +695,19 @@ from (values
  'What is React.memo and when should it be used?',
  'React.memo is a higher-order component that wraps a functional component and skips re-rendering it if its props have not changed (using a shallow comparison by default). It is most useful for components that render often with the same props and are expensive to re-render — wrapping every component in memo indiscriminately adds overhead without benefit.',
  null,
- 'const ExpensiveList = React.memo(function ExpensiveList({ items }) {\n    return <ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>;\n});',
+ 'const ExpensiveList = React.memo(function ExpensiveList({ items }) {
+    return <ul>{items.map(i => <li key={i.id}>{i.name}</li>)}</ul>;
+});',
  'jsx','medium',ARRAY['react','performance']::text[],2),
 
 ('react','performance','react-performance-003',
  'What is code splitting and how does React.lazy help?',
  'Code splitting breaks a large JavaScript bundle into smaller chunks that are loaded on demand rather than all at once, reducing initial load time. React.lazy() lets you define a component that is loaded via a dynamic import() only when it is actually rendered, typically paired with a Suspense boundary to show a fallback while the chunk loads.',
  null,
- 'const Settings = React.lazy(() => import("./Settings"));\n<Suspense fallback={<Spinner />}>\n    <Settings />\n</Suspense>',
+ 'const Settings = React.lazy(() => import("./Settings"));
+<Suspense fallback={<Spinner />}>
+    <Settings />
+</Suspense>',
  'jsx','medium',ARRAY['react','performance']::text[],3),
 
 ('react','performance','react-performance-004',
@@ -642,7 +744,12 @@ from (values
  'What are higher-order components (HOCs)?',
  'A higher-order component is a function that takes a component and returns a new component with additional props or behavior, following the pattern of composing functions. HOCs were a common way to share cross-cutting logic (like authentication checks or data fetching) before hooks became prevalent, and are still seen in some libraries.',
  null,
- 'function withLogging(Component) {\n    return function Wrapped(props) {\n        console.log("Rendering", Component.name);\n        return <Component {...props} />;\n    };\n}',
+ 'function withLogging(Component) {
+    return function Wrapped(props) {
+        console.log("Rendering", Component.name);
+        return <Component {...props} />;
+    };
+}',
  'jsx','medium',ARRAY['react','advanced']::text[],4),
 
 ('react','advanced-react','react-advanced-react-005',
@@ -667,7 +774,10 @@ from (values
  'What is the difference between WHERE and HAVING?',
  'WHERE filters individual rows before any grouping or aggregation happens, and cannot reference aggregate functions. HAVING filters groups after GROUP BY has been applied, and is used specifically to filter based on aggregate results, such as showing only departments with an average salary above a threshold.',
  null,
- 'SELECT department, AVG(salary)\nFROM employees\nGROUP BY department\nHAVING AVG(salary) > 50000;',
+ 'SELECT department, AVG(salary)
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 50000;',
  'sql','easy',ARRAY['sql','basics','aggregation']::text[],3),
 
 ('sql','basics','sql-basics-004',
@@ -682,7 +792,9 @@ from (values
  'What is the difference between INNER JOIN and OUTER JOIN?',
  'INNER JOIN returns only the rows that have matching values in both joined tables. OUTER JOIN (LEFT, RIGHT, or FULL) returns matching rows plus unmatched rows from one or both sides, filling in NULLs for columns from the table that has no match.',
  null,
- 'SELECT e.name, d.name\nFROM employees e\nINNER JOIN departments d ON e.department_id = d.id;',
+ 'SELECT e.name, d.name
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.id;',
  'sql','easy',ARRAY['sql','joins']::text[],1),
 
 ('sql','joins','sql-joins-002',
@@ -694,7 +806,9 @@ from (values
  'What is a self join and when would you use one?',
  'A self join joins a table to itself, typically using table aliases to distinguish the two "copies." It is useful for comparing rows within the same table, such as finding employees who share the same manager, or comparing each employee''s salary to their manager''s salary stored in the same employees table.',
  null,
- 'SELECT e.name AS employee, m.name AS manager\nFROM employees e\nJOIN employees m ON e.manager_id = m.id;',
+ 'SELECT e.name AS employee, m.name AS manager
+FROM employees e
+JOIN employees m ON e.manager_id = m.id;',
  'sql','medium',ARRAY['sql','joins']::text[],3),
 
 ('sql','joins','sql-joins-004',
@@ -714,7 +828,9 @@ from (values
  'What is the purpose of GROUP BY?',
  'GROUP BY collapses rows that share the same values in specified columns into a single summary row, so that aggregate functions like COUNT, SUM, AVG, MIN, and MAX can be computed per group rather than across the whole table.',
  null,
- 'SELECT department, COUNT(*) AS employee_count\nFROM employees\nGROUP BY department;',
+ 'SELECT department, COUNT(*) AS employee_count
+FROM employees
+GROUP BY department;',
  'sql','easy',ARRAY['sql','aggregations']::text[],2),
 
 ('sql','aggregations','sql-aggregations-003',
@@ -726,7 +842,10 @@ from (values
  'How do you find duplicate rows in a table using SQL?',
  'Group the rows by the column(s) that define a "duplicate," then use HAVING COUNT(*) > 1 to filter to only the groups that appear more than once.',
  null,
- 'SELECT email, COUNT(*) AS occurrences\nFROM users\nGROUP BY email\nHAVING COUNT(*) > 1;',
+ 'SELECT email, COUNT(*) AS occurrences
+FROM users
+GROUP BY email
+HAVING COUNT(*) > 1;',
  'sql','medium',ARRAY['sql','aggregations']::text[],4),
 
 -- ------------------------------------------------------------------
@@ -741,7 +860,11 @@ from (values
  'What is the difference between a correlated and non-correlated subquery?',
  'A non-correlated subquery is independent of the outer query — it can be run on its own and its result is computed once. A correlated subquery references a column from the outer query, so it must be conceptually re-evaluated for every row processed by the outer query, which can make it significantly slower on large datasets.',
  null,
- '-- Correlated: references outer query''s e alias\nSELECT name FROM employees e\nWHERE salary > (\n    SELECT AVG(salary) FROM employees WHERE department_id = e.department_id\n);',
+ '-- Correlated: references outer query''s e alias
+SELECT name FROM employees e
+WHERE salary > (
+    SELECT AVG(salary) FROM employees WHERE department_id = e.department_id
+);',
  'sql','hard',ARRAY['sql','subqueries']::text[],2),
 
 ('sql','subqueries','sql-subqueries-003',
@@ -753,7 +876,9 @@ from (values
  'Can a subquery be used in the SELECT clause?',
  'Yes — a scalar subquery (one that returns a single value) can be used directly in the SELECT list to compute a per-row derived value, such as showing each employee''s salary alongside their department''s average salary.',
  null,
- 'SELECT name, salary,\n    (SELECT AVG(salary) FROM employees) AS company_avg\nFROM employees;',
+ 'SELECT name, salary,
+    (SELECT AVG(salary) FROM employees) AS company_avg
+FROM employees;',
  'sql','medium',ARRAY['sql','subqueries']::text[],4),
 
 -- ------------------------------------------------------------------
@@ -763,7 +888,10 @@ from (values
  'What is a Common Table Expression (CTE)?',
  'A CTE is a named, temporary result set defined with a WITH clause that exists only for the duration of the query that follows it. CTEs improve readability by breaking complex queries into logical, named steps, and can be referenced multiple times within the same query.',
  null,
- 'WITH high_earners AS (\n    SELECT * FROM employees WHERE salary > 80000\n)\nSELECT department, COUNT(*) FROM high_earners GROUP BY department;',
+ 'WITH high_earners AS (
+    SELECT * FROM employees WHERE salary > 80000
+)
+SELECT department, COUNT(*) FROM high_earners GROUP BY department;',
  'sql','medium',ARRAY['sql','cte']::text[],1),
 
 ('sql','cte','sql-cte-002',
@@ -775,13 +903,21 @@ from (values
  'What is a recursive CTE and when would you use one?',
  'A recursive CTE references itself to repeatedly process hierarchical or graph-like data, such as an organizational chart or category tree. It consists of an "anchor" member (the base case) and a "recursive" member that references the CTE itself, combined with UNION ALL, continuing until the recursive member returns no more rows.',
  null,
- 'WITH RECURSIVE org_chart AS (\n    SELECT id, name, manager_id FROM employees WHERE manager_id IS NULL\n    UNION ALL\n    SELECT e.id, e.name, e.manager_id\n    FROM employees e\n    JOIN org_chart o ON e.manager_id = o.id\n)\nSELECT * FROM org_chart;',
+ 'WITH RECURSIVE org_chart AS (
+    SELECT id, name, manager_id FROM employees WHERE manager_id IS NULL
+    UNION ALL
+    SELECT e.id, e.name, e.manager_id
+    FROM employees e
+    JOIN org_chart o ON e.manager_id = o.id
+)
+SELECT * FROM org_chart;',
  'sql','hard',ARRAY['sql','cte','recursion']::text[],3),
 
 ('sql','cte','sql-cte-004',
  'Can you use multiple CTEs in a single query?',
  'Yes — multiple CTEs can be defined in a single WITH clause, separated by commas, and later CTEs can reference earlier ones defined in the same clause, allowing you to build up complex logic in clear, sequential steps.',
- 'WITH a AS (...), b AS (SELECT * FROM a WHERE ...)\nSELECT * FROM b;',
+ 'WITH a AS (...), b AS (SELECT * FROM a WHERE ...)
+SELECT * FROM b;',
  null,null,'easy',ARRAY['sql','cte']::text[],4),
 
 -- ------------------------------------------------------------------
@@ -796,21 +932,27 @@ from (values
  'What is the difference between RANK(), DENSE_RANK(), and ROW_NUMBER()?',
  'ROW_NUMBER() assigns a unique, sequential number to each row within a partition regardless of ties. RANK() assigns the same rank to tied rows but skips subsequent rank numbers (e.g. 1, 2, 2, 4). DENSE_RANK() also assigns the same rank to ties, but does not skip numbers afterward (e.g. 1, 2, 2, 3).',
  null,
- 'SELECT name, salary,\n    RANK() OVER (ORDER BY salary DESC) AS salary_rank\nFROM employees;',
+ 'SELECT name, salary,
+    RANK() OVER (ORDER BY salary DESC) AS salary_rank
+FROM employees;',
  'sql','hard',ARRAY['sql','window-functions']::text[],2),
 
 ('sql','window-functions','sql-window-functions-003',
  'What does the PARTITION BY clause do?',
  'PARTITION BY divides the result set into groups ("partitions") for the purpose of a window function, similar to how GROUP BY groups rows for aggregation — except the window function is computed independently within each partition while every row is still returned individually.',
  null,
- 'SELECT name, department, salary,\n    AVG(salary) OVER (PARTITION BY department) AS dept_avg\nFROM employees;',
+ 'SELECT name, department, salary,
+    AVG(salary) OVER (PARTITION BY department) AS dept_avg
+FROM employees;',
  'sql','medium',ARRAY['sql','window-functions']::text[],3),
 
 ('sql','window-functions','sql-window-functions-004',
  'How would you calculate a running total using SQL?',
  'Use the SUM() window function with an ORDER BY inside the OVER clause; by default this frames the calculation from the start of the partition up to the current row, producing a cumulative sum as the order progresses.',
  null,
- 'SELECT order_date, amount,\n    SUM(amount) OVER (ORDER BY order_date) AS running_total\nFROM orders;',
+ 'SELECT order_date, amount,
+    SUM(amount) OVER (ORDER BY order_date) AS running_total
+FROM orders;',
  'sql','medium',ARRAY['sql','window-functions']::text[],4),
 
 -- ------------------------------------------------------------------
@@ -842,7 +984,10 @@ from (values
 ('sql','transactions','sql-transactions-002',
  'What is the difference between COMMIT and ROLLBACK?',
  'COMMIT permanently saves all changes made during the current transaction to the database, making them visible to other sessions. ROLLBACK undoes all changes made during the current transaction, reverting the database to the state it was in before the transaction began, typically used when an error occurs partway through a multi-step operation.',
- 'BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT;',
+ 'BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;',
  null,null,'easy',ARRAY['sql','transactions']::text[],2),
 
 ('sql','transactions','sql-transactions-003',
@@ -864,3 +1009,39 @@ on conflict (slug) do update set
   display_order = excluded.display_order,
   topic_id = excluded.topic_id,
   language_id = excluded.language_id;
+
+-- =============================================================================
+-- Frequently Asked flag
+-- A curated set of the most commonly asked "classic" interview questions,
+-- marked so the frontend's "Frequently Asked" filter/badge has real signal.
+-- Re-running this block is safe — it always resets the flag to match this list.
+-- =============================================================================
+update public.questions set is_frequently_asked = false;
+
+update public.questions set is_frequently_asked = true
+where slug in (
+  'java-core-java-002',
+  'java-oop-002',
+  'java-collections-002',
+  'java-collections-003',
+  'java-multithreading-004',
+  'java-java-8-003',
+  'javascript-basics-002',
+  'javascript-functions-001',
+  'javascript-async-javascript-001',
+  'javascript-async-javascript-003',
+  'javascript-objects-001',
+  'javascript-es6-plus-003',
+  'react-fundamentals-002',
+  'react-hooks-001',
+  'react-hooks-002',
+  'react-components-005',
+  'react-state-003',
+  'react-performance-002',
+  'sql-joins-001',
+  'sql-basics-001',
+  'sql-window-functions-002',
+  'sql-subqueries-002',
+  'sql-transactions-001',
+  'sql-cte-001'
+);

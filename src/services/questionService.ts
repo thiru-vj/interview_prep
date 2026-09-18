@@ -10,13 +10,20 @@ const QUESTION_WITH_CONTEXT_SELECT = `
 
 export interface QuestionFilters {
   difficulty?: Difficulty | null
+  frequentlyAsked?: boolean
+}
+
+function applyFilters<T extends { eq: (col: string, val: unknown) => T }>(query: T, filters?: QuestionFilters): T {
+  let next = query
+  if (filters?.difficulty) next = next.eq('difficulty', filters.difficulty)
+  if (filters?.frequentlyAsked) next = next.eq('is_frequently_asked', true)
+  return next
 }
 
 export async function getQuestionCount(languageId: string, filters?: QuestionFilters): Promise<number> {
-  let query = supabase.from('questions').select('id', { count: 'exact', head: true }).eq('language_id', languageId)
-  if (filters?.difficulty) query = query.eq('difficulty', filters.difficulty)
+  const query = supabase.from('questions').select('id', { count: 'exact', head: true }).eq('language_id', languageId)
 
-  const { count, error } = await query
+  const { count, error } = await applyFilters(query, filters)
   if (error) throw error
   return count ?? 0
 }
@@ -29,13 +36,12 @@ export async function getQuestionsByLanguage(
 ): Promise<PaginatedResult<QuestionWithContext>> {
   const { from, to } = getRange(page, pageSize)
 
-  let query = supabase
+  const query = supabase
     .from('questions')
     .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
     .eq('language_id', languageId)
-  if (filters?.difficulty) query = query.eq('difficulty', filters.difficulty)
 
-  const { data, count, error } = await query
+  const { data, count, error } = await applyFilters(query, filters)
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: true })
     .range(from, to)
@@ -52,13 +58,12 @@ export async function getQuestionsByTopic(
 ): Promise<PaginatedResult<QuestionWithContext>> {
   const { from, to } = getRange(page, pageSize)
 
-  let query = supabase
+  const query = supabase
     .from('questions')
     .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
     .eq('topic_id', topicId)
-  if (filters?.difficulty) query = query.eq('difficulty', filters.difficulty)
 
-  const { data, count, error } = await query
+  const { data, count, error } = await applyFilters(query, filters)
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: true })
     .range(from, to)

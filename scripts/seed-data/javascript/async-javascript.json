@@ -1,0 +1,502 @@
+[
+  {
+    "question": "How do you create a Promise manually using the Promise constructor?",
+    "answer": "You pass an executor function to new Promise((resolve, reject) => {...}); call resolve(value) when the async operation succeeds, or reject(error) when it fails. The executor runs synchronously and immediately, but resolve/reject are typically called later, once some asynchronous work (like a timer or I/O callback) completes.",
+    "example": null,
+    "code": "const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));\nawait wait(1000);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's a common pitfall when chaining multiple .then() calls?",
+    "answer": "Forgetting to return a value (or a promise) from inside a .then() callback silently breaks the chain — subsequent .then() calls receive undefined instead of the expected data, since each .then() implicitly wraps whatever its callback returns in a resolved promise. Another common pitfall is nesting .then() calls instead of chaining them flatly, which recreates the callback-hell problem promises were meant to solve.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Should you use try/catch or .catch() to handle errors in an async function?",
+    "answer": "Both work, but they suit different situations: try/catch around await calls handles errors the same way as synchronous code and is usually more readable for sequential logic. .catch() attached directly to a promise chain is useful when you want to handle errors for a specific async call without wrapping the whole function, or when working outside an async function entirely.",
+    "example": null,
+    "code": "async function load() {\n  try {\n    const data = await fetchData();\n  } catch (err) {\n    console.error('failed', err);\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "error-handling"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does Promise.any() do, and how does it differ from Promise.race()?",
+    "answer": "Promise.any() resolves as soon as any one of the input promises fulfills, and only rejects if all of them reject (with an AggregateError containing all the individual errors). Promise.race() settles on whichever promise finishes first, whether it fulfills or rejects — so race can reject even if a later promise would have succeeded, while any() specifically waits for a success.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is 'promisifying' a callback-based function, and how would you do it manually?",
+    "answer": "Promisifying wraps an older Node-style callback API (fn(args, (err, result) => {...})) in a function that returns a Promise instead, so it can be used with async/await. You wrap the call in new Promise((resolve, reject) => {...}), calling reject(err) if the callback receives an error and resolve(result) otherwise.",
+    "example": null,
+    "code": "function promisify(fn) {\n  return (...args) => new Promise((resolve, reject) => {\n    fn(...args, (err, result) => err ? reject(err) : resolve(result));\n  });\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "node"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does for await...of do, and when do you need it instead of a regular for...of?",
+    "answer": "for await...of iterates over an async iterable (an object whose Symbol.asyncIterator returns items wrapped in promises), automatically awaiting each yielded value before the loop body runs. It's needed when iterating over something like a paginated API, a readable stream, or an async generator, where each 'next' value itself takes time to produce.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "iterators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How were generators used to manage asynchronous flow before async/await existed?",
+    "answer": "Generator functions (function*) can pause execution at a yield and be resumed later, so libraries like co wrapped a generator in a driver function that would yield a promise, wait for it to resolve, then resume the generator with the resolved value — effectively hand-rolling what async/await now does natively. async/await is often described as syntactic sugar over this exact generator-plus-promise-driver pattern.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the practical difference between setTimeout and setInterval?",
+    "answer": "setTimeout schedules a callback to run once after a delay. setInterval schedules a callback to run repeatedly every given interval until explicitly stopped with clearInterval — but if the callback itself takes longer than the interval, calls can queue up or overlap in confusing ways, which is why a self-rescheduling setTimeout is often preferred for reliable repeated polling.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "async", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does queueMicrotask() do?",
+    "answer": "queueMicrotask() schedules a callback to run in the microtask queue, the same queue used for resolved Promise .then() callbacks — meaning it runs after the current synchronous code finishes but before the next macrotask (like a setTimeout callback or UI render). It's useful when you want promise-like 'run soon but not synchronously' timing without actually creating a Promise object.",
+    "example": null,
+    "code": "queueMicrotask(() => console.log('microtask'));\nconsole.log('sync'); // logs: sync, then microtask",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What causes a race condition in async JavaScript code, and how can you guard against one?",
+    "answer": "A race condition occurs when multiple async operations that read/write shared state can complete in an unpredictable order, causing the final result to depend on timing rather than logic — a classic example is a search input firing multiple requests where an older, slower response overwrites a newer one. Guards include ignoring stale responses (tracking a request ID/token and discarding out-of-order results) or cancelling the previous request before starting a new one.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you cancel an in-flight fetch request?",
+    "answer": "Create an AbortController, pass its .signal to fetch's options, and call controller.abort() to cancel the request — fetch then rejects with an AbortError. This is commonly used to cancel a previous request when a new one starts (e.g. in a search-as-you-type feature) to avoid race conditions and wasted bandwidth.",
+    "example": null,
+    "code": "const controller = new AbortController();\nfetch(url, { signal: controller.signal });\ncontroller.abort(); // cancels the request",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "fetch"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between running two async operations sequentially vs in parallel?",
+    "answer": "Sequential execution (await a(); await b();) waits for each to finish before starting the next, so total time is the sum of both — necessary when b depends on a's result. Parallel execution (await Promise.all([a(), b()]), or starting both calls before awaiting either) runs them concurrently, so total time is roughly the slower of the two — appropriate when the operations are independent.",
+    "example": null,
+    "code": "// Sequential: slower\nconst a = await fetchA(); const b = await fetchB();\n// Parallel: faster\nconst [a2, b2] = await Promise.all([fetchA(), fetchB()]);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does an async function actually return if you don't write an explicit return statement?",
+    "answer": "An async function always returns a Promise, even without an explicit return — if there's no return statement, it implicitly returns a Promise that resolves to undefined once the function body finishes executing. If you return a plain value, it's automatically wrapped in a resolved Promise; if you return a promise, the outer promise adopts its state.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an 'unhandled promise rejection' and why is it a problem?",
+    "answer": "It occurs when a Promise rejects but no .catch() handler (or try/catch around an await) is attached to observe the rejection, meaning the error is silently swallowed instead of surfacing. In Node.js this can even crash the process depending on version/configuration, and in browsers it logs a console warning — either way it usually indicates a missing error-handling path in the code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does an error thrown deep inside an await chain propagate to the caller?",
+    "answer": "If any awaited call inside an async function throws (or its promise rejects), that rejection propagates up and effectively 'throws' at the await point, which can be caught by a surrounding try/catch in that same function. If uncaught locally, the async function's own returned promise rejects, and the error continues propagating to whatever calls that function and awaits (or catches) it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you limit the number of concurrent async requests running at once?",
+    "answer": "A common pattern is a simple concurrency-limited queue: maintain a counter of in-flight requests, and only start a new one from a work queue when the counter is below a max limit, decrementing and pulling the next item when one finishes. Libraries like p-limit implement this, but it can be hand-rolled with a loop of workers each pulling from a shared queue.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement retry logic with exponential backoff for a flaky async call?",
+    "answer": "Wrap the call in a loop (or recursive function) that catches failures, and on each retry waits progressively longer (e.g. doubling the delay each time, often with some random jitter added) before trying again, up to a maximum number of attempts. This avoids hammering a struggling service with immediate retries while still recovering automatically from transient failures.",
+    "example": null,
+    "code": "async function retry(fn, attempts = 3, delay = 500) {\n  for (let i = 0; i < attempts; i++) {\n    try { return await fn(); }\n    catch (err) { if (i === attempts - 1) throw err; await new Promise(r => setTimeout(r, delay * 2 ** i)); }\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "resilience"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do Promise.resolve() and Promise.reject() do?",
+    "answer": "Promise.resolve(value) returns a Promise that's already fulfilled with the given value (or, if given a thenable/promise, adopts its eventual state). Promise.reject(error) returns a Promise that's already rejected with the given error. They're useful for normalizing a value into a Promise or short-circuiting a chain with an immediate outcome.",
+    "example": null,
+    "code": "Promise.resolve(42).then(v => console.log(v)); // 42\nPromise.reject('oops').catch(e => console.log(e)); // oops",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean to 'compose' async functions, and how would you do it?",
+    "answer": "Composing async functions means chaining several async steps together so the output of one feeds into the next, typically written as a sequence of awaited calls inside a single async function, or via a reduce over an array of async functions that each await the previous result. It keeps multi-step async pipelines (validate, then transform, then save) readable as straight-line code instead of nested callbacks.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between blocking and non-blocking I/O, and where does JavaScript fit?",
+    "answer": "Blocking I/O halts the entire thread until an operation (like a file read or network call) completes, wasting time waiting. Non-blocking I/O lets the thread continue doing other work while the operation happens in the background, invoking a callback (or resolving a promise) when it's done. JavaScript's single-threaded runtime relies heavily on non-blocking I/O, via the event loop, to stay responsive despite having only one thread of execution.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do timers interact with the event loop's phases?",
+    "answer": "A timer callback (from setTimeout/setInterval) isn't guaranteed to run at exactly its specified delay — it's only guaranteed to run no earlier than that delay, since it must wait for the call stack to be empty and for its turn in the timer phase of the event loop. If synchronous code or other queued work is still executing, a timer's callback can fire noticeably later than requested.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is requestAnimationFrame preferred over setTimeout for animations?",
+    "answer": "requestAnimationFrame schedules a callback to run right before the browser's next repaint, syncing your updates with the display's actual refresh rate (typically 60fps) and automatically pausing when the tab is inactive to save resources. setTimeout has no awareness of the rendering pipeline, so animations driven by it can appear janky or keep running (wasting battery) in a backgrounded tab.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What problem do Web Workers solve, and what are their limitations?",
+    "answer": "Web Workers run JavaScript on a separate background thread, letting you offload CPU-intensive work (like heavy computation or data processing) without blocking the main thread and freezing the UI. Their main limitation is that they don't share memory with the main thread — communication happens via message passing (postMessage), and they can't directly access the DOM.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why doesn't array.forEach(async (item) => { await doSomething(item); }) wait for all the async work to finish?",
+    "answer": "forEach doesn't know or care what its callback returns — it calls the callback for each item and moves on immediately, ignoring the Promise each async callback returns. This means code after the forEach call runs before any of the async operations actually complete, which is a very common source of bugs; using a for...of loop with await, or Promise.all with map, are the correct alternatives.",
+    "example": null,
+    "code": "// Wrong: doesn't wait\nitems.forEach(async (item) => await save(item));\n// Correct: waits for all\nawait Promise.all(items.map(item => save(item)));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "When would you prefer explicit .then() chaining over async/await?",
+    "answer": "then() chaining can be more natural for simple, single-step transformations of a promise's result, or in contexts that can't be async functions. For anything with sequential logic, conditionals, or loops, async/await is almost always more readable since it lets asynchronous code be structured like ordinary synchronous code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can async code create a deadlock-like situation, even though JS is single-threaded?",
+    "answer": "It happens when two async operations end up waiting on each other in a cycle — for example, two mutually-dependent promises where each awaits a resolution that depends on the other completing first, or a lock/mutex-style pattern used to serialize access to a shared resource where a lock is acquired but never released due to an unhandled error path. It's less common than true multi-threaded deadlocks but can still hang a specific async flow indefinitely.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Conceptually, how does streaming a response differ from awaiting the whole response at once?",
+    "answer": "Streaming processes data in chunks as they arrive (e.g. via a ReadableStream reader or an async iterator over response.body), letting you start working with the beginning of a large payload before the rest has finished downloading. Awaiting the whole response (like response.json()) buffers everything into memory first and only resolves once the entire payload has arrived, which is simpler but less memory-efficient for large responses.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "streams"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement a debounced async search that avoids showing stale results?",
+    "answer": "Debounce the trigger (wait for a pause in typing before firing the request) to avoid firing a request per keystroke, and separately guard against out-of-order responses — e.g. by tagging each request with an incrementing ID and only applying the response if its ID matches the latest request, or by aborting the previous request with AbortController before starting a new one.",
+    "example": null,
+    "code": "let latestId = 0;\nasync function search(query) {\n  const id = ++latestId;\n  const results = await fetchResults(query);\n  if (id === latestId) render(results);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an async generator function and when would you use one?",
+    "answer": "An async generator (async function*) combines generators and promises — each yielded value can itself be awaited, and it's consumed with for await...of. It's useful for representing a sequence of asynchronously-produced values, like paginated API results fetched page by page on demand, without loading everything into memory up front.",
+    "example": null,
+    "code": "async function* fetchPages(url) {\n  let next = url;\n  while (next) {\n    const res = await fetch(next).then(r => r.json());\n    yield res.items;\n    next = res.nextPageUrl;\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the fundamental difference between synchronous and asynchronous code execution in JavaScript?",
+    "answer": "Synchronous code executes immediately, line by line, blocking further execution until each statement completes. Asynchronous code initiates an operation (like a timer, network request, or file read) and continues executing subsequent code immediately, with the result of the async operation delivered later via a callback, promise, or await, without blocking the single JS thread in the meantime.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if you await a value that isn't a Promise?",
+    "answer": "await works on any value, not just promises — if the value isn't a thenable, it's simply wrapped in an already-resolved Promise and immediately returns that value on the next microtask tick. This means you can safely await a plain number, string, or object without an error; it just adds a tiny amount of asynchronous scheduling.",
+    "example": null,
+    "code": "async function f() {\n  const x = await 5; // works fine, x === 5\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the three states of a Promise, and why can it only transition between them once?",
+    "answer": "A Promise is pending initially, then settles exactly once into either fulfilled (with a value) or rejected (with a reason) — once settled, its state and value are permanently locked and further calls to resolve/reject are no-ops. This 'settle once' guarantee is what makes promises reliable to consume: any .then()/.catch() attached, even after settlement, always fires with the same, immutable outcome.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if a .then() callback returns another Promise instead of a plain value?",
+    "answer": "The chain automatically 'flattens' — instead of resolving with a nested promise-within-a-promise, the outer chain waits for the returned inner promise to settle and adopts its eventual value or rejection. This auto-flattening is what makes sequential async operations chainable without ending up with deeply nested promise structures.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does an async function's promise resolve to undefined if it has no return statement, rather than never resolving?",
+    "answer": "Reaching the end of the function body (falling off the end) is treated exactly like an implicit return undefined; in regular JavaScript functions, and async functions inherit that behavior — completing execution, even without an explicit return, is what triggers the returned promise to fulfill, just with an undefined value rather than leaving it perpetually pending.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you kick off several independent async operations without letting a slow one block the others?",
+    "answer": "Start all the operations first (without awaiting each individually), collecting their promises, and only then await them together — either with Promise.all if you need all results and want to fail fast on any rejection, or Promise.allSettled if you want every outcome regardless of individual failures. Awaiting each one immediately in sequence would needlessly serialize otherwise-independent work.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does a finally block behave inside an async function with try/catch?",
+    "answer": "The finally block runs after the try (and catch, if triggered) completes, regardless of whether the awaited code succeeded, threw, or even if a return happened inside try/catch — making it ideal for cleanup logic, like closing a connection or hiding a loading spinner, that must run no matter the outcome.",
+    "example": null,
+    "code": "async function load() {\n  showSpinner();\n  try { return await fetchData(); }\n  finally { hideSpinner(); }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async", "error-handling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you cancel a pending setTimeout before it fires?",
+    "answer": "setTimeout returns an identifier (a number in browsers, a Timeout object in Node), which you pass to clearTimeout() to cancel the scheduled callback before it runs. This is commonly used to reset a debounce timer or clean up a pending timer when a component unmounts.",
+    "example": null,
+    "code": "const id = setTimeout(doThing, 1000);\nclearTimeout(id); // cancels it before it fires",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async", "timers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "At a high level, how does an Observable-based approach like RxJS differ from Promise-based async code?",
+    "answer": "A Promise represents a single future value and can only resolve once, while an Observable represents a stream of zero, one, or many values over time and can be cancelled (unsubscribed) mid-stream. Observables are better suited to ongoing event sources, like user input, WebSocket messages, or periodic polling, whereas Promises are a natural fit for one-off async operations like a single API call.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "rxjs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do Promises solve the 'callback hell' problem that plagued earlier asynchronous JavaScript?",
+    "answer": "Callback hell arises from deeply nesting callbacks for sequential async steps, each one indented inside the previous, making code hard to read and error handling inconsistent since each callback needs its own error check. Promises let you chain steps flatly with .then(), and centralize error handling in a single .catch() at the end of the chain, later improved further by async/await which reads like fully synchronous code.",
+    "example": null,
+    "code": "// Callback hell:\ngetUser(id, (user) => {\n  getPosts(user, (posts) => {\n    render(posts);\n  });\n});\n// With async/await:\nconst user = await getUser(id);\nconst posts = await getPosts(user);\nrender(posts);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why is items.forEach(async item => await process(item)) a common bug, compared to a regular for loop?",
+    "answer": "The async arrow callback passed to forEach returns a Promise per call, but forEach's implementation completely discards each callback's return value and never awaits anything — so it fires off all iterations near-instantly without waiting for any of them, and any code following the forEach call runs before the async work finishes or even before errors within it are observable. A plain for or for...of loop with await inside genuinely pauses the loop itself at each iteration.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you await results into named variables when using Promise.all?",
+    "answer": "Promise.all returns an array of results in the same order as the input array of promises, so you can destructure that array directly into named variables in one line, which reads more clearly than accessing results[0], results[1], etc.",
+    "example": null,
+    "code": "const [user, posts] = await Promise.all([fetchUser(id), fetchPosts(id)]);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you add a timeout to a Promise that might otherwise hang indefinitely?",
+    "answer": "Use Promise.race() between the real operation and a second promise that rejects after a fixed delay via setTimeout — whichever settles first 'wins', so if the real operation is too slow, the timeout promise rejects first and the overall race rejects with a timeout error.",
+    "example": null,
+    "code": "function withTimeout(promise, ms) {\n  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms));\n  return Promise.race([promise, timeout]);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a 'thenable' and why does it matter for how Promises interoperate?",
+    "answer": "A thenable is any object with a .then(onFulfilled, onRejected) method, regardless of whether it's a native Promise — the Promise spec is designed to treat any thenable as promise-like, so awaiting or chaining onto a thenable from a different library or a custom implementation still works correctly. This duck-typed interoperability is why different Promise implementations, including ones written before native Promises existed, can be mixed and awaited seamlessly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the microtask queue interact with multiple chained .then() calls versus a single setTimeout?",
+    "answer": "All queued microtasks, including every pending .then() callback, run to completion before the event loop moves on to the next macrotask, so a long or deeply chained sequence of .then() callbacks will all execute before a setTimeout(fn, 0) callback fires, even though the setTimeout was scheduled first. This is a common source of confusion when reasoning about the exact order operations run in.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a subtle bug that can occur from forgetting to return a promise chain inside another async function?",
+    "answer": "If an async function starts a nested async operation but doesn't return (or await) its promise, the outer function's own promise can resolve before the inner operation finishes — meaning any code awaiting the outer function proceeds too early, as if the nested work were already done when it might still be in flight. This is often called an accidental 'fire and forget' bug.",
+    "example": null,
+    "code": "async function bad() {\n  doAsyncThing(); // missing await/return\n}\nasync function good() {\n  return doAsyncThing(); // or: await doAsyncThing();\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you test that an async function correctly rejects with a specific error?",
+    "answer": "In most test frameworks you either await the call inside a try/catch and assert inside the catch block, failing the test if no error was thrown, or use the framework's dedicated helper for rejection assertions, like Jest's await expect(fn()).rejects.toThrow('message'), which awaits the promise and asserts on its rejection reason directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "testing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a common cause of memory leaks in async/event-driven JavaScript code?",
+    "answer": "Forgetting to clear timers (clearTimeout/clearInterval) or remove event listeners/subscriptions when they're no longer needed, such as when a component unmounts, keeps callbacks — and everything they close over — alive indefinitely, since the runtime can't garbage-collect anything still referenced by an active timer or listener. This is especially common in single-page apps where components mount and unmount repeatedly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "async", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can returning a rejected promise from inside a .then() success callback still be caught by a later .catch()?",
+    "answer": "A .catch() is really just .then(undefined, onRejected) attached further down the chain, and any rejection — whether it comes from the original promise or is produced partway through the chain by a thrown error or an explicitly returned rejected promise — propagates forward past any intermediate .then() calls that don't have a matching rejection handler, until it reaches the first one that does.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When multiple .then() handlers are attached to the same promise, in what order do they run?",
+    "answer": "They run in the order they were attached, once the promise settles — each is scheduled as a separate microtask, so if a promise resolves and three .then() callbacks are attached to it, all three run, each as its own microtask, before any subsequently-scheduled macrotask, in registration order relative to each other.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does 'microtask queue starvation' mean, and how can it happen?",
+    "answer": "It's a situation where microtasks keep scheduling more microtasks, such as a .then() callback that recursively queues another .then(), faster than the queue can drain, which starves the event loop of the chance to reach the next macrotask phase — meaning rendering, timers, and I/O callbacks can be indefinitely delayed since the spec requires the entire microtask queue to empty before moving on. It's a rare but real performance pitfall in recursive promise-based code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "async", "event-loop"],
+    "isFrequentlyAsked": false
+  }
+]

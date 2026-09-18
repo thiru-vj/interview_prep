@@ -9,6 +9,7 @@ import { NotFoundState } from '@/components/common/NotFoundState'
 import { TopicList } from '@/components/topic/TopicList'
 import { QuestionList } from '@/components/question/QuestionList'
 import { DifficultyFilter } from '@/components/question/DifficultyFilter'
+import { FaqToggle } from '@/components/question/FaqToggle'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useLanguage } from '@/hooks/useLanguage'
 import { useTopics } from '@/hooks/useTopics'
@@ -23,6 +24,7 @@ export function Language() {
 
   const page = parsePageParam(searchParams.get('page'))
   const difficulty = (searchParams.get('difficulty') as Difficulty | null) ?? null
+  const frequentlyAsked = searchParams.get('faq') === 'true'
 
   const { data: language, loading: languageLoading, error: languageError } = useLanguage(slug)
   const { data: topics, loading: topicsLoading } = useTopics(language?.id)
@@ -30,15 +32,20 @@ export function Language() {
     data: result,
     loading: questionsLoading,
     error: questionsError,
-  } = useQuestionsByLanguage(language?.id, page, { difficulty })
+  } = useQuestionsByLanguage(language?.id, page, { difficulty, frequentlyAsked })
 
   const returnTo = `${location.pathname}${location.search}`
 
-  function updateParams(next: { page?: number; difficulty?: Difficulty | null }) {
+  function updateParams(next: { page?: number; difficulty?: Difficulty | null; faq?: boolean }) {
     const params = new URLSearchParams(searchParams)
     if (next.difficulty !== undefined) {
       if (next.difficulty) params.set('difficulty', next.difficulty)
       else params.delete('difficulty')
+      params.set('page', '1')
+    }
+    if (next.faq !== undefined) {
+      if (next.faq) params.set('faq', 'true')
+      else params.delete('faq')
       params.set('page', '1')
     }
     if (next.page !== undefined) {
@@ -81,13 +88,16 @@ export function Language() {
           <h2 id="questions-heading" className="text-lg font-semibold text-slate-900 dark:text-white">
             All Questions
           </h2>
-          <DifficultyFilter value={difficulty} onChange={(value) => updateParams({ difficulty: value })} />
+          <div className="flex flex-wrap items-center gap-2">
+            <FaqToggle value={frequentlyAsked} onChange={(value) => updateParams({ faq: value })} />
+            <DifficultyFilter value={difficulty} onChange={(value) => updateParams({ difficulty: value })} />
+          </div>
         </div>
 
         {questionsLoading && <LoadingState label="Loading questions..." />}
         {questionsError && <ErrorState message="Unable to load questions. Please try again." />}
         {!questionsLoading && !questionsError && result && result.data.length === 0 && (
-          <EmptyState message="Try a different difficulty filter." />
+          <EmptyState message="Try a different filter." />
         )}
         {!questionsLoading && !questionsError && result && result.data.length > 0 && (
           <>

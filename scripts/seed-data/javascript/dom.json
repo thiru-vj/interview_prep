@@ -1,0 +1,492 @@
+[
+  {
+    "question": "What is the difference between querySelector/querySelectorAll and getElementById/getElementsByClassName?",
+    "answer": "`querySelector`/`querySelectorAll` accept any CSS selector and give you far more flexibility (attribute selectors, combinators, pseudo-classes), while `getElementById`/`getElementsByClassName` only match by a single id or class name. The older methods also return live collections (that auto-update as the DOM changes) for `getElementsByClassName`, whereas `querySelectorAll` returns a static NodeList snapshot.",
+    "example": null,
+    "code": "document.querySelectorAll('.item:not(.disabled)');\ndocument.getElementById('main');",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a DOM node and a DOM element?",
+    "answer": "A node is the general base type in the DOM tree, covering elements, text, comments, and the document itself. An element is specifically a tag-based node (like `<div>` or `<p>`) — every element is a node, but not every node is an element, which is why APIs like `childNodes` (all nodes) and `children` (elements only) behave differently.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you create and insert a new element into the DOM?",
+    "answer": "`document.createElement(tagName)` creates a detached element, which you then configure (set attributes, text, children) before attaching it to the tree with a method like `appendChild()`, `append()`, or `insertBefore()`. Nothing is visible on the page until the element is actually attached to a node that's part of the document.",
+    "example": null,
+    "code": "const li = document.createElement('li');\nli.textContent = 'New item';\ndocument.querySelector('ul').appendChild(li);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do insertBefore() and replaceChild() do?",
+    "answer": "`parent.insertBefore(newNode, referenceNode)` inserts `newNode` into `parent` immediately before `referenceNode` (or at the end if `referenceNode` is `null`). `parent.replaceChild(newNode, oldNode)` swaps `oldNode` out for `newNode` in a single operation, removing the old node from the tree in the process.",
+    "example": null,
+    "code": "list.insertBefore(newItem, list.firstChild);\nlist.replaceChild(newItem, oldItem);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the classList API used for?",
+    "answer": "`element.classList` exposes a DOMTokenList with methods like `add()`, `remove()`, `toggle()`, `replace()`, and `contains()` for manipulating an element's CSS classes individually, without needing to parse or rebuild the whole `className` string manually. `toggle()` is especially handy for show/hide or active-state UI patterns.",
+    "example": null,
+    "code": "el.classList.toggle('active');\nel.classList.contains('active'); // true/false",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the dataset API and when would you use it?",
+    "answer": "`element.dataset` exposes an element's `data-*` HTML attributes as a plain object with camelCase keys — `data-user-id` becomes `dataset.userId`. It's a clean, standards-based way to attach custom metadata to DOM elements without inventing your own attribute scheme or relying on non-standard attributes.",
+    "example": "<div data-user-id=\"42\"></div>",
+    "code": "el.dataset.userId; // '42'\nel.dataset.userId = '43';",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between event.target and event.currentTarget?",
+    "answer": "`event.target` is the actual element that triggered the event (e.g. the specific button clicked), while `event.currentTarget` is the element the listener is currently attached to and executing on. They differ whenever an event bubbles — a listener on a parent `<ul>` sees `target` as the clicked `<li>` but `currentTarget` as the `<ul>` itself.",
+    "example": null,
+    "code": "list.addEventListener('click', (e) => {\n  console.log(e.target);        // the clicked <li>\n  console.log(e.currentTarget); // the <ul>\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you create and dispatch a custom event?",
+    "answer": "`new CustomEvent(name, { detail, bubbles })` creates an event carrying arbitrary payload data in `detail`, and `element.dispatchEvent(event)` fires it on that element as if it were a native event, triggering any matching listeners including delegated ones if `bubbles: true` is set. This is the standard way for independent pieces of UI code to communicate through the DOM without direct references to each other.",
+    "example": null,
+    "code": "const event = new CustomEvent('item-added', { detail: { id: 42 }, bubbles: true });\nel.dispatchEvent(event);\ndocument.addEventListener('item-added', (e) => console.log(e.detail.id));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the capture option in addEventListener do?",
+    "answer": "By default, `addEventListener` attaches a listener for the bubbling phase, running after the event has reached its target. Passing `{ capture: true }` (or just `true`) attaches it for the capturing phase instead, so it runs on the way down from the document root to the target, before any bubbling-phase listeners fire.",
+    "example": null,
+    "code": "el.addEventListener('click', handler, { capture: true });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the once option in addEventListener do?",
+    "answer": "`{ once: true }` makes the browser automatically remove the listener right after it fires for the first time, saving you from manually calling `removeEventListener` inside the handler. It's a concise way to handle events you only care about a single occurrence of, like a one-time animation-end callback.",
+    "example": "el.addEventListener('animationend', handler, { once: true });",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the passive option in addEventListener do, and why does it matter for scrolling?",
+    "answer": "`{ passive: true }` tells the browser the listener will never call `preventDefault()`, allowing the browser to start scrolling immediately instead of waiting to see if the handler cancels it. This is a meaningful performance improvement for high-frequency events like `touchstart`, `touchmove`, and `wheel`, which is why many browsers now default touch listeners to passive.",
+    "example": null,
+    "code": "window.addEventListener('touchmove', handler, { passive: true });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why must you keep a reference to a handler function to remove it later?",
+    "answer": "`removeEventListener` matches listeners by reference equality of the function (and the same capture/options), so passing a new inline arrow function to `removeEventListener` will never remove a listener added with a different (even identical-looking) function. To be able to remove a listener later, you must store the exact same function reference that was passed to `addEventListener`.",
+    "example": null,
+    "code": "const handler = () => console.log('click');\nel.addEventListener('click', handler);\nel.removeEventListener('click', handler); // works\n// el.removeEventListener('click', () => console.log('click')); // does NOT work",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the load and DOMContentLoaded events?",
+    "answer": "`DOMContentLoaded` fires once the HTML has been fully parsed and the DOM tree is built, without waiting for stylesheets, images, or other subresources to finish loading. `load` fires later, once the entire page — including all images, styles, and iframes — has fully loaded, so DOM-manipulation code usually only needs to wait for `DOMContentLoaded`.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a MutationObserver used for?",
+    "answer": "`MutationObserver` lets you asynchronously watch a DOM subtree for changes — added/removed nodes, attribute changes, or text content changes — and run a callback with a batch of mutation records, instead of polling the DOM. It's commonly used by libraries that need to react to DOM changes made by other code they don't control, like browser extensions or rich text editors.",
+    "example": null,
+    "code": "const observer = new MutationObserver((mutations) => console.log(mutations));\nobserver.observe(document.body, { childList: true, subtree: true });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "observers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does IntersectionObserver help implement lazy loading?",
+    "answer": "`IntersectionObserver` asynchronously notifies you when an observed element enters or exits the browser's viewport (or another ancestor element), without the performance cost of manually checking `getBoundingClientRect()` on every scroll event. Lazy-loading images use it to only set an `<img>`'s real `src` once the placeholder scrolls into view, deferring the network request until it's actually needed.",
+    "example": null,
+    "code": "const observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      entry.target.src = entry.target.dataset.src;\n      observer.unobserve(entry.target);\n    }\n  });\n});\nimages.forEach(img => observer.observe(img));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "performance", "observers"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does ResizeObserver do?",
+    "answer": "`ResizeObserver` notifies you when an observed element's content box (or border box) size changes, letting you react to layout changes caused by CSS, font loading, or a responsive container — without the inaccuracy and performance cost of listening to the window's `resize` event and re-measuring elements manually.",
+    "example": null,
+    "code": "const ro = new ResizeObserver(entries => {\n  entries.forEach(e => console.log(e.contentRect.width));\n});\nro.observe(el);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "observers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the browser's built-in constraint validation API work on forms?",
+    "answer": "Form controls expose validity state through properties like `required`, `pattern`, and `min`/`max`, and the browser evaluates them automatically; `input.checkValidity()` returns whether the element currently satisfies its constraints, and `input.validity` gives a detailed `ValidityState` object (e.g. `valueMissing`, `patternMismatch`). `input.setCustomValidity(message)` lets you add custom validation logic that plugs into the same native error-reporting UI.",
+    "example": null,
+    "code": "if (!emailInput.checkValidity()) {\n  console.log(emailInput.validationMessage);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the FormData API used for?",
+    "answer": "`new FormData(formElement)` reads all the named fields of a form (including file inputs) into a key-value structure that can be sent directly as a `multipart/form-data` request body via `fetch`, without manually serializing each field. It supports the same `get`/`set`/`append`/`entries` style API as `Map` and `URLSearchParams`.",
+    "example": null,
+    "code": "const formData = new FormData(document.querySelector('form'));\nfetch('/submit', { method: 'POST', body: formData });",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between localStorage, sessionStorage, and cookies?",
+    "answer": "`localStorage` persists data with no expiration until explicitly cleared and is scoped per-origin across all tabs/windows. `sessionStorage` is scoped to a single tab and cleared when that tab closes. Cookies are much smaller (~4KB), are automatically sent with every matching HTTP request (adding overhead), and support server-set expiration and `httpOnly`/`secure` flags that Web Storage APIs don't have.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "storage"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the History API enable client-side routing in a single-page app?",
+    "answer": "`history.pushState(state, '', url)` changes the URL shown in the address bar and adds a new entry to the browser's session history, without triggering a full page reload, and `history.replaceState()` does the same but replaces the current entry instead of adding one. Listening for the `popstate` event lets the app re-render the correct view when the user navigates with the browser's back/forward buttons.",
+    "example": null,
+    "code": "history.pushState({ page: 'profile' }, '', '/profile');\nwindow.addEventListener('popstate', (e) => render(e.state));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the same-origin policy and how does CORS relate to it?",
+    "answer": "The same-origin policy is the browser's default restriction preventing a script from one origin (scheme + host + port) from reading responses from a different origin, to protect against malicious cross-site data access. CORS is the mechanism that lets a server explicitly opt in to allowing specific cross-origin requests, via response headers like `Access-Control-Allow-Origin`, which the browser checks before exposing the response to the calling script.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does a basic fetch() request look like, and how does it handle errors?",
+    "answer": "`fetch(url)` returns a Promise that resolves with a Response object once headers arrive — you then call `.json()` or `.text()` to read the body, which returns another Promise. Critically, `fetch()` only rejects on network failure, not on HTTP error status codes like 404 or 500, so you must check `response.ok` (or `response.status`) yourself and throw manually if the request failed at the HTTP level.",
+    "example": null,
+    "code": "const res = await fetch('/api/users');\nif (!res.ok) throw new Error(`HTTP ${res.status}`);\nconst users = await res.json();",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "fetch"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between reflow and repaint in the browser?",
+    "answer": "A reflow (layout) recalculates the geometry — position and size — of elements affected by a change, which is expensive because it can cascade to the whole page. A repaint just redraws pixels for elements whose appearance changed (like color) without affecting layout, which is cheaper. Reading layout properties like `offsetHeight` right after writing a style change forces a synchronous reflow (\"layout thrashing\"), which is a common performance trap.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "dom", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the critical rendering path?",
+    "answer": "The critical rendering path is the sequence of steps the browser takes to convert HTML, CSS, and JavaScript into pixels on screen: parsing HTML into the DOM, parsing CSS into the CSSOM, combining them into a render tree, computing layout, and finally painting. Optimizing it (minimizing render-blocking CSS/JS, reducing DOM depth) is central to improving perceived page-load performance.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "dom", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When would you use requestAnimationFrame instead of setTimeout for animations?",
+    "answer": "`requestAnimationFrame` schedules a callback to run right before the browser's next repaint, syncing your updates to the display's actual refresh rate and automatically pausing in background tabs to save resources. `setTimeout`-based animation has no such synchronization, so it can cause visible jank (frames rendered at the wrong time) and keeps running (wasting CPU/battery) even when the tab isn't visible.",
+    "example": null,
+    "code": "function tick() {\n  updatePosition();\n  requestAnimationFrame(tick);\n}\nrequestAnimationFrame(tick);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "performance", "animation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is requestIdleCallback used for?",
+    "answer": "`requestIdleCallback` schedules a callback to run during a browser's idle periods, after more urgent work (rendering, user input) has been handled, and passes a deadline object so the callback can yield control if it's running out of idle time. It's useful for low-priority background work like analytics batching or prefetching, but shouldn't be used for anything visually important since it offers no timing guarantees.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the core events involved in implementing native drag-and-drop?",
+    "answer": "The Drag and Drop API fires `dragstart` on the dragged element, `dragover` on potential drop targets (which must call `preventDefault()` to actually allow a drop), and `drop` on the target when the item is released — with `dataTransfer` carrying the payload between them. `dragend` fires on the source element once the operation finishes, regardless of whether the drop succeeded.",
+    "example": null,
+    "code": "el.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', el.id));\ntarget.addEventListener('dragover', (e) => e.preventDefault());\ntarget.addEventListener('drop', (e) => console.log(e.dataTransfer.getData('text/plain')));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "drag-and-drop"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you read from and write to the system clipboard in JavaScript?",
+    "answer": "The async Clipboard API (`navigator.clipboard.writeText()` / `.readText()`) lets you programmatically copy or read text, but it requires a secure context (HTTPS) and, for reading, often requires explicit user permission or a user-initiated event. The older `document.execCommand('copy')` approach still works in many browsers as a fallback but is deprecated.",
+    "example": null,
+    "code": "await navigator.clipboard.writeText('Copied text');",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "clipboard"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does getBoundingClientRect() return and what is it used for?",
+    "answer": "`element.getBoundingClientRect()` returns the element's size and position relative to the viewport (`top`, `left`, `width`, `height`, etc.), reflecting its current rendered layout including any CSS transforms. It's commonly used for things like custom tooltip positioning, drag-and-drop hit testing, or manual scroll-based visibility checks.",
+    "example": "const rect = el.getBoundingClientRect();\nconst isVisible = rect.top < window.innerHeight && rect.bottom > 0;",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can JavaScript respond to responsive CSS breakpoints using matchMedia?",
+    "answer": "`window.matchMedia(query)` evaluates a CSS media query and returns a `MediaQueryList` with a `.matches` boolean, and calling `.addEventListener('change', callback)` on it lets your JavaScript react whenever the viewport crosses that breakpoint — without polling `window.innerWidth` on every resize event.",
+    "example": null,
+    "code": "const mq = window.matchMedia('(max-width: 768px)');\nmq.addEventListener('change', (e) => console.log(e.matches ? 'mobile' : 'desktop'));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom", "responsive"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the Shadow DOM and what problem does it solve?",
+    "answer": "The Shadow DOM lets an element host a separate, encapsulated DOM subtree (a \"shadow root\") whose internal structure and styles don't leak out to, or get affected by, the rest of the page — CSS selectors from outside can't accidentally style inside the shadow tree, and vice versa. It's the mechanism native form controls and Web Components use to keep their internal implementation details isolated from the surrounding page.",
+    "example": null,
+    "code": "const shadow = el.attachShadow({ mode: 'open' });\nshadow.innerHTML = '<style>p { color: red; }</style><p>Isolated</p>';",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "dom", "web-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a custom element and how do you define one?",
+    "answer": "A custom element is a user-defined HTML tag registered with `customElements.define(name, class)`, where the class extends `HTMLElement` and can hook into its lifecycle via callbacks like `connectedCallback()` (mounted) and `attributeChangedCallback()` (an observed attribute changed). Combined with the Shadow DOM and `<template>`, this is the foundation of the Web Components standard for building framework-agnostic reusable UI.",
+    "example": null,
+    "code": "class MyBadge extends HTMLElement {\n  connectedCallback() { this.textContent = 'Badge'; }\n}\ncustomElements.define('my-badge', MyBadge);",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "dom", "web-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are some key ARIA attributes used to make dynamic DOM updates accessible?",
+    "answer": "`aria-live` (e.g. `\"polite\"`) marks a region so screen readers announce content changes inside it automatically, `aria-expanded`/`aria-hidden` communicate toggled states like accordions or menus, and `aria-label`/`aria-labelledby` provide accessible names for elements that don't have visible text. These matter most for custom interactive widgets, since native elements like `<button>` already carry correct semantics automatically.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is focus management and why does it matter for modal dialogs?",
+    "answer": "Focus management means deliberately controlling which element has keyboard focus as the UI changes — for a modal, that means moving focus into the dialog when it opens, trapping Tab/Shift+Tab within it so focus can't escape to the page behind it, and returning focus to the triggering element when it closes. Without this, keyboard and screen-reader users lose track of where they are and can interact with content hidden behind the modal.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between touch events and pointer events?",
+    "answer": "Touch events (`touchstart`, `touchmove`, `touchend`) only fire for touch input and can report multiple simultaneous touch points. Pointer events (`pointerdown`, `pointermove`, `pointerup`) unify mouse, touch, and stylus input behind a single event model with a `pointerType` property, letting you write one handler that works correctly across input types instead of separately handling mouse and touch events.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the window and document objects?",
+    "answer": "`window` represents the browser tab/window itself — the global execution context, providing things like `location`, `history`, `localStorage`, timers, and the global scope. `document` represents the loaded HTML page's DOM tree specifically, and is actually a property of `window` (`window.document`), giving access to elements, `querySelector`, and page-level metadata.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can detached DOM nodes cause a memory leak?",
+    "answer": "A DOM node is \"detached\" once it's removed from the document, but it can't actually be garbage collected as long as something still references it — most commonly a JavaScript variable, closure, or an event listener that was never cleaned up. Long-lived single-page apps that repeatedly create and remove elements without releasing these references can slowly accumulate detached nodes in memory over time.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "dom", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it important to remove event listeners when an element is removed?",
+    "answer": "An event listener attached to an element (or to a stable target like `window`/`document` referencing that element in its closure) keeps that element's scope alive, which can prevent both the element and anything it closes over from being garbage collected even after the element leaves the DOM. Explicitly calling `removeEventListener` (or using `{ signal }` with an AbortController to remove many listeners at once) when a component/element is torn down avoids this class of leak.",
+    "example": null,
+    "code": "const controller = new AbortController();\nel.addEventListener('click', handler, { signal: controller.signal });\n// later, removes all listeners registered with this signal:\ncontroller.abort();",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "memory", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the storage event used for?",
+    "answer": "The `storage` event fires on `window` in other tabs/windows of the same origin whenever `localStorage` is modified — notably, it does not fire in the tab that made the change. This makes it a simple way to synchronize state (like a logged-out session or a theme toggle) across multiple open tabs without any server round-trip.",
+    "example": null,
+    "code": "window.addEventListener('storage', (e) => {\n  if (e.key === 'theme') applyTheme(e.newValue);\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "storage"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you programmatically enter and exit fullscreen mode?",
+    "answer": "`element.requestFullscreen()` asks the browser to display that element (and its descendants) in fullscreen, returning a Promise that resolves once the transition completes, and `document.exitFullscreen()` reverses it. This must be triggered from a user gesture (like a click) — browsers block fullscreen requests made without direct user interaction.",
+    "example": null,
+    "code": "videoEl.requestFullscreen();\ndocument.exitFullscreen();",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you get the user's current location with the Geolocation API?",
+    "answer": "`navigator.geolocation.getCurrentPosition(success, error)` asynchronously requests the device's location, prompting the user for permission first, and invokes the success callback with a `position.coords` object containing `latitude`/`longitude`. `watchPosition()` is the continuous variant that keeps calling the callback as the device moves, useful for live tracking.",
+    "example": null,
+    "code": "navigator.geolocation.getCurrentPosition(\n  (pos) => console.log(pos.coords.latitude, pos.coords.longitude),\n  (err) => console.error(err)\n);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a shallow and a deep clone with cloneNode()?",
+    "answer": "`node.cloneNode()` (or `cloneNode(false)`) copies only the node itself, with none of its children. `node.cloneNode(true)` performs a deep clone, copying the entire subtree of descendants along with it. Neither variant copies event listeners attached via `addEventListener` — those must be reattached manually on the clone.",
+    "example": "const copy = card.cloneNode(true);",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the contenteditable attribute do?",
+    "answer": "Setting `contenteditable=\"true\"` on any element makes its content directly editable by the user in the browser, essentially turning it into a rich-text editing surface without a `<textarea>`. It's the foundation most WYSIWYG/rich-text editors are built on, though it has notoriously inconsistent behavior across browsers for things like paste handling and list formatting.",
+    "example": "<div contenteditable=\"true\">Edit me</div>",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is IntersectionObserver generally preferred over scroll event listeners for detecting element visibility?",
+    "answer": "Scroll-based visibility checks require calling `getBoundingClientRect()` inside a scroll handler, which runs very frequently and forces the browser to recompute layout synchronously, hurting scroll performance even when debounced or throttled. `IntersectionObserver` instead runs asynchronously off the main thread's critical path, only invoking your callback when the intersection state actually changes, making it both more efficient and simpler to use correctly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between innerText and textContent?",
+    "answer": "`textContent` returns all text within an element regardless of CSS, including text inside `<script>`/hidden elements, and is fast since it doesn't trigger layout. `innerText` is layout-aware — it respects CSS (`display: none` text is excluded, `<br>` becomes a newline) and reading it forces a reflow, making it slower but sometimes more representative of what a user actually sees rendered.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the beforeunload event used for?",
+    "answer": "`beforeunload` fires just before the page is about to be unloaded (closed, refreshed, or navigated away from), and setting `event.returnValue` (or calling `preventDefault()`) triggers the browser's native \"leave site?\" confirmation dialog. It's typically used to warn users about unsaved changes, but browsers heavily restrict its behavior (no custom message text, must result from user interaction) to prevent abuse.",
+    "example": null,
+    "code": "window.addEventListener('beforeunload', (e) => {\n  if (hasUnsavedChanges) e.preventDefault();\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "events"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is assigning untrusted data to innerHTML a security risk?",
+    "answer": "`innerHTML` parses its string as real HTML, so any untrusted content containing a `<script>` tag or an event-handler attribute (like `onerror`) can execute arbitrary JavaScript in the page's context — a classic DOM-based XSS vulnerability. Using `textContent` for plain text, or sanitizing HTML through a trusted library before insertion, avoids this risk.",
+    "example": null,
+    "code": "// Dangerous if `comment` is user-supplied:\nel.innerHTML = comment;\n// Safe:\nel.textContent = comment;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "dom", "security"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does Element.closest() do?",
+    "answer": "`element.closest(selector)` walks up from the element through its ancestors (including itself) and returns the first one matching the given CSS selector, or `null` if none match. It's frequently used inside a delegated event handler to find the relevant interactive ancestor of whatever was actually clicked, e.g. `event.target.closest('.card')`.",
+    "example": "const card = event.target.closest('.card');",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Node.contains() check for?",
+    "answer": "`node.contains(otherNode)` returns whether `otherNode` is a descendant of `node` (or is `node` itself). It's commonly used to detect \"click outside\" interactions — for example, checking whether the clicked element is contained within a dropdown before deciding to close it.",
+    "example": null,
+    "code": "document.addEventListener('click', (e) => {\n  if (!dropdown.contains(e.target)) closeDropdown();\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "dom"],
+    "isFrequentlyAsked": false
+  }
+]

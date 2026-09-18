@@ -11,6 +11,7 @@ No login. No signup. No user accounts. Just browse a language, pick a topic (or 
 - **25 questions per page** with efficient database-level pagination (`range()`), not client-side slicing
 - Difficulty filter (`All` / `Easy` / `Medium` / `Hard`) reflected in the URL, so filtered/paginated views are shareable
 - Question detail pages with Markdown-rendered answers, optional example, optional syntax-highlighted code (with a copy button), and tags
+- **Frequently Asked** flag — a curated/toggleable subset of "classic" questions, filterable in the URL (`?faq=true`) and shown with a badge on cards and detail pages
 - **Previous / Next** navigation that stays within the user's current browsing context (a topic, or the whole language)
 - Breadcrumb navigation on every page
 - Light/dark theme, remembered in `localStorage`
@@ -55,8 +56,13 @@ src/
 └── utils/                pagination helpers, icon lookup
 
 supabase/
-├── schema.sql           Tables, constraints, indexes, RLS policies
-└── seed.sql              120+ seeded interview questions (idempotent — safe to re-run)
+├── schema.sql            Tables, constraints, indexes, RLS policies
+├── seed.sql              Languages, topics, and the original 120 hand-written questions (idempotent)
+└── seed-frontend.sql     Generated: ~300 more JavaScript + ~300 more React questions (see below)
+
+scripts/
+├── generate-seed.mjs     Reads scripts/seed-data/**/*.json → writes supabase/seed-frontend.sql
+└── seed-data/            JSON question banks, one file per language/topic — edit these, not the generated SQL
 ```
 
 Components never call Supabase directly — they call hooks, which call the `services/` layer. This keeps the data-access logic in one place, and makes it easy to swap or extend later.
@@ -76,6 +82,7 @@ npm run preview        # preview the production build locally
 npm run lint            # ESLint
 npm run format          # Prettier — write
 npm run format:check    # Prettier — check only
+npm run seed:generate   # regenerate supabase/seed-frontend.sql from scripts/seed-data/**/*.json
 ```
 
 ## Environment Variables
@@ -94,10 +101,11 @@ Only the **anon/public** key is ever used in the frontend. Row Level Security (s
 1. Create a new project at [supabase.com](https://supabase.com).
 2. Open the **SQL Editor** in your project.
 3. Run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `languages`, `topics` and `questions` tables, indexes, a full-text search column, and Row Level Security policies that allow public `SELECT` only.
-4. Run the contents of [`supabase/seed.sql`](supabase/seed.sql). This seeds 4 languages, their topics, and 120+ interview questions. The script upserts by slug (`on conflict ... do update`), so it's safe to re-run any time you edit it during development.
-5. In your Supabase project settings, copy the **Project URL** and the **anon public** API key.
-6. Paste them into your local `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-7. Run `npm run dev` and open the printed local URL.
+4. Run the contents of [`supabase/seed.sql`](supabase/seed.sql). This seeds 4 languages, their topics, and the original 120 interview questions, and marks a curated set of them as "Frequently Asked". The script upserts by slug (`on conflict ... do update`), so it's safe to re-run any time you edit it during development.
+5. Run the contents of [`supabase/seed-frontend.sql`](supabase/seed-frontend.sql). This adds ~300 more JavaScript questions and ~300 more React questions on top of step 4 (generated from `scripts/seed-data/` — see [Generating More Seed Data](#generating-more-seed-data) below). Also idempotent; safe to re-run.
+6. In your Supabase project settings, copy the **Project URL** and the **anon public** API key.
+7. Paste them into your local `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+8. Run `npm run dev` and open the printed local URL.
 
 ### Row Level Security
 
@@ -132,7 +140,7 @@ Topic slugs must be unique **within** a language (the same slug, like `basics`, 
 
 ```sql
 insert into public.questions (
-  language_id, topic_id, slug, question, answer, example, code, code_language, difficulty, tags, display_order
+  language_id, topic_id, slug, question, answer, example, code, code_language, difficulty, tags, is_frequently_asked, display_order
 )
 select
   l.id, t.id,
@@ -140,10 +148,11 @@ select
   'What is the difference between a list and a tuple in Python?',
   'Lists are mutable and defined with square brackets; tuples are immutable and defined with parentheses. Because tuples are immutable, they can be used as dictionary keys and are generally slightly faster to iterate over.',
   null,
-  'nums = (1, 2, 3)  # tuple\nitems = [1, 2, 3]  # list',
+  E'nums = (1, 2, 3)  # tuple\nitems = [1, 2, 3]  # list',
   'python',
   'easy',
   ARRAY['python','basics']::text[],
+  false,
   1
 from public.languages l
 join public.topics t on t.language_id = l.id and t.slug = 'basics'
@@ -156,6 +165,7 @@ on conflict (slug) do update set
   code_language = excluded.code_language,
   difficulty = excluded.difficulty,
   tags = excluded.tags,
+  is_frequently_asked = excluded.is_frequently_asked,
   display_order = excluded.display_order;
 ```
 
@@ -166,6 +176,18 @@ Notes:
 - `example` and `code` are optional — leave them `null` if not needed; the UI only renders sections that have content.
 - `answer` and `example` support Markdown (rendered safely via `rehype-sanitize` — never `dangerouslySetInnerHTML`).
 - `code_language` drives syntax highlighting; the registered languages are `java`, `javascript`, `typescript`, `jsx`, `tsx`, and `sql` (see `src/components/question/QuestionCode.tsx` to register more).
+- `is_frequently_asked` (`boolean`, defaults `false`) drives the "Frequently Asked" badge and `?faq=true` filter — set it `true` for genuinely common/classic questions only.
+- **Watch out for `\n` in string literals:** plain `'...'` strings in Postgres do **not** interpret backslash escapes (`standard_conforming_strings` is on by default), so a literal `\n` inside a `'...'`-quoted `code`/`example` value is stored as the two characters `\` and `n`, not a line break. Either put a real newline directly inside the quoted string (spanning multiple physical lines, as `supabase/seed.sql` and the generated `seed-frontend.sql` both do), or use Postgres's `E'...'` escape-string syntax if you want literal `\n` sequences interpreted.
+
+## Generating More Seed Data
+
+For bulk additions (e.g. expanding a language by dozens/hundreds of questions), hand-writing SQL doesn't scale — use the JSON + generator workflow instead of editing `supabase/seed.sql` directly:
+
+1. Add or edit a file at `scripts/seed-data/<language-slug>/<topic-slug>.json` — a plain JSON array of question objects. See [`scripts/seed-data/README.md`](scripts/seed-data/README.md) for the exact schema and content guidelines (quality bar, difficulty mix, duplicate-avoidance, etc).
+2. Run `npm run seed:generate`. This reads every `scripts/seed-data/**/*.json` file, validates each entry (required fields, valid difficulty, matching `codeLanguage` when `code` is set, no duplicate questions within a topic file), assigns slugs/`display_order` deterministically (starting at `101` per topic so they never collide with hand-written `001`-`005` entries), and writes the whole thing to `supabase/seed-frontend.sql`.
+3. Run the regenerated `supabase/seed-frontend.sql` in the Supabase SQL Editor. It upserts by slug, so it's safe to re-run any time you regenerate it.
+
+Currently this powers the JavaScript and React question banks (~300 questions each, on top of the original 5-per-topic hand-written set), but the same mechanism works for any language/topic — just point it at a new `scripts/seed-data/<language-slug>/` directory.
 
 ## Deployment
 

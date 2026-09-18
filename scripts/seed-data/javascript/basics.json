@@ -1,0 +1,492 @@
+[
+  {
+    "question": "What is the difference between primitive and reference types in JavaScript?",
+    "answer": "Primitive types (string, number, boolean, null, undefined, symbol, bigint) are immutable and copied by value when assigned or passed to a function. Reference types (objects, arrays, functions) are copied by reference, so two variables can point to the same underlying object and mutations through one are visible through the other.",
+    "example": null,
+    "code": "let a = { x: 1 };\nlet b = a;\nb.x = 2;\nconsole.log(a.x); // 2, same object",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "types"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are truthy and falsy values in JavaScript?",
+    "answer": "A truthy value is any value that evaluates to true in a boolean context, and a falsy value evaluates to false. The only falsy values are false, 0, -0, 0n, \"\", null, undefined, and NaN — everything else, including empty objects and arrays, is truthy.",
+    "example": null,
+    "code": "if ([]) console.log('arrays are truthy');",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does typeof NaN return \"number\"?",
+    "answer": "NaN (Not-a-Number) is technically a special numeric value defined by the IEEE 754 floating-point standard to represent an invalid or undefined arithmetic result, so JavaScript classifies it under the number type. It's the only value in JavaScript that is not equal to itself, which is why Number.isNaN() exists to reliably detect it.",
+    "example": null,
+    "code": "typeof NaN === 'number'; // true",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between typeof and instanceof?",
+    "answer": "typeof returns a string describing the primitive type of a value (like \"string\", \"number\", \"object\", \"function\"), and is evaluated at the operand level without knowledge of the prototype chain. instanceof checks whether an object's prototype chain contains a given constructor's prototype, so it works for distinguishing between different object types like Array vs plain Object.",
+    "example": null,
+    "code": "[] instanceof Array; // true\ntypeof []; // 'object'",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is type coercion in JavaScript?",
+    "answer": "Type coercion is JavaScript's automatic (implicit) conversion of a value from one type to another when an operator or context expects a different type, such as converting a number to a string during string concatenation with +. It can also be done explicitly using functions like Number(), String(), or Boolean().",
+    "example": null,
+    "code": "1 + '2' === '12'; // number coerced to string",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "coercion"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does 0.1 + 0.2 not equal 0.3 in JavaScript?",
+    "answer": "JavaScript stores numbers as IEEE 754 double-precision floating-point values, which cannot represent most decimal fractions exactly in binary. The tiny rounding error means 0.1 + 0.2 evaluates to 0.30000000000000004, so comparisons involving decimals should use a small tolerance (epsilon) instead of strict equality.",
+    "example": null,
+    "code": "Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an IIFE (Immediately Invoked Function Expression)?",
+    "answer": "An IIFE is a function that is defined and executed immediately after its creation, typically wrapped in parentheses to force it to be parsed as an expression rather than a declaration. It was historically used to create a private scope and avoid polluting the global namespace before ES6 modules and block scoping existed.",
+    "example": null,
+    "code": "(function () {\n  console.log('runs immediately');\n})();",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does \"use strict\" do in JavaScript?",
+    "answer": "\"use strict\" enables strict mode, which catches common coding mistakes by throwing errors instead of silently failing — for example, assigning to an undeclared variable, duplicating parameter names, or using reserved words as identifiers. It also disables some confusing features like the `with` statement and changes `this` to be undefined in plain function calls instead of the global object.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the global object in JavaScript, and how do you access it?",
+    "answer": "The global object holds global variables and functions available everywhere in a JavaScript environment; in browsers it's `window`, in Node.js it's `global`. The `globalThis` keyword, introduced in ES2020, provides a standard way to access the global object regardless of the environment.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are Symbols in JavaScript and what are they used for?",
+    "answer": "A Symbol is a primitive type introduced in ES6 that creates a unique and immutable value, often used as a property key to avoid naming collisions with other properties, including ones added by other libraries. Symbols are not enumerable in for...in loops and are commonly used to implement well-known protocol hooks like Symbol.iterator.",
+    "example": null,
+    "code": "const id = Symbol('id');\nconst obj = { [id]: 123 };",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is BigInt and when would you use it?",
+    "answer": "BigInt is a primitive type that can represent integers with arbitrary precision, beyond the safe integer limit of Number (2^53 - 1). It's created by appending `n` to an integer literal or calling BigInt(), and is used when working with very large numbers such as cryptographic calculations or high-precision IDs.",
+    "example": null,
+    "code": "const big = 9007199254740993n;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between JSON.parse and JSON.stringify?",
+    "answer": "JSON.stringify() converts a JavaScript value (object, array, primitive) into a JSON-formatted string, useful for sending data over the network or storing it. JSON.parse() does the reverse, converting a JSON string back into a JavaScript value — both throw errors on malformed input.",
+    "example": null,
+    "code": "const str = JSON.stringify({ a: 1 }); // '{\"a\":1}'\nconst obj = JSON.parse(str); // { a: 1 }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "json"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why is NaN !== NaN in JavaScript, and how do you check for it correctly?",
+    "answer": "Per the IEEE 754 standard, NaN is defined to never equal any value, including itself, since it represents an undefined or unrepresentable numeric result. To reliably check for NaN, use Number.isNaN(value), which — unlike the global isNaN() — does not coerce its argument first.",
+    "example": null,
+    "code": "NaN === NaN; // false\nNumber.isNaN(NaN); // true",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between block scope, function scope, and global scope?",
+    "answer": "Global scope is accessible everywhere in the program. Function scope means a variable is accessible anywhere within the function it was declared in, regardless of nested blocks (this is how `var` behaves). Block scope, used by `let` and `const`, restricts a variable's visibility to the nearest enclosing pair of curly braces, such as an if block or loop.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "scope"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the void operator do in JavaScript?",
+    "answer": "The void operator evaluates an expression and always returns undefined, discarding the expression's result. It's rarely needed in modern code but historically appeared in `javascript:void(0)` links to prevent page navigation while still executing the expression's side effects.",
+    "example": null,
+    "code": "void 0; // undefined",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are labeled statements in JavaScript and when are they useful?",
+    "answer": "A labeled statement attaches an identifier to a loop or block so that `break` or `continue` can target that specific outer loop instead of just the innermost one. They're rarely used in modern code because they can hurt readability, but they're the standard way to break out of nested loops directly.",
+    "example": null,
+    "code": "outer: for (let i = 0; i < 3; i++) {\n  for (let j = 0; j < 3; j++) {\n    if (j === 1) continue outer;\n    console.log(i, j);\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "loops"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the comma operator do in JavaScript?",
+    "answer": "The comma operator evaluates each of its operands from left to right and returns the value of the last operand, discarding the results of the others. It's most commonly seen in the update clause of a for loop where you need to perform multiple operations, such as `for (let i = 0, j = 10; i < j; i++, j--)`.",
+    "example": null,
+    "code": "const x = (1, 2, 3); // x is 3",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Automatic Semicolon Insertion (ASI) and what problems can it cause?",
+    "answer": "ASI is a JavaScript engine mechanism that automatically inserts semicolons at the end of statements when they're omitted, based on specific parsing rules. It can cause subtle bugs, most famously when a `return` statement is followed by a newline before the returned value — ASI inserts a semicolon right after `return`, causing the function to return undefined instead of the intended value.",
+    "example": null,
+    "code": "function getValue() {\n  return\n  {\n    value: 1\n  };\n}\n// returns undefined, not the object, due to ASI",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is short-circuit evaluation in JavaScript?",
+    "answer": "Short-circuit evaluation means logical operators && and || stop evaluating as soon as the result is determined: && returns the first falsy operand (or the last if all are truthy), and || returns the first truthy operand (or the last if all are falsy). This is commonly used to provide default values or to conditionally call a function.",
+    "example": null,
+    "code": "const name = user.name || 'Guest';",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "operators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the nullish coalescing operator (??) and the logical OR operator (||)?",
+    "answer": "|| returns the right-hand operand if the left is any falsy value (0, '', false, null, undefined, NaN), while ?? only falls back to the right-hand operand if the left is specifically null or undefined. This matters when 0 or an empty string are valid values you don't want overridden.",
+    "example": null,
+    "code": "0 || 'default'; // 'default'\n0 ?? 'default'; // 0",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "es6"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is optional chaining (?.) and what problem does it solve?",
+    "answer": "Optional chaining lets you safely access deeply nested object properties without manually checking each level for null or undefined — if any part of the chain is nullish, the whole expression short-circuits and returns undefined instead of throwing a TypeError.",
+    "example": null,
+    "code": "const city = user?.address?.city;",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are tagged template literals?",
+    "answer": "A tagged template literal is a template string preceded by a function (the tag) that processes the string and its interpolated values before producing the final result, instead of the default string interpolation. The tag function receives the literal string parts as an array and the interpolated expressions as separate arguments, enabling custom formatting, sanitization, or i18n logic.",
+    "example": null,
+    "code": "function upper(strings, ...values) {\n  return strings.reduce((acc, s, i) => acc + s + (values[i]?.toUpperCase() ?? ''), '');\n}\nupper`Hello ${'world'}`; // 'Hello WORLD'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the in operator and hasOwnProperty()?",
+    "answer": "The `in` operator checks whether a property exists anywhere in an object's own properties or its prototype chain. `hasOwnProperty()` checks only the object's own properties, ignoring anything inherited from the prototype, which makes it more precise when you want to avoid false positives from inherited properties.",
+    "example": null,
+    "code": "'toString' in {}; // true (inherited)\n({}).hasOwnProperty('toString'); // false",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an array-like object and an iterable in JavaScript?",
+    "answer": "An array-like object has a numeric `length` property and indexed elements (like `arguments` or a NodeList) but doesn't have array methods like map or forEach unless converted. An iterable implements the Symbol.iterator protocol, allowing it to be used with for...of loops and the spread operator — arrays and strings are both iterable.",
+    "example": null,
+    "code": "Array.from(document.querySelectorAll('div')); // array-like to real array",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you explicitly convert values between types in JavaScript?",
+    "answer": "Use Number(value) to convert to a number, String(value) to convert to a string, and Boolean(value) to convert to a boolean, all of which follow well-defined coercion rules. These are generally preferred over implicit coercion (like using + '' to convert to a string) because the intent is clearer to readers.",
+    "example": null,
+    "code": "Number('42'); // 42\nString(42); // '42'\nBoolean(''); // false",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "coercion"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between for...in and for...of loops?",
+    "answer": "for...in iterates over the enumerable property keys of an object, including inherited ones, and is typically used with plain objects. for...of iterates over the values of an iterable (arrays, strings, Maps, Sets), making it the preferred choice for looping over array elements directly.",
+    "example": null,
+    "code": "for (const key in {a:1}) {} // 'a'\nfor (const val of [1,2]) {} // 1, 2",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "loops"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are some common quirks of the switch statement in JavaScript?",
+    "answer": "switch uses strict equality (===) to compare the expression against each case, so type coercion never happens. Cases without a `break` statement will \"fall through\" and execute the next case's code too, which is a common source of bugs, and a `default` case can be placed anywhere, not just at the end.",
+    "example": null,
+    "code": "switch (1) {\n  case 1:\n  case 2:\n    console.log('one or two');\n    break;\n  default:\n    console.log('other');\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the ternary (conditional) operator work in JavaScript?",
+    "answer": "The ternary operator `condition ? valueIfTrue : valueIfFalse` is a compact, single-expression alternative to an if/else statement, and is the only operator in JavaScript that takes three operands. It's commonly used for concise conditional assignment but should be avoided for complex nested logic since it hurts readability.",
+    "example": null,
+    "code": "const status = age >= 18 ? 'adult' : 'minor';",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "operators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Object.is() and the strict equality operator (===)?",
+    "answer": "Object.is() behaves like === for almost all values, but differs in two edge cases: Object.is(NaN, NaN) returns true (=== returns false), and Object.is(0, -0) returns false while 0 === -0 returns true. It's mainly used internally by React and other libraries for precise value comparison.",
+    "example": null,
+    "code": "Object.is(NaN, NaN); // true\nNaN === NaN; // false",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is string immutability important in JavaScript?",
+    "answer": "Strings in JavaScript are immutable — methods like toUpperCase() or slice() always return a new string rather than modifying the original. This makes strings safe to share across different parts of a program without unexpected side effects, though it means repeated concatenation in a loop can be less efficient than using an array and join().",
+    "example": null,
+    "code": "let s = 'hi';\ns[0] = 'H'; // silently fails, s is still 'hi'",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "strings"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you reliably check if a value is an array?",
+    "answer": "Array.isArray(value) is the reliable way to check if a value is an array, because typeof returns 'object' for arrays just like plain objects. Array.isArray() correctly distinguishes arrays even across different execution contexts (like iframes), unlike an instanceof Array check.",
+    "example": null,
+    "code": "Array.isArray([1,2,3]); // true\ntypeof [1,2,3]; // 'object'",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between undeclared, undefined, and uninitialized variables?",
+    "answer": "An undeclared variable was never declared with var/let/const and referencing it throws a ReferenceError (or creates an implicit global in non-strict mode). A declared-but-unassigned variable holds the value undefined. A let/const variable that has been declared but not yet reached in execution order is 'uninitialized' and sits in the temporal dead zone, throwing a ReferenceError if accessed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "scope"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between mutable and immutable operations on arrays?",
+    "answer": "Mutable array methods like push, pop, splice, and sort modify the original array in place. Immutable operations like map, filter, concat, and the spread operator return a new array, leaving the original untouched — this distinction matters a lot in frameworks like React that rely on reference changes to detect updates.",
+    "example": null,
+    "code": "const sorted = [...arr].sort(); // doesn't mutate arr",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an accessor property versus a data property in a JavaScript object?",
+    "answer": "A data property simply stores a value directly. An accessor property is defined with get and/or set functions that compute a value on read or intercept an assignment on write, rather than storing the value directly — both are configured via Object.defineProperty() or object literal getter/setter syntax.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between synchronous and asynchronous code execution in JavaScript at a basic level?",
+    "answer": "Synchronous code runs line by line, blocking further execution until the current operation completes. Asynchronous code (like setTimeout, fetch, or promises) is scheduled to run later without blocking the main thread, allowing the program to continue executing other code while waiting for the operation to finish.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Number.isInteger() check, and how does it differ from Number.isSafeInteger()?",
+    "answer": "Number.isInteger() returns true if a value is a number with no fractional component, such as 5 or 5.0. Number.isSafeInteger() additionally checks that the value falls within the safe integer range (±(2^53 - 1)) where integers can be represented exactly without precision loss.",
+    "example": null,
+    "code": "Number.isInteger(5.0); // true\nNumber.isSafeInteger(2 ** 53); // false",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between == null and === null for checking null or undefined?",
+    "answer": "Because == performs type coercion and null == undefined evaluates to true (while null and undefined are not loosely equal to anything else), `value == null` is a common, concise idiom to check for both null and undefined at once. `value === null` only matches null exactly, requiring a separate check for undefined.",
+    "example": null,
+    "code": "null == undefined; // true\nnull === undefined; // false",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "operators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a shallow and a deep freeze of an object?",
+    "answer": "Object.freeze() only freezes the top-level properties of an object — nested objects remain mutable. A deep freeze recursively calls Object.freeze() on every nested object as well, which requires a custom recursive helper function since JavaScript has no built-in deepFreeze.",
+    "example": null,
+    "code": "function deepFreeze(obj) {\n  Object.values(obj).forEach((v) => typeof v === 'object' && v && deepFreeze(v));\n  return Object.freeze(obj);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Number.parseFloat and Number.parseInt?",
+    "answer": "parseInt parses a string and returns an integer, stopping at the first non-numeric character, and accepts an optional radix argument (base 2-36). parseFloat parses and returns a floating-point number, including decimal points, but doesn't support a radix argument.",
+    "example": null,
+    "code": "parseInt('3.14', 10); // 3\nparseFloat('3.14'); // 3.14",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should you always specify a radix when using parseInt?",
+    "answer": "Without an explicit radix, parseInt guesses the base from the string's format, and historically strings starting with '0' were sometimes interpreted as octal in older engines, leading to unexpected results. Always passing 10 (or the intended base) avoids this ambiguity and makes the intent explicit.",
+    "example": null,
+    "code": "parseInt('08'); // 8 in modern engines, but explicit radix avoids any doubt\nparseInt('08', 10); // 8",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a wrapper object and a primitive value in JavaScript?",
+    "answer": "Primitives like strings and numbers aren't objects and have no methods of their own, but JavaScript automatically wraps them in a temporary wrapper object (like String or Number) whenever you call a method on them, such as 'hello'.toUpperCase(). The wrapper object is discarded immediately after the method call completes.",
+    "example": null,
+    "code": "typeof 'hi'; // 'string'\ntypeof new String('hi'); // 'object'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "types"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between let redeclaration errors and var redeclaration behavior?",
+    "answer": "Declaring the same variable name twice with var in the same scope is allowed and simply overwrites the previous binding without error. Doing the same with let or const throws a SyntaxError (\"already declared\"), because block-scoped declarations are stricter about preventing accidental redeclaration.",
+    "example": null,
+    "code": "var x = 1; var x = 2; // fine\nlet y = 1; let y = 2; // SyntaxError",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "scope"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between deep equality and reference equality for objects?",
+    "answer": "Reference equality (===) checks whether two variables point to the exact same object in memory. Deep equality checks whether two objects have the same structure and values, even if they are different objects — JavaScript has no built-in deep equality operator, so it requires a recursive comparison function or a library like lodash's isEqual.",
+    "example": null,
+    "code": "{ a: 1 } === { a: 1 }; // false, different objects",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the with statement in JavaScript and why is it discouraged?",
+    "answer": "The with statement extends the scope chain for a block, letting you reference an object's properties without prefixing them, but it makes code ambiguous and hard to optimize since the engine can't statically determine whether an identifier refers to a variable or an object property. It's forbidden entirely in strict mode.",
+    "example": null,
+    "code": "with (Math) { console.log(PI); } // avoid this",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Number.MAX_SAFE_INTEGER and Number.MAX_VALUE?",
+    "answer": "Number.MAX_SAFE_INTEGER (2^53 - 1) is the largest integer that can be represented exactly without losing precision. Number.MAX_VALUE is the largest finite number JavaScript can represent at all, but numbers beyond MAX_SAFE_INTEGER lose integer precision even though they're still within MAX_VALUE.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does JavaScript determine equality when using the includes() method on an array versus indexOf()?",
+    "answer": "Array.prototype.includes() uses the SameValueZero algorithm, which treats NaN as equal to itself, so it can correctly find NaN in an array. Array.prototype.indexOf() uses strict equality (===), so it can never find NaN because NaN === NaN is false.",
+    "example": null,
+    "code": "[NaN].includes(NaN); // true\n[NaN].indexOf(NaN); // -1",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "basics", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is destructuring with default values in JavaScript?",
+    "answer": "When destructuring an object or array, you can provide a default value for a property that assigns only if the extracted value is strictly undefined (not just falsy), which is useful for handling optional function parameters or config objects.",
+    "example": null,
+    "code": "const { retries = 3 } = options;",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "basics", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an expression and a statement in JavaScript?",
+    "answer": "An expression produces a value and can be used wherever a value is expected, such as `2 + 2` or a function call. A statement performs an action and does not itself produce a usable value, such as an if block or a for loop — though some constructs, like function expressions, blur this line depending on context.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "basics"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is variable shadowing in JavaScript?",
+    "answer": "Variable shadowing occurs when a variable declared in an inner scope has the same name as a variable in an outer scope, temporarily 'hiding' the outer variable for the duration of the inner scope. It's legal with let/const in nested blocks but can make code confusing if used carelessly.",
+    "example": null,
+    "code": "let x = 1;\n{\n  let x = 2; // shadows outer x\n  console.log(x); // 2\n}\nconsole.log(x); // 1",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "basics", "scope"],
+    "isFrequentlyAsked": false
+  }
+]

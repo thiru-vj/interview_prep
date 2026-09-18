@@ -16,11 +16,26 @@ create table if not exists public.languages (
   slug          text not null unique,
   description   text,
   icon          text,
+  category      text not null default 'backend',
   display_order integer not null default 0,
-  created_at    timestamptz not null default now()
+  created_at    timestamptz not null default now(),
+  constraint languages_category_check check (category in ('frontend', 'backend', 'database'))
 );
 
 comment on table public.languages is 'Top-level technologies (Java, JavaScript, React, SQL, ...).';
+
+-- Upgrade path for databases that ran an earlier version of this script before
+-- category existed — `create table if not exists` above is a no-op on an
+-- existing table, so the column and constraint need adding explicitly here too.
+alter table public.languages
+  add column if not exists category text not null default 'backend';
+
+alter table public.languages
+  drop constraint if exists languages_category_check;
+alter table public.languages
+  add constraint languages_category_check check (category in ('frontend', 'backend', 'database'));
+
+create index if not exists idx_languages_category on public.languages (category);
 
 -- =============================================================================
 -- Table: topics
@@ -53,6 +68,7 @@ create table if not exists public.questions (
   code_language text,
   difficulty    text not null default 'medium',
   tags          text[],
+  is_frequently_asked boolean not null default false,
   display_order integer not null default 0,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now(),
@@ -60,6 +76,12 @@ create table if not exists public.questions (
 );
 
 comment on table public.questions is 'Individual interview questions belonging to a language and topic.';
+
+-- Upgrade path for databases that ran an earlier version of this script before
+-- is_frequently_asked existed — `create table if not exists` above is a no-op
+-- on an existing table, so the column needs adding explicitly here too.
+alter table public.questions
+  add column if not exists is_frequently_asked boolean not null default false;
 
 -- =============================================================================
 -- updated_at trigger
@@ -94,6 +116,12 @@ create index if not exists idx_questions_difficulty on public.questions (difficu
 create index if not exists idx_questions_created_at on public.questions (created_at);
 create index if not exists idx_questions_slug on public.questions (slug);
 create index if not exists idx_questions_ordering on public.questions (language_id, topic_id, display_order, created_at);
+
+-- Partial index: fast lookups for "frequently asked" filters without bloating
+-- the index with the (usually larger) set of non-FAQ rows.
+create index if not exists idx_questions_frequently_asked
+  on public.questions (language_id, topic_id)
+  where is_frequently_asked = true;
 
 -- Full-text search across question, answer and tags.
 -- to_tsvector() is STABLE (not IMMUTABLE), so it can't be used directly in a

@@ -12,7 +12,7 @@ export function useQuestionsByLanguage(
   return useAsync(() => {
     if (!languageId) return Promise.resolve({ data: [], total: 0, page, pageSize, totalPages: 1 })
     return getQuestionsByLanguage(languageId, page, pageSize, filters)
-  }, [languageId, page, pageSize, filters.difficulty])
+  }, [languageId, page, pageSize, filters.difficulty, filters.frequentlyAsked])
 }
 
 /** Paginated + filtered questions for a single topic listing page. */
@@ -25,5 +25,5 @@ export function useQuestionsByTopic(
   return useAsync(() => {
     if (!topicId) return Promise.resolve({ data: [], total: 0, page, pageSize, totalPages: 1 })
     return getQuestionsByTopic(topicId, page, pageSize, filters)
-  }, [topicId, page, pageSize, filters.difficulty])
+  }, [topicId, page, pageSize, filters.difficulty, filters.frequentlyAsked])
 }

@@ -1,0 +1,502 @@
+[
+  {
+    "question": "What does it mean for a component to be 'pure' in React?",
+    "answer": "A pure component always renders the same output given the same props and state, with no side effects during rendering (no mutating external variables, no network calls in the render body itself). Purity is what makes optimizations like React.memo safe — React can skip re-rendering a pure component when its inputs haven't changed, because it trusts the output would be identical anyway.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "purity"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the presentational vs. container component pattern?",
+    "answer": "A presentational component focuses purely on how things look — it receives data and callbacks via props and has little to no internal logic. A container component focuses on how things work — it manages state, fetches data, and passes the results down to presentational components to render. This separation makes presentational components easy to reuse and test in isolation, though hooks have made the pattern less rigid than it used to be.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the compound components pattern?",
+    "answer": "Compound components are a set of components designed to be used together, sharing implicit state (usually via context) so the parent can expose a flexible, declarative API instead of one giant component with many boolean props. A classic example is a <Tabs> component that exposes <Tabs.List>, <Tabs.Tab>, and <Tabs.Panel> as related pieces that communicate behind the scenes.",
+    "example": null,
+    "code": "<Tabs defaultValue=\"a\">\n  <Tabs.List>\n    <Tabs.Tab value=\"a\">First</Tabs.Tab>\n    <Tabs.Tab value=\"b\">Second</Tabs.Tab>\n  </Tabs.List>\n  <Tabs.Panel value=\"a\">Content A</Tabs.Panel>\n  <Tabs.Panel value=\"b\">Content B</Tabs.Panel>\n</Tabs>",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "patterns"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why does React favor composition over inheritance for reusing component logic?",
+    "answer": "React components rarely benefit from a class-inheritance hierarchy the way traditional OOP UI toolkits did, because most reuse needs (sharing markup, injecting behavior, wrapping with extra functionality) are better solved by passing components as props or children (composition) than by extending a base component class. The React team has explicitly recommended composition over inheritance since early React documentation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you provide default values for props in a functional component?",
+    "answer": "The idiomatic way is to use a default parameter value when destructuring props in the function signature, so the default only applies when the prop is undefined. The older defaultProps static property still works on function components but is deprecated in modern React in favor of default parameters.",
+    "example": null,
+    "code": "function Button({ label = 'Submit', variant = 'primary' }) {\n  return <button className={variant}>{label}</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use props.children to build a generic wrapper component?",
+    "answer": "By accepting children and rendering it somewhere inside your own markup, a component can wrap arbitrary content with consistent styling or behavior without needing to know what that content actually is. This is how generic components like Card, Modal, or Layout are usually implemented.",
+    "example": null,
+    "code": "function Panel({ title, children }) {\n  return (\n    <section className=\"panel\">\n      <h2>{title}</h2>\n      {children}\n    </section>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "children"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why must React component names start with a capital letter?",
+    "answer": "JSX uses capitalization to distinguish between a built-in DOM tag and a custom component: a lowercase tag like <div> compiles to a plain string type ('div'), while a capitalized tag like <Button> compiles to a reference to the Button variable. If a component were named lowercase, JSX would treat it as an unknown HTML tag instead of your component.",
+    "example": null,
+    "code": "function button() { return <button />; }\n<button />   // renders a native <button>, NOT your component!\n\nfunction Button() { return <button />; }\n<Button />   // correctly renders your component",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you conditionally render an entire component with an early return?",
+    "answer": "Instead of nesting a ternary deep inside JSX, a component can return early — for example returning null or a loading indicator before its main return statement — to keep the primary render logic flat and readable when a whole branch of the UI should be skipped.",
+    "example": null,
+    "code": "function UserProfile({ user }) {\n  if (!user) return <p>No user selected.</p>;\n  return <h1>{user.name}</h1>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "conditional-rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you use Fragments with keys when a list item renders multiple elements?",
+    "answer": "When each item in a mapped list needs to render more than one sibling element (for example a <dt>/<dd> pair), you can't wrap them in a keyed <div> without affecting layout, so you use an explicit <React.Fragment key={...}> instead — the shorthand <> </> syntax doesn't support the key prop.",
+    "example": null,
+    "code": "{terms.map(t => (\n  <React.Fragment key={t.id}>\n    <dt>{t.term}</dt>\n    <dd>{t.definition}</dd>\n  </React.Fragment>\n))}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "lists"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is forwardRef and when would you use it?",
+    "answer": "By default, function components don't accept a ref — refs passed to them are ignored. forwardRef wraps a component to receive the ref as a second argument and manually attach it to an inner DOM node, which is needed when you build a reusable input-like component and want consumers to still be able to focus/measure the underlying element directly.",
+    "example": null,
+    "code": "const FancyInput = forwardRef((props, ref) => (\n  <input ref={ref} className=\"fancy\" {...props} />\n));\n\n// usage\nconst ref = useRef(null);\n<FancyInput ref={ref} />",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "refs"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does useImperativeHandle do, and how does it relate to forwardRef?",
+    "answer": "useImperativeHandle customizes what value a ref exposes when used together with forwardRef — instead of exposing the raw DOM node, the component can expose a curated object of specific methods (e.g. { focus, reset }), hiding internal implementation details from the parent. It's used sparingly, since exposing imperative APIs works against React's declarative model and should be reserved for cases that genuinely need it.",
+    "example": null,
+    "code": "const CustomInput = forwardRef((props, ref) => {\n  const inputRef = useRef(null);\n  useImperativeHandle(ref, () => ({\n    focus: () => inputRef.current.focus(),\n  }));\n  return <input ref={inputRef} {...props} />;\n});",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "refs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can a component expose 'slots' of custom JSX via named props?",
+    "answer": "When a component needs more than one distinct region of custom content (not just a single children block), it can accept multiple props that are themselves JSX, such as header and footer, and render each in its designated spot. This is a common way to build layout components with more structure than plain children allows.",
+    "example": null,
+    "code": "function Dialog({ header, children, footer }) {\n  return (\n    <div className=\"dialog\">\n      <div className=\"dialog-header\">{header}</div>\n      <div className=\"dialog-body\">{children}</div>\n      <div className=\"dialog-footer\">{footer}</div>\n    </div>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean to think of components as a 'design system'?",
+    "answer": "A design system is a shared library of consistent, reusable components (buttons, inputs, cards) with a well-defined API and consistent styling, used across an entire product or organization instead of each team reinventing its own version. Treating components this way encourages thinking about props as a stable public contract, since many unrelated features may depend on the same component.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "design-systems"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you render a dynamic list of controlled text inputs, each with its own value?",
+    "answer": "Keep an array (or object keyed by id) in state representing each input's current value, render one controlled <input> per array item using its index or id as the key, and update just that one entry in the array (immutably) in the onChange handler rather than replacing the whole array with a single new value.",
+    "example": null,
+    "code": "function updateField(index, value) {\n  setFields(prev => prev.map((f, i) => (i === index ? value : f)));\n}\n\nfields.map((value, i) => (\n  <input key={i} value={value} onChange={e => updateField(i, e.target.value)} />\n))",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are some component-design considerations when building a multi-step form?",
+    "answer": "A common approach is to keep the overall form data and current step index in the parent, and render one 'step' component at a time based on that index, passing down the relevant slice of data plus onNext/onBack callbacks. Each step component stays focused on its own fields, while validation can happen per-step (before allowing 'Next') or all at once on final submit, depending on the desired UX.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between a 'wrapper' component built through composition versus a higher-order component?",
+    "answer": "A composition-based wrapper simply renders its children (or a specific prop) inside some extra markup or context provider — you use it directly in JSX like any other component. A higher-order component (HOC) is a function that takes a component and returns a brand new component with injected props, so you use its output rather than nesting the original component as a child — composition is generally simpler and easier to trace than HOCs for most cases.",
+    "example": null,
+    "code": "// Composition-based wrapper (simpler)\nfunction Centered({ children }) {\n  return <div className=\"centered\">{children}</div>;\n}\n<Centered><Form /></Centered>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "composition", "hoc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the single responsibility principle apply to React components?",
+    "answer": "Each component should ideally be responsible for one clear piece of UI or behavior — for example, separating a data-fetching concern from a purely presentational list item — rather than one component trying to handle layout, data fetching, and business logic all at once. This makes components easier to test, reuse, and reason about in isolation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can component composition (children as props) help avoid prop drilling, as an alternative to Context?",
+    "answer": "Instead of passing a deeply-nested piece of data down through many layers as a prop, a parent that already has that data can render the deeply-nested component itself and pass it in as children (or another JSX prop) to an intermediate component, which just renders {children} without needing to know about that data at all. This sidesteps drilling through components that don't actually use the value, without introducing Context.",
+    "example": null,
+    "code": "// Instead of: <Layout data={data} /> forwarding data through many layers\nfunction App() {\n  return <Layout><Sidebar data={data} /></Layout>;\n}\nfunction Layout({ children }) {\n  return <div className=\"layout\">{children}</div>; // never touches `data`\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does wrapping a child component in React.memo sometimes fail to prevent re-renders?",
+    "answer": "React.memo does a shallow comparison of props, so if a parent passes a new object, array, or inline function literal as a prop on every render (even with the same logical contents), the shallow comparison sees a different reference and re-renders the child anyway. Fixing this usually means memoizing that prop value with useMemo/useCallback in the parent, or restructuring so the prop is a stable primitive.",
+    "example": null,
+    "code": "// Breaks memoization: new object every render\n<Child style={{ color: 'red' }} />\n\n// Fixed: stable reference\nconst style = useMemo(() => ({ color: 'red' }), []);\n<Child style={style} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "performance", "memo"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why can passing a new object or array literal as a prop on every render hurt performance?",
+    "answer": "Even if two object literals are structurally identical, they are different references in memory, so any child relying on reference equality (React.memo, a useEffect dependency, useMemo) treats them as 'changed' every single render. This can cause unnecessary re-renders or effect re-runs that wouldn't happen if the same reference were reused.",
+    "example": null,
+    "code": "// New array reference every render, even though contents are the same\n<List items={[1, 2, 3]} />",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are common conventions for organizing component files in a React project?",
+    "answer": "Common approaches include grouping by feature/domain (each feature folder contains its own components, hooks, and styles) or grouping by type (a top-level components/, hooks/, pages/ split). Most teams also co-locate a component's styles, tests, and sub-components in the same folder as the component itself, rather than scattering related files across the project.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "project-structure"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean to 'colocate' state near where it's used?",
+    "answer": "Colocating state means keeping a piece of state in the lowest (most local) component that actually needs it, rather than defaulting to lifting everything to a top-level parent or global store. This keeps unrelated parts of the tree from re-rendering when that state changes, and keeps the component's logic easier to understand in isolation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When should you extract a piece of JSX into its own component versus keeping it inline?",
+    "answer": "Good signals to extract a component include the JSX being reused in more than one place, the block being complex enough to hurt readability where it is, or the block needing its own isolated state or memoization. If none of those apply, keeping markup inline is often simpler than introducing an extra file and prop-passing overhead for no real benefit.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the convention for naming event handler props on a custom component?",
+    "answer": "By convention, a component exposes an event-like prop as onSomething (e.g. onSave, onClose, onSelect) mirroring the native DOM onClick/onChange naming, while the internal function that implements the behavior is usually named handleSomething. Following this convention makes a component's API predictable to anyone familiar with React norms.",
+    "example": null,
+    "code": "function Modal({ onClose }) {\n  function handleBackdropClick() {\n    onClose();\n  }\n  return <div onClick={handleBackdropClick}>...</div>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "conventions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you make a component render nothing under certain conditions?",
+    "answer": "A component can return null (or false, or undefined) from its render function, and React simply renders nothing to the DOM for it — no wrapper element, no placeholder. This is commonly used for components that should conditionally 'disappear' entirely, like a banner that's dismissed.",
+    "example": null,
+    "code": "function Banner({ visible, message }) {\n  if (!visible) return null;\n  return <div className=\"banner\">{message}</div>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "conditional-rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does it matter whether you write <Input /> or <Input></Input> in JSX?",
+    "answer": "No — for a component or element with no children, the self-closing form <Input /> and the explicit open/close form <Input></Input> compile to the exact same output. Self-closing is just the conventional, more concise style for childless elements; JSX requires closing every tag one way or the other, unlike HTML where some tags can be left unclosed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "jsx"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you forward unknown 'rest' props onto the underlying DOM element in a wrapper component?",
+    "answer": "Destructure the props you specifically care about, then spread the remaining rest object onto the DOM element, so consumers can still pass through standard HTML attributes (id, aria-label, data-* attributes, etc.) without the wrapper having to explicitly declare every single one.",
+    "example": null,
+    "code": "function PrimaryButton({ variant, children, ...rest }) {\n  return (\n    <button className={`btn btn-${variant}`} {...rest}>\n      {children}\n    </button>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How should a custom component handle accessibility props like aria-label?",
+    "answer": "A well-designed custom component should forward standard ARIA attributes through to the underlying native element (usually via rest-prop spreading) rather than swallowing them, so consumers can still make the component accessible in context. Some components also set sensible default ARIA attributes internally (like role and aria-expanded on a custom dropdown) so consumers don't have to wire up accessibility from scratch every time.",
+    "example": null,
+    "code": "function IconButton({ label, icon, ...rest }) {\n  return (\n    <button aria-label={label} {...rest}>\n      {icon}\n    </button>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the general philosophy behind testing React components?",
+    "answer": "The widely recommended approach (popularized by Testing Library) is to test components the way a user would interact with them — querying by visible text or accessible roles and simulating clicks/typing — rather than reaching into internal implementation details like component state or instance methods. This makes tests more resilient to refactors, since they only break when actual user-facing behavior changes, not when internals are reorganized.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "testing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why did class components require render() to be a pure function, and how does that carry over to function components?",
+    "answer": "React could call render() multiple times (or not at all, if it decided the output wasn't needed) as part of its internal scheduling, so relying on side effects inside render() led to unpredictable behavior. The same rule carries over to function components: the function body itself (everything outside of useEffect) must stay free of side effects, with useEffect being the designated place for anything that needs to interact with the outside world.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "components", "purity"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the 'children as a function' (render prop) pattern at a basic level?",
+    "answer": "Instead of passing static JSX as children, you pass a function as children, and the component calls that function with some internal data, letting the caller decide exactly what to render with it. It's less common today since custom hooks solve the same 'share stateful logic' problem with less nesting, but it still appears in some libraries.",
+    "example": null,
+    "code": "function MouseTracker({ children }) {\n  const [pos, setPos] = useState({ x: 0, y: 0 });\n  return (\n    <div onMouseMove={e => setPos({ x: e.clientX, y: e.clientY })}>\n      {children(pos)}\n    </div>\n  );\n}\n\n<MouseTracker>{pos => <p>{pos.x}, {pos.y}</p>}</MouseTracker>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "patterns", "render-props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you conditionally apply CSS classes based on props or state in JSX?",
+    "answer": "For a couple of simple conditions, template literals or ternaries are enough; for anything more complex, a small utility like clsx or classnames is commonly used to combine class names based on truthy values, which reads more clearly than manually concatenating strings.",
+    "example": null,
+    "code": "import clsx from 'clsx';\n\n<button className={clsx('btn', { 'btn-active': isActive, 'btn-disabled': disabled })} />",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "styling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between using inline styles and CSS classes in a React component?",
+    "answer": "Inline styles (style={{ color: 'red' }}) are a JavaScript object applied directly to the element's style attribute, useful for one-off dynamic values computed at runtime, but they can't use pseudo-classes, media queries, or be overridden by normal CSS specificity rules as easily. CSS classes (via plain CSS, CSS Modules, or a CSS-in-JS library) support the full power of CSS and are generally preferred for anything beyond a truly dynamic, per-instance value.",
+    "example": null,
+    "code": "// Inline: fine for one dynamic value\n<div style={{ width: `${progress}%` }} />\n\n// Class: fine for everything else\n<div className=\"progress-bar\" />",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "styling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you pass a whole component (not just data) as a prop to another component?",
+    "answer": "Because components are just values (function references) in React, you can pass a component itself as a prop and render it with JSX syntax inside the receiving component, which is useful for injecting a customizable piece of UI, like letting a List component accept an ItemComponent to render for each row.",
+    "example": null,
+    "code": "function List({ items, ItemComponent }) {\n  return items.map(item => <ItemComponent key={item.id} item={item} />);\n}\n\n<List items={users} ItemComponent={UserRow} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between a fully controlled input and one using defaultValue?",
+    "answer": "A fully controlled input's value always comes from state, and every keystroke must go through onChange to update that state before the input reflects it. An input with defaultValue is uncontrolled — React sets its initial value once and then lets the DOM manage the value itself afterward, which is useful when you don't need to react to every change, just read the value later (e.g. via a ref or on submit).",
+    "example": null,
+    "code": "// Uncontrolled: React doesn't track keystrokes\n<input defaultValue=\"Jane\" ref={inputRef} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does an event handler prop passed to a memoized child need a stable reference?",
+    "answer": "If a memoized child is wrapped in React.memo but receives an inline arrow function as a prop (e.g. onClick={() => doThing()}), a new function is created on every parent render, which breaks the shallow-equality check React.memo relies on and causes the child to re-render anyway. Wrapping the handler in useCallback in the parent keeps the same function reference across renders (as long as its own dependencies don't change) so the memoized child can actually skip re-rendering.",
+    "example": null,
+    "code": "const handleClick = useCallback(() => setCount(c => c + 1), []);\n<MemoizedButton onClick={handleClick} />",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "performance", "usecallback"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is prop validation still worth doing in a TypeScript React project?",
+    "answer": "TypeScript catches type mismatches at compile time, but it can't validate data coming from truly dynamic runtime sources like an API response or third-party integration whose shape wasn't guaranteed. For components consuming genuinely untrusted external data, a lightweight runtime check (or a schema validation library) can still add a useful safety net that pure compile-time types can't provide.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "typescript"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the trade-off between using named exports and a default export for a component?",
+    "answer": "A default export lets the importer name the component anything they want on import, which can lead to inconsistent naming across a codebase and makes some 'find all usages' tooling less reliable. Named exports enforce a single consistent name everywhere and make auto-import tooling more predictable, which is why many style guides now prefer named exports for components, especially in larger codebases.",
+    "example": null,
+    "code": "// Named export (consistent name everywhere it's imported)\nexport function Button() { /* ... */ }\nimport { Button } from './Button';",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "components", "conventions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a polymorphic component in React?",
+    "answer": "A polymorphic component accepts an 'as' prop (or similar) that lets the caller choose which underlying HTML element or component it renders as, while keeping the same styling and behavior — for example, a Text component that can render as a <p>, <span>, or <h1> depending on context, without needing a separate component for each.",
+    "example": null,
+    "code": "function Text({ as: Tag = 'p', children, ...rest }) {\n  return <Tag {...rest}>{children}</Tag>;\n}\n\n<Text as=\"h1\">Title</Text>\n<Text as=\"span\">Inline text</Text>",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "components", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What API design decisions matter most when building a reusable Modal component?",
+    "answer": "A typical Modal needs at minimum an isOpen boolean and an onClose callback so the parent stays in control of when it's shown, plus children for its content — implementation details like rendering via a portal, trapping focus, and closing on Escape/backdrop click should live inside the Modal itself so every consumer gets that behavior for free rather than reimplementing it.",
+    "example": null,
+    "code": "<Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>\n  <p>Are you sure?</p>\n</Modal>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean to separate a component's 'props API' from its implementation details?",
+    "answer": "A component's props are its public contract with consumers — what it accepts and what it promises to do with it — while everything inside the component (how it's structured internally, what hooks it uses, whether it renders one element or ten) is an implementation detail that should be free to change without breaking anyone using the component. Good component design keeps that props API small, stable, and intention-revealing, independent of internal refactors.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When rendering a list of togglable items, should each item's open/closed state live in the parent or in each item component?",
+    "answer": "If only one item can be open at a time (like an accordion), the 'which item is open' state needs to live in the parent so it can enforce that constraint across siblings. If each item toggles completely independently with no relationship to its siblings, colocating the open/closed state inside each item component is simpler and avoids unnecessary parent re-renders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the benefit of splitting a large form into smaller field components?",
+    "answer": "Splitting a form into per-field components (e.g. a TextField, SelectField) lets each field manage its own local UI concerns (like showing/hiding a validation message) and can limit re-renders to just the field that changed rather than the entire form, while also making the individual field markup reusable across different forms in the app.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is it possible to over-fragment a UI into too many small components?",
+    "answer": "Yes — splitting every few lines of JSX into its own component can add indirection (having to jump between many files to follow one flow) and prop-passing overhead without meaningfully improving reuse or clarity. Extraction should be driven by genuine reuse, complexity, or isolation needs (see when-to-extract guidance) rather than an arbitrary rule like 'components should be under N lines.'",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you render something only in the browser, not during server rendering, inside a component?",
+    "answer": "Check for the browser environment (commonly via a mounted flag set in a useEffect, since useEffect only runs on the client) and conditionally render the browser-only content once that flag is true, rather than checking typeof window directly during render, which would cause a mismatch between server and client output.",
+    "example": null,
+    "code": "const [mounted, setMounted] = useState(false);\nuseEffect(() => setMounted(true), []);\nif (!mounted) return null;\nreturn <BrowserOnlyWidget />;",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "ssr"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How did the render props pattern's nesting problem lead to the adoption of custom hooks?",
+    "answer": "Sharing multiple pieces of stateful logic via render props meant nesting each provider component inside the next ('wrapper hell'), which made the JSX tree deep and hard to follow even though none of those wrappers rendered any actual visible markup. Custom hooks solve the same reuse problem by letting a component call several hooks side by side as plain function calls, with no extra nesting or indirection in the render tree at all.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "components", "patterns", "hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can a component expose multiple distinct 'slots' of JSX beyond a single children prop?",
+    "answer": "Define separate named props for each slot (e.g. leftIcon, rightIcon, title) that each accept JSX, and render them in their respective positions — this is useful when a component's layout has more than one meaningful content region and a single children block wouldn't convey which content goes where.",
+    "example": null,
+    "code": "function ListItem({ leftIcon, title, rightIcon }) {\n  return (\n    <div className=\"list-item\">\n      {leftIcon}\n      <span>{title}</span>\n      {rightIcon}\n    </div>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between a component definition and a component instance?",
+    "answer": "A component definition (the function itself, e.g. function Button() {...}) is a single reusable blueprint. Each time you write <Button /> in JSX, React creates a separate instance of it with its own independent state — rendering <Button /> three times produces three distinct instances, each unaware of the others' state, even though they all share the same underlying definition.",
+    "example": null,
+    "code": "<div>\n  <Button label=\"A\" />\n  <Button label=\"B\" />\n  <Button label=\"C\" />\n</div> // 3 independent instances of the same Button definition",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "components", "fundamentals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What actually happens if you ignore React's 'each child in a list should have a unique key' warning?",
+    "answer": "The list still renders, but React falls back to matching items by their position in the array, which can cause state to attach to the wrong item after an insertion, removal, or reorder — for example, a text input's typed value can visibly 'jump' to a different row if an earlier item is removed from the array. Fixing the warning by adding a stable, unique key eliminates this class of bug.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "keys", "debugging"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the three high-level lifecycle stages every component goes through?",
+    "answer": "Mounting is when a component is created and inserted into the DOM for the first time. Updating is when it re-renders in response to changed props, state, or context. Unmounting is when it's removed from the DOM entirely. In function components these map to useEffect running after mount/update, and its cleanup function running before unmount or before the effect re-runs.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "components", "lifecycle"],
+    "isFrequentlyAsked": true
+  }
+]

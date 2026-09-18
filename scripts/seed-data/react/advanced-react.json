@@ -1,0 +1,502 @@
+[
+  {
+    "question": "How does React Suspense work for data fetching, beyond just lazy-loading components?",
+    "answer": "A data source that supports Suspense (like a framework's data layer, or React's own use() hook with a promise) can \"throw\" a pending promise during render, which tells React to pause that part of the tree and show the nearest Suspense boundary's fallback until the promise resolves. This lets components read data as if it were already available, with the loading state handled declaratively by a wrapping <Suspense> instead of manual isLoading checks scattered through the component.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "suspense"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How should you decide where to place Suspense boundaries in a component tree?",
+    "answer": "A boundary placed too high shows a large, jarring loading fallback for the whole page even if only a small part is waiting on data; a boundary placed too low means every nested async component blocks its own tiny corner independently, which can look inconsistent. The common approach is to group logically-related content that should appear together behind one boundary, and let independent sections (like a sidebar versus a main content area) have their own separate boundaries so they can load and appear independently.",
+    "example": null,
+    "code": "<Suspense fallback={<PageSkeleton />}>\n  <Header />\n  <Suspense fallback={<SidebarSkeleton />}>\n    <Sidebar />\n  </Suspense>\n  <MainContent />\n</Suspense>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "suspense"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does \"concurrent\" mean when people describe React 18 as a concurrent renderer?",
+    "answer": "Concurrent doesn't mean multi-threaded — React still runs on a single thread. It means React can start rendering an update, pause partway through, work on something more urgent instead, and come back to (or discard) the paused render later, rather than always running a render to completion once started, the way React's original synchronous renderer worked.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "concurrent-rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between hydration and a full client-side render?",
+    "answer": "A full client-side render builds the DOM from scratch in the browser using JavaScript. Hydration takes HTML that was already rendered (on the server or at build time) and attaches React's event listeners and internal state to that existing markup without re-creating the DOM nodes, so the page appears instantly while React \"wakes up\" the already-visible content and makes it interactive.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "hydration"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is islands architecture / partial hydration, at a high level?",
+    "answer": "Instead of hydrating an entire page's worth of React as one unit, islands architecture ships and hydrates only the small, genuinely interactive pieces of a page (like a like-button or a carousel) independently, while the rest of the page stays static HTML with no JavaScript attached at all. This is a framework-agnostic pattern aimed at pages that are mostly static content with only a few interactive widgets, minimizing the amount of JS shipped and hydrated.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "hydration"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are React Server Components and how do they differ from traditional server-side rendering?",
+    "answer": "Server Components run exclusively on the server (or at build time) and never ship their code to the client at all — not even for hydration — whereas traditional SSR renders HTML on the server but still sends the full component JavaScript to the browser so it can hydrate. Server Components can also directly access server-only resources (a database, the filesystem) without an API layer, and can be mixed with regular Client Components for the interactive parts of a page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "server-components"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you implement the children-as-a-function (render props) pattern?",
+    "answer": "Instead of accepting a static children element, the component calls the children prop as a function during its own render, passing it internal state or data the caller needs. This lets the parent component own some shared logic (like tracking mouse position or a data subscription) while giving the consumer full control over what markup to render with that data.",
+    "example": null,
+    "code": "function MouseTracker({ children }) {\n  const [pos, setPos] = useState({ x: 0, y: 0 });\n  return (\n    <div onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}>\n      {children(pos)}\n    </div>\n  );\n}\n\n<MouseTracker>{(pos) => <p>{pos.x}, {pos.y}</p>}</MouseTracker>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "render-props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do compound components use Context internally to share implicit state between siblings?",
+    "answer": "A compound component (like <Tabs><Tabs.List><Tabs.Tab /></Tabs.List></Tabs>) sets up a Context provider in its root component to hold shared state (like the currently active tab), and each child subcomponent reads that Context internally rather than receiving the state as an explicit prop. This gives consumers a clean, declarative JSX API while the components coordinate behind the scenes.",
+    "example": null,
+    "code": "const TabsContext = createContext();\nfunction Tabs({ children }) {\n  const [active, setActive] = useState(0);\n  return <TabsContext.Provider value={{ active, setActive }}>{children}</TabsContext.Provider>;\n}\nfunction Tab({ index, children }) {\n  const { active, setActive } = useContext(TabsContext);\n  return <button onClick={() => setActive(index)}>{children}</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "compound-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why do events triggered inside a Portal still bubble up through the React component tree instead of the DOM tree?",
+    "answer": "React maintains its own synthetic event system layered on top of the DOM, and it dispatches bubbling events based on the React component tree (where the Portal's content was logically rendered), not the actual DOM parent it was inserted into. This means a click inside a modal rendered via a portal into document.body will still trigger onClick handlers on its logical React ancestors, even though those ancestors aren't its DOM ancestors.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "portals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What kinds of errors do React error boundaries NOT catch?",
+    "answer": "Error boundaries only catch errors thrown during rendering, in lifecycle methods, and in constructors of the tree below them. They do not catch errors inside event handlers (those need a regular try/catch), errors in asynchronous code like setTimeout or promise callbacks, errors during server-side rendering, or errors thrown in the error boundary's own code.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "error-boundaries"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you let a user recover from an error caught by an error boundary, instead of leaving them stuck on a fallback UI?",
+    "answer": "The error boundary's fallback UI can include a \"try again\" button that resets the boundary's internal hasError state, which causes React to attempt rendering the children again — useful if the error was transient (like a flaky network request). For errors tied to specific data (like a broken route), the reset can also be tied to a key change so navigating away and back gets a completely fresh boundary instance.",
+    "example": null,
+    "code": "class ErrorBoundary extends React.Component {\n  state = { hasError: false };\n  static getDerivedStateFromError() { return { hasError: true }; }\n  render() {\n    if (this.state.hasError) {\n      return <button onClick={() => this.setState({ hasError: false })}>Try again</button>;\n    }\n    return this.props.children;\n  }\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "error-boundaries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can the key prop be used as an advanced reset mechanism beyond simple lists?",
+    "answer": "Changing a key anywhere — not just in a list — tells React to treat the element as a completely new instance rather than updating the existing one, discarding all of its state, refs, and effects. This is a useful trick for resetting a complex form or wizard when switching between unrelated records, without manually resetting every individual field.",
+    "example": null,
+    "code": "<EditForm key={selectedRecord.id} record={selectedRecord} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "key"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you apply the controlled/uncontrolled pattern when designing a reusable library component?",
+    "answer": "A well-designed reusable component (like a dropdown or accordion) usually supports both modes: it manages its own internal state by default (uncontrolled, easy for basic usage), but accepts optional value and onChange props that, when provided, let the parent fully control the state instead. This dual API is common in component libraries because it serves simple use cases out of the box while still giving advanced consumers full control when they need it.",
+    "example": null,
+    "code": "function Toggle({ value, onChange, defaultValue = false }) {\n  const [internal, setInternal] = useState(defaultValue);\n  const isControlled = value !== undefined;\n  const isOn = isControlled ? value : internal;\n  const toggle = () => isControlled ? onChange(!isOn) : setInternal((v) => !v);\n  return <button onClick={toggle}>{isOn ? 'On' : 'Off'}</button>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "component-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a custom hook that wraps a third-party imperative API (like a chart library or a map SDK)?",
+    "answer": "The hook typically creates the imperative instance inside a useEffect (or useLayoutEffect if it touches layout) tied to a ref pointing at a DOM container, exposes an imperative-to-declarative bridge by updating the instance whenever relevant React state/props change, and tears the instance down in the effect's cleanup function to avoid leaking it on unmount or re-initialization.",
+    "example": null,
+    "code": "function useChart(containerRef, data) {\n  useEffect(() => {\n    const chart = new ChartLib(containerRef.current);\n    chart.render(data);\n    return () => chart.destroy();\n  }, [data]);\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "custom-hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does ref forwarding work through multiple layers of wrapping components?",
+    "answer": "By default, a ref passed to a custom component doesn't automatically attach to a DOM node inside it, because refs aren't part of the normal props flow. forwardRef lets a component explicitly accept a ref as a second argument and forward it to whichever inner DOM node or child it chooses, and this can be chained through several nested wrapper components as long as each one also forwards the ref it receives.",
+    "example": null,
+    "code": "const FancyInput = forwardRef((props, ref) => (\n  <input ref={ref} className=\"fancy\" {...props} />\n));\n\nconst inputRef = useRef(null);\n<FancyInput ref={inputRef} />;",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "refs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does combining the Provider pattern with a custom hook create a common library-authoring idiom?",
+    "answer": "A Context Provider supplies shared state to a subtree, and a paired custom hook (like useAuth() or useTheme()) wraps useContext to both read that value and throw a helpful error if it's called outside the Provider — giving consumers a clean, self-documenting API instead of importing and using the raw Context object directly everywhere.",
+    "example": null,
+    "code": "const AuthContext = createContext(null);\nexport function useAuth() {\n  const ctx = useContext(AuthContext);\n  if (!ctx) throw new Error('useAuth must be used within AuthProvider');\n  return ctx;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "context"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What problem did React's fiber architecture solve compared to the older stack reconciler?",
+    "answer": "The original \"stack\" reconciler processed the entire component tree synchronously and couldn't be paused once started, which could block the main thread long enough to make an app feel unresponsive during large updates. Fiber restructured reconciliation into units of work that can be paused, resumed, prioritized, or abandoned, which is the foundation that makes features like concurrent rendering, Suspense, and useTransition possible.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "fiber"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is time slicing in the context of React's concurrent features?",
+    "answer": "Time slicing is the technique of breaking rendering work into small chunks and yielding control back to the browser between chunks, so the main thread stays free to handle higher-priority work like user input or animation frames instead of being monopolized by a single long render. It's what allows React to render a large update \"in the background\" without freezing the page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "concurrent-rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does React avoid synchronous rendering that blocks the main thread for large updates?",
+    "answer": "Because JavaScript in the browser runs on a single thread shared with layout, painting, and input handling, a long synchronous render blocks all of that, making the page feel frozen and unresponsive to clicks or typing during the update. Concurrent rendering exists specifically to let React interrupt a big render to handle urgent input first, keeping the app feeling responsive even while a large update is still in progress.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "concurrent-rendering"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does React's Strict Mode intentionally invoke component functions and effects twice in development?",
+    "answer": "Double-invoking helps surface bugs caused by impure render logic or missing effect cleanup — if a render function or an effect isn't idempotent (e.g. it mutates something outside its scope, or an effect forgets to clean up a subscription before running again), running it twice makes the bug visible immediately in development instead of only appearing later under concurrent rendering in production. It only happens in development builds and has no effect on production behavior.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "strict-mode"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you approach testing an error boundary?",
+    "answer": "Render a component tree with the error boundary wrapping a deliberately-throwing child (a small test-only component that throws in its render), then assert that the fallback UI appears instead of the app crashing. Since React logs errors to the console during this, tests typically suppress or spy on console.error for that specific test to keep output clean, while still asserting the boundary's behavior.",
+    "example": null,
+    "code": "function Bomb() { throw new Error('boom'); }\n\ntest('shows fallback on error', () => {\n  render(<ErrorBoundary><Bomb /></ErrorBoundary>);\n  expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();\n});",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "testing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the key considerations when building an accessible modal using a Portal?",
+    "answer": "Beyond rendering the modal outside the normal DOM flow via a portal, an accessible modal needs to trap keyboard focus inside itself while open (so Tab doesn't escape to the page behind it), return focus to the triggering element on close, be dismissible via the Escape key, and use appropriate ARIA attributes (role=\"dialog\", aria-modal=\"true\") so assistive technology announces it correctly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "accessibility"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the \"lifting content up\" pattern, and how does it differ from passing configuration objects as props?",
+    "answer": "Instead of a component accepting a configuration prop describing what to render (like a headerConfig object with a title and icon name), \"lifting content up\" has the parent pass actual JSX as a prop or children, giving the parent full flexibility over markup and behavior without the child needing to anticipate every possible configuration. It trades some structure/type-safety for significantly more composability.",
+    "example": null,
+    "code": "// Configuration object — child must know every possible shape\n<Card header={{ title: 'Stats', icon: 'chart' }} />\n\n// Lifted content — parent has full control\n<Card header={<h2><ChartIcon /> Stats</h2>} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "component-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why did the React ecosystem largely move from HOCs and render props to hooks?",
+    "answer": "HOCs and render props both share stateful logic by wrapping components, which adds extra layers to the component tree (\"wrapper hell\"), makes props harder to trace back to their source, and can create naming collisions between multiple HOCs. Hooks let you extract and reuse the exact same stateful logic as a plain function call inside a component, with no extra nesting, clearer data flow, and props/types that are easy to trace directly.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a reusable useFetch custom hook that wraps fetch with loading and error state?",
+    "answer": "The hook wraps a fetch call in a useEffect keyed on the URL, tracks loading/data/error in state, and — critically — checks a \"still relevant\" flag or uses an AbortController in the cleanup function so a stale response from a superseded request doesn't overwrite state after the component has moved on to a new URL or unmounted.",
+    "example": null,
+    "code": "function useFetch(url) {\n  const [state, setState] = useState({ data: null, loading: true, error: null });\n  useEffect(() => {\n    let active = true;\n    setState((s) => ({ ...s, loading: true }));\n    fetch(url).then((r) => r.json())\n      .then((data) => active && setState({ data, loading: false, error: null }))\n      .catch((error) => active && setState({ data: null, loading: false, error }));\n    return () => { active = false; };\n  }, [url]);\n  return state;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "custom-hooks"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you avoid \"wrapper hell\" when a component needs several cross-cutting concerns from multiple HOCs?",
+    "answer": "Composing several HOCs (withAuth(withTheme(withLogging(Component)))) creates deep, hard-to-debug nesting in the React tree and in the props chain. Converting each HOC's logic into a custom hook and calling all of them directly inside a single component — useAuth(), useTheme(), useLogging() — achieves the same functionality flat, with each concern independently visible and no extra component layers.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "hoc"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the key prop interact with list reordering when combined with animation libraries?",
+    "answer": "Animation libraries that animate list reordering (like sliding items into their new position) rely on stable keys to know that an item at a new index is actually the same logical item that moved, rather than a different item that happened to land there. If keys aren't stable (e.g. using array index), the library will animate the wrong items or fail to animate the move at all, since it can't tell which DOM node corresponds to which piece of data across the reorder.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "key"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does streaming SSR mean, and what problem does it solve compared to traditional SSR?",
+    "answer": "Traditional SSR waits until the entire page's HTML is generated on the server before sending any of it to the browser, so a single slow data dependency delays the whole response. Streaming SSR sends HTML in chunks as it becomes ready — the shell and fast content arrive immediately while slower sections stream in afterward wrapped in Suspense boundaries — so users see and can interact with part of the page much sooner.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "ssr"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a Server Component and a Client Component in a framework that supports React Server Components?",
+    "answer": "Server Components render only on the server, can be async and read server-only resources directly, and produce no client-side JavaScript. Client Components (marked explicitly, e.g. with a \"use client\" directive) run in the browser, can use hooks like useState and useEffect, and handle interactivity — a typical app composes both, using Server Components for static/data-heavy parts of the tree and Client Components only where interactivity is actually needed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "server-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use useImperativeHandle to customize what a parent's ref actually receives from a child?",
+    "answer": "By default, forwardRef exposes the raw underlying DOM node to the parent's ref. useImperativeHandle lets the child instead expose a custom object with only specific methods it chooses to allow (like focus() or reset()), hiding the rest of its internals and giving the parent a deliberately limited imperative API rather than direct DOM access.",
+    "example": null,
+    "code": "const VideoPlayer = forwardRef((props, ref) => {\n  const videoRef = useRef(null);\n  useImperativeHandle(ref, () => ({\n    play: () => videoRef.current.play(),\n    pause: () => videoRef.current.pause(),\n  }));\n  return <video ref={videoRef} src={props.src} />;\n});",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "refs"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the render props pattern and simply passing children?",
+    "answer": "Plain children are a static React element — whatever was passed is rendered as-is. Render props pass a function as children (or as another prop), which the component invokes during its own render and can supply arguments to, letting the consumer's rendered output depend on internal state the component controls, something static children can't do.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "advanced", "render-props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement a compound component that also supports an alternative flat/prop-driven API for simpler use cases?",
+    "answer": "The compound component's root can accept optional props (like a tabs array) and, if provided, internally render the same subcomponents it would otherwise expect the consumer to compose manually — giving simple use cases a one-line API while still exposing the flexible <Tabs.Tab> composition for consumers who need custom markup per tab.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "compound-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't a Client Component directly import and render a Server Component as a child in frameworks that support RSC?",
+    "answer": "Once a component tree crosses into a Client Component, everything below it must also be capable of running in the browser, but Server Components are never sent to the client at all — so a Client Component can't import one directly. The workaround is for a Server Component higher up the tree to render the Server Component and pass its already-rendered output down as the children prop to the Client Component, which the Client Component can then simply display.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "server-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a common gotcha when combining Suspense with data that depends on props that change frequently?",
+    "answer": "If a component wrapped by Suspense re-suspends every time its data-fetching key changes (e.g. a search query updating on every keystroke), the fallback UI can flash repeatedly instead of the previous content staying visible while new data loads. Wrapping the update that changes the key in useTransition (or using useDeferredValue) keeps the old content on screen and marks the pending state instead of immediately unmounting to the fallback.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "suspense"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does React decide whether to reuse a DOM node or destroy and recreate it when the element type changes at the same position?",
+    "answer": "If two elements at the same position in the tree have different types (e.g. a <div> replaced by a <span>, or one custom component replaced by a different one), React tears down the entire old subtree — including its state and DOM nodes — and builds a fresh one, rather than trying to patch the differences. This is why conditionally rendering entirely different component types (instead of the same type with different props) resets any local state those components held.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "reconciliation"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the use() hook introduced alongside Suspense-based data fetching?",
+    "answer": "use() lets a component read the value of a promise or a Context directly during render, suspending the component (via Suspense) if the promise hasn't resolved yet. Unlike other hooks, it can be called conditionally, which makes it more flexible for reading async resources exactly where they're needed rather than always at the top of a component.",
+    "example": null,
+    "code": "function Comments({ commentsPromise }) {\n  const comments = use(commentsPromise);\n  return <ul>{comments.map((c) => <li key={c.id}>{c.text}</li>)}</ul>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "suspense"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you design a component library's theming system to support both a default theme and consumer overrides?",
+    "answer": "A common approach layers a ThemeProvider around the app supplying design tokens (colors, spacing, typography) via Context with sensible defaults, letting consumers override only the specific tokens they need by merging their partial theme object over the defaults, rather than requiring a full theme object to be supplied every time.",
+    "example": null,
+    "code": "const defaultTheme = { colors: { primary: '#2563eb' }, spacing: { sm: 8 } };\nfunction ThemeProvider({ theme = {}, children }) {\n  const merged = { ...defaultTheme, ...theme, colors: { ...defaultTheme.colors, ...theme.colors } };\n  return <ThemeContext.Provider value={merged}>{children}</ThemeContext.Provider>;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "component-design"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between an error boundary catching a render error and a global window error handler?",
+    "answer": "A window.onerror or window.addEventListener('error', ...) handler catches uncaught errors anywhere in the page's JavaScript, including outside React entirely, but can't stop React from unmounting the broken tree or show a React-rendered fallback in its place. An error boundary is specifically integrated into React's render lifecycle, so it can catch the error before the broken UI is committed and swap in a fallback UI seamlessly within the component tree.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "error-boundaries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can compound components expose an imperative escape hatch (like a ref-based API) alongside their declarative props?",
+    "answer": "The root compound component can accept a ref via forwardRef and use useImperativeHandle to expose specific imperative methods (like next() or reset() for a carousel), giving consumers a declarative props-based API for the common case while still allowing direct imperative control for edge cases that don't fit cleanly into props.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "compound-components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might two components with the exact same output still be treated differently by React's reconciler based on how they're defined?",
+    "answer": "If a component function is defined inside another component's body (re-created on every parent render), React sees a new component type on every render — even though the JSX output looks identical — and will unmount/remount it instead of updating it in place, silently resetting its state. Defining components at the module level (outside other components) avoids this trap.",
+    "example": null,
+    "code": "// Bug: Inner defined inside Outer — new type every render, resets state\nfunction Outer() {\n  function Inner() { const [n, setN] = useState(0); return <button onClick={() => setN(n+1)}>{n}</button>; }\n  return <Inner />;\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "advanced", "reconciliation"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What role does the ErrorBoundary's getDerivedStateFromError differ from componentDidCatch?",
+    "answer": "getDerivedStateFromError is called during the render phase and should be a pure function that returns new state to trigger the fallback UI — it can't perform side effects. componentDidCatch is called during the commit phase and is where side effects belong, such as logging the error to a monitoring service; most error boundaries implement both, one to render the fallback and the other to report the error.",
+    "example": null,
+    "code": "class ErrorBoundary extends React.Component {\n  state = { hasError: false };\n  static getDerivedStateFromError() { return { hasError: true }; }\n  componentDidCatch(error, info) { logErrorToService(error, info); }\n  render() { return this.state.hasError ? <Fallback /> : this.props.children; }\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "error-boundaries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you structure a custom hook so it can be safely called conditionally, given the rules of hooks forbid conditional hook calls?",
+    "answer": "You can't call a hook conditionally, but you can make the hook itself always run and internally decide whether to do work based on an argument — for example, a useFetch(url) hook can always be called, but skip the actual fetch inside its effect if url is null, keeping the hook call itself unconditional while its behavior is effectively conditional.",
+    "example": null,
+    "code": "function useFetch(url) {\n  useEffect(() => {\n    if (!url) return; // conditional behavior, not a conditional hook call\n    fetch(url);\n  }, [url]);\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between React's legacy Context API (contextTypes) and the modern createContext API?",
+    "answer": "The legacy API required class components to declare contextTypes and read context off this.context, worked only with class components, and had no way to opt out of re-rendering when unrelated context changed. The modern createContext/useContext API works in both function and class components, supports multiple independent contexts cleanly via nesting, and is the only option going forward since the legacy API is deprecated.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "advanced", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you build a generic useLocalStorage custom hook that keeps React state in sync with localStorage?",
+    "answer": "The hook initializes state by reading from localStorage (falling back to a default if nothing is stored or parsing fails), and wraps the setter so every update also writes the new value back to localStorage, wrapped in try/catch since storage access can throw (private browsing, quota exceeded, or a non-browser environment during SSR).",
+    "example": null,
+    "code": "function useLocalStorage(key, defaultValue) {\n  const [value, setValue] = useState(() => {\n    try { return JSON.parse(localStorage.getItem(key)) ?? defaultValue; }\n    catch { return defaultValue; }\n  });\n  useEffect(() => {\n    try { localStorage.setItem(key, JSON.stringify(value)); } catch {}\n  }, [key, value]);\n  return [value, setValue];\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "custom-hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it recommended to keep error boundaries relatively granular rather than having just one at the app root?",
+    "answer": "A single root-level error boundary means any unhandled error anywhere in the app replaces the entire UI with a fallback, even if the error occurred in a small, non-critical widget. Placing boundaries around independent sections (a sidebar, a single card in a dashboard) contains failures to just that section, letting the rest of the app keep working.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "error-boundaries"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean for a custom hook to \"leak\" implementation details, and how would you avoid it?",
+    "answer": "A hook leaks details when its return value or required arguments expose internals that force consumers to understand how it works internally (like returning a raw dispatch function alongside state, or requiring a specific shape only relevant to the hook's own logic) rather than a clean, purpose-built API. Designing the hook's public surface around what the consumer actually needs to do (return an updater function with a clear name, not raw internals) keeps it reusable and easy to refactor later.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "custom-hooks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you type a compound component's subcomponents so TypeScript knows Tabs.Tab and Tabs.List are valid?",
+    "answer": "You attach the subcomponents as static properties on the root component and declare that shape in the type, e.g. by intersecting the root component's function type with an object type listing each subcomponent, so Tabs.Tab and Tabs.List are recognized both at runtime (as actual properties) and by the type checker.",
+    "example": null,
+    "code": "const Tabs = Object.assign(TabsRoot, { List: TabsList, Tab: TabsTab });\n// Tabs.List and Tabs.Tab are now valid, type-checked usages",
+    "codeLanguage": "tsx",
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "typescript"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a controlled component re-rendering on every keystroke and how that scales in a large form?",
+    "answer": "A single controlled input re-rendering on every keystroke is cheap, but if that state lives at the top of a large form and every field is controlled from the same parent, every keystroke re-renders the entire form and all its fields, not just the one being typed into. Splitting form state per-field (or using a form library with field-level subscriptions) keeps each keystroke's re-render scoped to just the relevant field.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "advanced", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might you wrap a list of Fragments with keys instead of wrapping each group in an extra <div>?",
+    "answer": "React.Fragment (or the <>...</> shorthand) lets a component return multiple sibling elements without adding an extra wrapping DOM node, which matters when that wrapper would break CSS layout (like flex or grid) that depends on direct-child relationships. When rendering a list of fragments, each still needs a key (using the explicit <React.Fragment key={id}> form, since the shorthand <> syntax doesn't accept props).",
+    "example": null,
+    "code": "{items.map((item) => (\n  <React.Fragment key={item.id}>\n    <dt>{item.term}</dt>\n    <dd>{item.definition}</dd>\n  </React.Fragment>\n))}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "advanced", "fragments"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between defaultProps and using default parameter values in a function component?",
+    "answer": "defaultProps is set as a static property on the component and works for both class and function components, but is being phased out for function components in favor of plain JavaScript default parameter values in the function signature, which are simpler, more idiomatic, and work identically for destructured props. Default parameters are now the recommended approach; defaultProps still exists mainly for backward compatibility and class components.",
+    "example": null,
+    "code": "// Preferred\nfunction Avatar({ size = 40, alt = 'User avatar' }) { /* ... */ }\n\n// Legacy\nfunction Avatar({ size, alt }) { /* ... */ }\nAvatar.defaultProps = { size: 40, alt: 'User avatar' };",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "advanced", "props"],
+    "isFrequentlyAsked": false
+  }
+]

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import type { LanguageWithCount } from '@/types/database'
 import { getLanguageIcon } from '@/utils/icons'
+import { getCategoryBadgeClassName, getCategoryLabel } from '@/utils/categories'
 
 interface LanguageCardProps {
   language: LanguageWithCount
@@ -27,7 +28,14 @@ export function LanguageCard({ language }: LanguageCardProps) {
         />
       </div>
       <div>
-        <h3 className="font-semibold text-slate-900 dark:text-white">{language.name}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold text-slate-900 dark:text-white">{language.name}</h3>
+          <span
+            className={`rounded-full px-2 py-0.5 text-xs font-medium ${getCategoryBadgeClassName(language.category)}`}
+          >
+            {getCategoryLabel(language.category)}
+          </span>
+        </div>
         {language.description && (
           <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">{language.description}</p>
         )}

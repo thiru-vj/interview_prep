@@ -1,5 +1,6 @@
 import type { QuestionWithContext } from '@/types/database'
 import { DifficultyBadge } from '@/components/common/DifficultyBadge'
+import { FaqBadge } from '@/components/common/FaqBadge'
 import { Markdown } from '@/components/common/Markdown'
 import { QuestionCode } from './QuestionCode'
 
@@ -19,6 +20,7 @@ export function QuestionDetail({ question }: QuestionDetailProps) {
             {question.topic.name}
           </span>
           <DifficultyBadge difficulty={question.difficulty} />
+          {question.is_frequently_asked && <FaqBadge />}
         </div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">{question.question}</h1>
       </header>

@@ -1,0 +1,512 @@
+[
+  {
+    "question": "Why does the classic \"closures in a loop with var\" example print the same value for every iteration?",
+    "answer": "Because var is function-scoped, not block-scoped, all the callbacks created inside the loop share the same single variable binding. By the time the callbacks actually run (asynchronously), the loop has already finished and the shared variable holds its final value. Using let instead creates a new binding for each iteration, so each closure captures its own value.",
+    "example": null,
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\n// logs 3, 3, 3 — use let instead of var to fix",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "closures"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a higher-order function?",
+    "answer": "A higher-order function is a function that either takes one or more functions as arguments, returns a function, or both. Array methods like map, filter, and reduce are common examples, as are function factories and decorators.",
+    "example": null,
+    "code": "const withLogging = (fn) => (...args) => {\n  console.log('calling with', args);\n  return fn(...args);\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a pure function?",
+    "answer": "A pure function always returns the same output for the same input and produces no observable side effects, such as mutating external state, logging, or making network calls. Pure functions are easier to test, reason about, and memoize, and are a core building block of functional programming.",
+    "example": null,
+    "code": "// pure\nconst add = (a, b) => a + b;\n\n// impure — depends on and mutates external state\nlet total = 0;\nconst addToTotal = (n) => (total += n);",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is memoization and how would you implement it?",
+    "answer": "Memoization is an optimization technique that caches the result of an expensive function call keyed by its arguments, so subsequent calls with the same arguments return the cached result instead of recomputing it. It only works correctly for pure functions, since it assumes the same input always produces the same output.",
+    "example": null,
+    "code": "function memoize(fn) {\n  const cache = new Map();\n  return (arg) => {\n    if (cache.has(arg)) return cache.get(arg);\n    const result = fn(arg);\n    cache.set(arg, result);\n    return result;\n  };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is function composition?",
+    "answer": "Function composition is combining two or more functions to produce a new function, where the output of one function becomes the input of the next. It's a core functional programming technique for building complex behavior from small, reusable, single-purpose functions.",
+    "example": null,
+    "code": "const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x);\nconst addThenDouble = compose((x) => x * 2, (x) => x + 1);\naddThenDouble(3); // 8",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "functional"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are default parameters and what are some edge cases to be aware of?",
+    "answer": "Default parameters let a function fall back to a specified value when an argument is omitted or explicitly passed as undefined (but not null). A subtle edge case is that default values are evaluated at call time, left to right, and can reference earlier parameters in the same parameter list.",
+    "example": null,
+    "code": "function greet(name = 'Guest', greeting = `Hello, ${name}`) {\n  return greeting;\n}\ngreet(); // 'Hello, Guest'\ngreet(undefined, 'Hi'); // 'Hi'",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between rest parameters and the arguments object?",
+    "answer": "Rest parameters (...args) collect the remaining arguments into a real Array instance, so array methods like map and filter work directly on it. The arguments object is an array-like (not a real array) available in regular functions, lacks array methods, and — unlike rest params — isn't available at all in arrow functions.",
+    "example": null,
+    "code": "function sum(...nums) {\n  return nums.reduce((a, b) => a + b, 0); // works directly\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can't arrow functions be used as object methods that need to access `this`?",
+    "answer": "Arrow functions don't have their own `this` binding — they inherit `this` lexically from the surrounding scope at the time they're defined, which for a top-level object literal method is usually not the object itself. Using a regular function (or method shorthand) ensures `this` refers to the object the method was called on.",
+    "example": null,
+    "code": "const counter = {\n  count: 0,\n  increment: () => { this.count++; } // wrong — `this` isn't `counter`\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "this"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between a named function expression and an anonymous function expression?",
+    "answer": "A named function expression has an identifier that is only visible inside the function's own body (useful for recursion or debugging stack traces), while the outer scope still refers to it via the variable it was assigned to. An anonymous function expression has no such internal name, which makes recursive self-reference and stack traces harder to read.",
+    "example": null,
+    "code": "const factorial = function fact(n) {\n  return n <= 1 ? 1 : n * fact(n - 1); // 'fact' only usable inside here\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is recursion, and what's a risk to watch out for when using it in JavaScript?",
+    "answer": "Recursion is when a function calls itself to break a problem into smaller subproblems, with a base case that stops the recursion. The main risk is a stack overflow if the recursion is too deep or the base case is missing or unreachable, since JavaScript engines have a limited call stack size and (unlike some languages) don't guarantee tail-call optimization in practice.",
+    "example": null,
+    "code": "function factorial(n) {\n  if (n <= 1) return 1; // base case\n  return n * factorial(n - 1);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions", "recursion"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are generator functions and what does the yield keyword do?",
+    "answer": "A generator function, declared with function*, can pause and resume its execution using the yield keyword, producing a sequence of values over time instead of returning a single value at once. Calling a generator function returns an iterator, and each call to .next() resumes execution until the next yield.",
+    "example": null,
+    "code": "function* range(start, end) {\n  for (let i = start; i <= end; i++) yield i;\n}\n[...range(1, 3)]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is generator delegation using yield*?",
+    "answer": "yield* delegates iteration to another generator or iterable, effectively yielding all of its values one by one as though they were yielded directly from the outer generator. It's useful for composing generators together without manually looping over the inner generator.",
+    "example": null,
+    "code": "function* inner() { yield 1; yield 2; }\nfunction* outer() {\n  yield* inner();\n  yield 3;\n}\n[...outer()]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between function hoisting and var hoisting?",
+    "answer": "Function declarations are hoisted completely, including their full body, so they can be called before their definition appears in the code. var declarations are hoisted but only the declaration itself, initialized to undefined — the assignment stays in place, so accessing the variable before assignment gives undefined rather than the intended value.",
+    "example": null,
+    "code": "sayHi(); // works — 'Hi'\nfunction sayHi() { console.log('Hi'); }\n\nconsole.log(x); // undefined, not an error\nvar x = 5;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "hoisting"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Function.prototype.length return?",
+    "answer": "Function.length returns the number of parameters declared before the first one with a default value or a rest parameter — parameters after a default value, and rest parameters themselves, are not counted. It's occasionally used by libraries to introspect how many arguments a callback expects.",
+    "example": null,
+    "code": "function f(a, b, c = 1, ...rest) {}\nf.length; // 2",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean that functions are \"first-class citizens\" in JavaScript?",
+    "answer": "Being first-class means functions can be treated like any other value: assigned to variables, stored in data structures, passed as arguments, and returned from other functions. This is what makes higher-order functions, callbacks, and functional programming patterns possible in JavaScript.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a callback function, and what's a downside of relying heavily on them?",
+    "answer": "A callback is a function passed as an argument to another function, to be invoked later — commonly used for asynchronous operations or customizable behavior. Deeply nesting callbacks (especially for sequential async steps) leads to \"callback hell,\" hard-to-read pyramid-shaped code, which Promises and async/await were introduced to address.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "functions", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does JavaScript support function overloading like Java does?",
+    "answer": "No — JavaScript doesn't support true function overloading; declaring two functions with the same name simply has the second definition overwrite the first. The common workaround is to inspect the number or type of arguments inside a single function and branch behavior accordingly, or use default/rest parameters.",
+    "example": null,
+    "code": "function greet(name, formal) {\n  return formal ? `Good day, ${name}` : `Hey ${name}`;\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is partial application, and how does it differ from currying?",
+    "answer": "Partial application fixes some (but not necessarily all) of a function's arguments up front, producing a new function that takes the remaining arguments and can be called with any number of them at once. Currying specifically transforms a function into a chain of unary (single-argument) functions — currying is a specific, stricter form of partial application.",
+    "example": null,
+    "code": "const add3 = (a, b, c) => a + b + c;\nconst addTo5 = add3.bind(null, 5); // partial application\naddTo5(2, 3); // 10",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "functional"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is new.target used for in a function?",
+    "answer": "new.target is a meta-property that is set to the constructor function itself when a function is invoked with the `new` keyword, and is undefined otherwise. It's used inside a function to detect whether it was called as a constructor, letting you guard against a constructor function being called without `new`.",
+    "example": null,
+    "code": "function Person(name) {\n  if (!new.target) throw new Error('Person must be called with new');\n  this.name = name;\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a constructor function and a regular function?",
+    "answer": "Any function can be used as a constructor by calling it with `new`, which creates a new object, sets its prototype, binds `this` to that new object, and returns it implicitly (unless the function explicitly returns another object). By convention, constructor functions are named with a capital letter to signal that they're meant to be called with `new`.",
+    "example": null,
+    "code": "function Point(x, y) {\n  this.x = x;\n  this.y = y;\n}\nconst p = new Point(1, 2);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the module pattern in JavaScript?",
+    "answer": "The module pattern uses an IIFE (or, in modern code, a real ES module) to create a private scope, exposing only a deliberate public API while keeping implementation details hidden. Before native ES modules existed, this was the standard way to emulate encapsulation and avoid polluting the global namespace.",
+    "example": null,
+    "code": "const counterModule = (function () {\n  let count = 0;\n  return {\n    increment: () => ++count,\n    get: () => count,\n  };\n})();",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the Function constructor and a regular function declaration?",
+    "answer": "The Function constructor (new Function('a', 'b', 'return a + b')) creates a function from strings at runtime, similar to eval, and always executes in the global scope rather than the scope where it was created. It's rarely used in practice because it's slower, bypasses closures, and poses security/injection risks if used with untrusted input.",
+    "example": null,
+    "code": "const add = new Function('a', 'b', 'return a + b');\nadd(2, 3); // 5 — but avoid this pattern",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a thunk in JavaScript?",
+    "answer": "A thunk is a function that wraps an expression or async operation to delay its evaluation until it's actually called, deferring the work. Thunks are commonly seen in Redux middleware (redux-thunk) to delay dispatching an action until some async work completes.",
+    "example": null,
+    "code": "const thunk = () => fetch('/api/data').then((r) => r.json());\n// nothing happens until thunk() is called",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is recursion generally faster or slower than an equivalent iterative loop in JavaScript?",
+    "answer": "Iterative loops are generally faster and more memory-efficient than recursion in JavaScript, because each recursive call adds a new frame to the call stack, and JavaScript engines don't reliably optimize tail calls in practice despite it being part of the ES6 spec. Recursion is still preferred when it makes the code significantly clearer, such as tree traversal.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does JavaScript actually perform tail call optimization?",
+    "answer": "Tail call optimization (reusing the current stack frame for a function call that is the very last action in a function) is part of the ES6 specification, but in practice only Safari's JavaScriptCore implements it — V8 (Chrome, Node.js) and Firefox's engine do not, so recursive code relying on it will still hit a stack overflow on deep recursion in most environments.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a variadic function?",
+    "answer": "A variadic function is one that accepts a variable number of arguments rather than a fixed count, implemented in JavaScript using rest parameters or the arguments object. Math.max() and console.log() are built-in examples of variadic functions.",
+    "example": null,
+    "code": "function sum(...numbers) {\n  return numbers.reduce((a, b) => a + b, 0);\n}\nsum(1, 2, 3, 4); // 10",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is method shorthand syntax in object literals?",
+    "answer": "ES6 introduced a shorter syntax for defining methods on an object literal, omitting the `function` keyword and colon. It behaves the same as assigning a regular function expression to a property, except shorthand methods can use `super` when defined inside an object literal.",
+    "example": null,
+    "code": "const obj = {\n  greet() { return 'hi'; } // shorthand, same as greet: function() {...}\n};",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How is bind() used for partial application, and how does it differ from a plain wrapper function?",
+    "answer": "fn.bind(thisArg, ...presetArgs) returns a new function with `this` and some leading arguments permanently fixed, and any further arguments passed at call time are appended after the preset ones. Unlike writing a manual wrapper function, bind() is a built-in, slightly more efficient mechanism and also correctly locks in `this`, not just the arguments.",
+    "example": null,
+    "code": "function multiply(a, b) { return a * b; }\nconst double = multiply.bind(null, 2);\ndouble(5); // 10",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "this"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a self-invoking function pattern used for besides creating private scope?",
+    "answer": "Besides encapsulating private state, self-invoking (IIFE) patterns are used to run initialization code exactly once immediately on load, to avoid leaking loop variables into an async callback pre-ES6, and to create isolated contexts for library code that shouldn't conflict with globals from other scripts on the page.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens if you forget to bind `this` in a class method passed as a callback?",
+    "answer": "When a class method is passed as a standalone reference (e.g. as an event handler), it loses its connection to the instance it was defined on, so `this` inside the method becomes undefined (in strict mode/classes) when the method is later invoked. Fixing this requires binding the method in the constructor, using an arrow function class field, or binding at the call site.",
+    "example": null,
+    "code": "class Button {\n  constructor() { this.label = 'Click'; }\n  handleClick() { console.log(this.label); }\n}\nconst b = new Button();\nconst fn = b.handleClick;\nfn(); // TypeError: Cannot read properties of undefined",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "this"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is an arrow function class field, and how does it solve the `this` binding problem?",
+    "answer": "An arrow function assigned as a class field (e.g. `handleClick = () => {...}`) captures `this` lexically from the constructor at the time the instance is created, so it's always bound to that instance regardless of how the method is later called or passed around. This avoids needing to manually bind the method in the constructor.",
+    "example": null,
+    "code": "class Button {\n  label = 'Click';\n  handleClick = () => console.log(this.label); // always bound to instance\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "this"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between eager and lazy evaluation, and how do generators enable laziness in JavaScript?",
+    "answer": "Eager evaluation computes a value immediately when an expression is encountered; lazy evaluation defers computation until the value is actually needed. Generators enable lazy evaluation because each `yield` pauses execution, so values are only produced on demand as the consumer calls .next(), which is useful for infinite sequences or expensive computations.",
+    "example": null,
+    "code": "function* naturals() {\n  let n = 1;\n  while (true) yield n++;\n}\nconst it = naturals();\nit.next().value; // 1 — nothing else computed yet",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean for a function to be idempotent, and how does that differ from being pure?",
+    "answer": "An idempotent function produces the same result and end state no matter how many times it's called with the same input (common in HTTP PUT/DELETE semantics), but it may still have side effects — repeating them just doesn't change the outcome further. A pure function additionally must have no side effects at all, which is a stricter requirement than idempotency.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you implement a simple once() function that ensures a callback only runs a single time?",
+    "answer": "A once() wrapper uses a closure to keep track of whether the wrapped function has already been called, and simply returns the cached result (or does nothing) on subsequent calls, delegating to the original function only the first time.",
+    "example": null,
+    "code": "function once(fn) {\n  let called = false, result;\n  return (...args) => {\n    if (!called) { called = true; result = fn(...args); }\n    return result;\n  };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "closures"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a callback-based API and a Promise-based API from a function design perspective?",
+    "answer": "A callback-based API accepts a function argument that the underlying operation invokes when it completes (often with an error-first signature), giving the caller no direct return value to work with. A Promise-based API instead returns a Promise object immediately, which the caller can chain with .then()/.catch() or await, making composition and error handling far more consistent.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you write a curried function manually without a library?",
+    "answer": "A manually curried function returns a chain of single-argument functions until all expected arguments have been collected, at which point it invokes the original function with all of them. A generic curry() helper can do this for any function by checking fn.length against the accumulated arguments so far.",
+    "example": null,
+    "code": "function curry(fn) {\n  return function curried(...args) {\n    if (args.length >= fn.length) return fn(...args);\n    return (...more) => curried(...args, ...more);\n  };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "functional"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between passing a function reference and invoking a function when assigning an event handler?",
+    "answer": "Passing a function reference (onClick={handleClick}) hands the function itself to be called later by the framework/DOM API. Invoking it immediately (onClick={handleClick()}) calls the function right away during render/setup and assigns whatever it *returns* as the handler, which is almost never the intended behavior.",
+    "example": null,
+    "code": "button.addEventListener('click', handleClick); // correct — passes reference\nbutton.addEventListener('click', handleClick()); // wrong — calls immediately",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a closure, technically, in terms of the JavaScript execution model?",
+    "answer": "Technically, a closure is the combination of a function together with references to its surrounding lexical environment (the variables in scope at the time it was created). The JavaScript engine keeps that environment alive in memory for as long as the closure itself is reachable, even after the outer function that created it has returned.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "closures"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can closures accidentally cause memory leaks?",
+    "answer": "Because a closure keeps its entire enclosing scope alive as long as it exists, capturing a large object or DOM node inside a long-lived closure (like an event listener that's never removed) prevents that memory from being garbage collected even if it's no longer actually needed. Being deliberate about what a closure captures, and cleaning up listeners/timers, avoids this.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "closures", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a private variable pattern using closures, before class private fields existed?",
+    "answer": "Before the # private field syntax, closures were the standard way to emulate private state — a variable declared inside a constructor or factory function is inaccessible from outside, and only the functions returned/attached from that same scope (which close over the variable) can read or modify it.",
+    "example": null,
+    "code": "function createAccount(balance) {\n  return {\n    deposit: (amount) => (balance += amount),\n    getBalance: () => balance,\n  };\n}\n// balance itself is not directly accessible from outside",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "closures"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between arguments.length and a function's declared parameter count?",
+    "answer": "arguments.length reflects the actual number of arguments passed at the call site, regardless of how many parameters the function declares. fn.length reflects how many parameters were declared (up to the first default/rest parameter) — the two can easily differ if a function is called with more or fewer arguments than it declares.",
+    "example": null,
+    "code": "function f(a, b) { return arguments.length; }\nf(1, 2, 3); // 3, even though f.length is 2",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an async function under the hood, in terms of generators and promises?",
+    "answer": "Conceptually, an async function behaves like a generator function whose yields are automatically driven by a runner that resolves each awaited Promise before resuming execution. You don't write the generator/runner machinery yourself — async/await is syntactic sugar the engine provides — but understanding that mental model explains why await only works inside async functions.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is function currying used for in real-world code, beyond interview trivia?",
+    "answer": "Currying is used to build specialized, reusable functions from a general one by pre-filling common arguments — for example, a generic `request(method, url, body)` function curried into `get = request('GET')`, or configuring event handlers, validators, or middleware with shared setup ahead of time.",
+    "example": null,
+    "code": "const request = (method) => (url) => (body) => fetch(url, { method, body });\nconst post = request('POST');\npost('/api/users')({ name: 'Ana' });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "functional"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Array.prototype.forEach and a for loop in terms of function semantics?",
+    "answer": "forEach takes a callback function and invokes it once per array element, but it cannot be stopped early with break/continue and always returns undefined, making it purely for side effects. A regular for loop supports break/continue and can be used to build a return value directly, giving more control at the cost of slightly more boilerplate.",
+    "example": null,
+    "code": "arr.forEach((item) => {\n  if (item === 'skip') return; // only skips this iteration, doesn't stop the loop\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a decorator-like pattern for functions in plain JavaScript (without the decorator proposal)?",
+    "answer": "Even without the experimental decorator syntax, you can achieve the same effect by writing a higher-order function that wraps another function, adding behavior (like logging, timing, or retries) before/after calling the original, then returning the wrapped version.",
+    "example": null,
+    "code": "function withTiming(fn) {\n  return (...args) => {\n    const start = Date.now();\n    const result = fn(...args);\n    console.log(`${fn.name} took ${Date.now() - start}ms`);\n    return result;\n  };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between .call() and a direct method call in terms of what problem it solves?",
+    "answer": "A direct method call (obj.method()) automatically binds `this` to obj. .call() lets you invoke a function while manually specifying what `this` should be, which is useful for borrowing a method from one object (or from Array.prototype) and applying it to a different, unrelated object.",
+    "example": null,
+    "code": "function greet() { return `Hi, ${this.name}`; }\ngreet.call({ name: 'Sam' }); // 'Hi, Sam' — borrowing greet for another object",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "this"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you convert an array-like arguments object into a real array inside a function?",
+    "answer": "Use Array.from(arguments) or the spread operator [...arguments] to convert the array-like arguments object into a genuine array with full access to array methods. This is largely unnecessary in modern code since rest parameters already produce a real array directly.",
+    "example": null,
+    "code": "function f() {\n  const args = Array.from(arguments);\n  return args.map((x) => x * 2);\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between throwing inside a regular function versus inside a Promise executor or async function?",
+    "answer": "Throwing inside a regular synchronous function propagates immediately as a normal exception that the caller must catch with try/catch. Throwing inside a Promise executor or an async function is captured automatically and turned into a rejected Promise instead of an uncaught exception, so it must be handled with .catch() or a try/catch around an await.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "functions", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the significance of a function's name property, and can it be changed?",
+    "answer": "Every function has a read-only (but configurable) `name` property reflecting its inferred or declared name, which is inferred automatically when a function is assigned to a variable or object property, even for anonymous arrow functions. It's mainly useful for debugging and stack traces, and can be explicitly overridden with Object.defineProperty if needed.",
+    "example": null,
+    "code": "const greet = () => {};\ngreet.name; // 'greet', inferred from the assignment",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a factory function and a constructor function?",
+    "answer": "A factory function is a regular function that returns a new object explicitly, without using `new` or `this` — the caller just calls it like any other function. A constructor function relies on `new` to create and implicitly return a new object with `this` bound to it. Factory functions avoid `new`-related footguns (like forgetting it) entirely.",
+    "example": null,
+    "code": "function createPoint(x, y) {\n  return { x, y }; // no `new` needed\n}\nconst p = createPoint(1, 2);",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean for a function argument to be passed \"by reference\" versus \"by value\" in JavaScript?",
+    "answer": "JavaScript always passes arguments by value — but for objects and arrays, the \"value\" being copied is a reference to the object, so mutating the object's contents inside the function affects the caller's object too, while reassigning the parameter itself to a brand-new object does not affect the caller's variable.",
+    "example": null,
+    "code": "function mutate(obj) { obj.x = 99; } // affects caller's object\nfunction reassign(obj) { obj = { x: 99 }; } // does not affect caller's variable",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "functions"],
+    "isFrequentlyAsked": true
+  }
+]

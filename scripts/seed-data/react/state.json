@@ -1,0 +1,502 @@
+[
+  {
+    "question": "Why shouldn't you store a value in state if it can be computed from existing props or state?",
+    "answer": "Storing a derivable value in its own state creates two sources of truth that can drift out of sync whenever the underlying data changes but you forget to update the derived copy. It's simpler and safer to compute it directly during render, optionally memoized with useMemo if expensive, so it's always consistent with its source data by construction.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "derived-state"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What's the problem with syncing a prop into state using useEffect, and what's the better alternative?",
+    "answer": "Copying a prop into local state via useEffect creates a state update that lags one render behind the prop change, causing a visible flash of stale data and an extra unnecessary render. If the component truly needs its own editable copy of the prop, it's better to derive the initial value directly during the first render, and if the prop can change later and should reset the local copy, use a key prop to remount instead of syncing with an effect.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "state", "useeffect"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does \"state colocation\" mean in React?",
+    "answer": "It means keeping a piece of state as close as possible to the components that actually use it, rather than lifting everything to a shared ancestor by default. This limits the render impact of a state change to the smallest necessary part of the tree and keeps components easier to reason about in isolation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What signals suggest a component's state logic should move from useState to useReducer?",
+    "answer": "Signs include several related pieces of state that always change together, next-state calculations that depend on the previous state in non-obvious ways, or update logic scattered across many event handlers that would benefit from being centralized and unit-testable as a single pure function.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "usereducer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why must a reducer function passed to useReducer be pure?",
+    "answer": "React may call a reducer more than once per dispatched action in some cases, such as in development with Strict Mode to help surface side effects, so a reducer that mutates its arguments or performs side effects like network calls could produce inconsistent or duplicated results. A reducer should only compute and return a new state object based on its arguments, with no side effects or mutation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "usereducer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do useReducer and Context combine to create a lightweight global state pattern?",
+    "answer": "A single useReducer call lives in a top-level provider component, and its state and dispatch function are exposed through one or two Context providers, letting any descendant read the shared state or dispatch actions to update it without prop drilling. This mimics the core Redux pattern of a single store, actions, and a reducer using only built-in React APIs, at the cost of Context's re-render characteristics at larger scale.",
+    "example": null,
+    "code": "const StateContext = createContext(null);\nconst DispatchContext = createContext(null);\nfunction Provider({ children }) {\n  const [state, dispatch] = useReducer(reducer, initialState);\n  return (\n    <StateContext.Provider value={state}>\n      <DispatchContext.Provider value={dispatch}>{children}</DispatchContext.Provider>\n    </StateContext.Provider>\n  );\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "state", "usereducer", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean to \"normalize\" state shape, and why does it help?",
+    "answer": "Normalizing means storing collections as a flat map keyed by ID, similar to a database table, instead of deeply nested arrays of arrays. It makes updating or looking up a single item O(1) and avoids duplicating the same entity in multiple nested places, which is a common source of state getting out of sync.",
+    "example": null,
+    "code": "// nested (harder to update one comment)\n{ posts: [{ id: 1, comments: [{ id: 10, text: '...' }] }] }\n\n// normalized (easy to update by id)\n{ posts: { 1: { id: 1, commentIds: [10] } }, comments: { 10: { id: 10, text: '...' } } }",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "normalization"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you update a deeply nested piece of state without mutating it?",
+    "answer": "Spread every level of the object from the changed property up to the root, creating new objects for each level along the path while reusing the untouched siblings by reference. This is verbose for deeply nested shapes, which is itself a good argument for normalizing state or using a library like Immer to write seemingly-mutable updates that produce immutable results.",
+    "example": null,
+    "code": "setUser(prev => ({\n  ...prev,\n  address: { ...prev.address, city: 'Austin' },\n}));",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "immutability"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you add, remove, and update an item in an array stored in state?",
+    "answer": "Add with the spread operator to create a new array including the new item, remove with Array.filter to build a new array excluding the target, and update with Array.map to return a new array where only the matching item is replaced with a modified copy — each produces a brand-new array rather than mutating the original with push or splice, which React needs to detect the change.",
+    "example": null,
+    "code": "setItems(prev => [...prev, newItem]); // add\nsetItems(prev => prev.filter(i => i.id !== id)); // remove\nsetItems(prev => prev.map(i => i.id === id ? { ...i, done: true } : i)); // update",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "immutability"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How can a stale closure cause a race condition when updating state?",
+    "answer": "If an async callback, like a fetch handler, was created during a render where a variable had an old value, calling a state setter inside it based on that captured variable can overwrite newer state with outdated data once it finally resolves, especially if a more recent render's callback resolves first. Using functional state updates, or checking a ref or flag that tracks the latest request, avoids acting on outdated captured values.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "state", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should you prefer setCount(c => c + 1) over setCount(count + 1) in most cases?",
+    "answer": "The functional form always receives React's latest pending state value rather than whatever count was when the closure was created, so it's safe even when multiple updates are queued in the same tick or the handler is called from a stale closure like inside a timer. It removes an entire category of \"off by one\" state bugs caused by batching.",
+    "example": null,
+    "code": "setCount(c => c + 1);",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is \"automatic batching\" in React 18?",
+    "answer": "React 18 batches multiple state updates that happen within the same synchronous block of code, including inside promises, timeouts, and native event handlers and not just React's own event handlers as in React 17, into a single re-render for better performance. It can be opted out of for a specific update using flushSync when an immediate, unbatched render is genuinely required.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "At a high level, when would you reach for a dedicated state management library instead of just Context?",
+    "answer": "Once an app has a lot of frequently-changing shared state, many independent consumers that shouldn't all re-render together, or needs like time-travel debugging and middleware, dedicated libraries such as Redux Toolkit, Zustand, Jotai, or Recoil offer more efficient selective subscriptions and tooling than plain Context, which re-renders every consumer on any value change by default.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "state-management"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can Context cause more re-renders than expected, and how do you mitigate it?",
+    "answer": "Every component that calls useContext for a given Context re-renders whenever that Context's value changes, even if the component only cares about one field of a larger value object, and a new object literal passed as the value on every render defeats memoization entirely. Mitigations include memoizing the value with useMemo, splitting one large context into several smaller, more narrowly-scoped ones, or using a selector-based library for fine-grained subscriptions.",
+    "example": null,
+    "code": "const value = useMemo(() => ({ user, theme }), [user, theme]);\n<AppContext.Provider value={value}>{children}</AppContext.Provider>",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "state", "context", "performance"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you decide between passing a prop, using Context, or reaching for an external store?",
+    "answer": "Use props when only one or two levels of the tree need the data, since it's the most explicit and easiest to trace. Reach for Context when several components at varying depths need read access to relatively stable, infrequently-changing data. Reach for an external store or library when state changes frequently, is needed widely, and re-render performance or cross-cutting features like persistence or middleware matter.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between \"server state\" and \"client state,\" and why does the distinction matter?",
+    "answer": "Client state is data that only ever lives in the browser, like a modal's open/closed flag or a form draft, fully owned by the app. Server state is a client-side cache of data that actually lives on a server and can go stale, requiring concerns like refetching, caching, and synchronization that plain useState or useReducer weren't designed for, which is why libraries like React Query or SWR exist specifically to manage it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "data-fetching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the main tradeoffs between controlled state, uncontrolled refs, and a form library for managing form state?",
+    "answer": "Fully controlled state, with every field backed by useState, gives full control and easy validation but can cause a re-render on every keystroke across a large form. Uncontrolled inputs with refs avoid that re-render cost by reading values only on submit, at the expense of harder real-time validation. Form libraries like React Hook Form aim for the best of both by using uncontrolled inputs internally while still exposing a controlled-feeling API with built-in validation and minimal re-renders.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "state", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "In what sense is the URL a form of application state?",
+    "answer": "Values encoded in the path or query string, like a selected tab, page number, or filter, represent state just like a useState value would, but with the added benefit of being shareable, bookmarkable, and preserved across a refresh — which is why pagination and filters commonly live in the URL instead of component state.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a simple pattern for persisting a piece of state to localStorage?",
+    "answer": "Initialize state lazily by reading from localStorage on the first render, then use a useEffect that writes the current value to localStorage whenever it changes, commonly wrapped into a reusable useLocalStorage custom hook.",
+    "example": null,
+    "code": "const [value, setValue] = useState(() => JSON.parse(localStorage.getItem(key)) ?? initial);\nuseEffect(() => { localStorage.setItem(key, JSON.stringify(value)); }, [key, value]);",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "localstorage"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can changing a component's key prop be used to reset its internal state?",
+    "answer": "React treats a component with a different key as an entirely new element, unmounting the old instance and discarding its state, then mounting a fresh one — so changing a form component's key when switching between editing different records resets all of its internal state instantly without manual reset logic.",
+    "example": null,
+    "code": "<UserForm key={selectedUserId} user={selectedUser} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "keys"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the \"single source of truth\" principle mean for state design?",
+    "answer": "Each piece of data should have exactly one place it's stored and considered authoritative — every other place that needs it should read or derive from that one source rather than keeping its own separate copy, which is what keeps duplicated state from silently drifting out of sync.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a \"waterfall\" of state updates, and why is it a performance concern?",
+    "answer": "It's when fetching or computing one piece of state depends on first fetching another, which depends on a third, causing sequential renders and network round-trips instead of parallel ones — for example, fetching a user, then waiting for that to fetch their permissions, then waiting for that to fetch their dashboard data. Restructuring to kick off independent requests in parallel, or colocating data needs, avoids the compounding latency.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "state", "performance", "data-fetching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is an optimistic UI update?",
+    "answer": "It's updating local state to reflect the expected result of an action, like marking a todo as done, immediately, before the server has actually confirmed it, so the UI feels instant, and rolling the state back if the request later fails, rather than waiting for a round-trip before showing any change.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "data-fetching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might you pass a function to useState instead of an object literal directly, even for state that isn't expensive to compute?",
+    "answer": "Passing a function guarantees the initializer only runs once on mount, which matters when constructing the initial object involves calling something with side effects, like Date.now() or a random ID generator, that shouldn't re-run on every render even though its result is discarded after the first.",
+    "example": null,
+    "code": "const [id] = useState(() => crypto.randomUUID());",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you share state across different pages or routes in a single-page app?",
+    "answer": "Lift the state above the router, for example in a top-level provider, so it persists across navigations instead of being recreated per route, use Context or an external store to make it accessible from any route, or encode it in the URL itself if it should also survive a full page refresh.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "routing"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a \"state machine\" approach to modeling UI state, and what problem does it solve?",
+    "answer": "Instead of tracking independent booleans like isLoading, isError, and isSuccess, which can combine into invalid states like both being true at once, a state machine defines one explicit status value that can only be one of a fixed set of named states with defined transitions between them, making impossible states actually impossible to represent.",
+    "example": null,
+    "code": "type Status = 'idle' | 'loading' | 'success' | 'error';\nconst [status, setStatus] = useState('idle');",
+    "codeLanguage": "tsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "state-machines"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is tracking isLoading, isError, and hasData as three separate booleans risky?",
+    "answer": "Nothing prevents them from ending up in a combination that shouldn't be possible, like isLoading and isError both true at once, and the component has to guess which one \"wins\" when rendering — a single status enum makes only one state representable at a time and removes that ambiguity entirely.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "state-machines"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a \"selector\" in the context of external state stores, and why does it help performance?",
+    "answer": "A selector is a small function that reads and derives just the specific slice of a larger store's state a component needs, and most store libraries only re-render components whose selected slice actually changed — so a component selecting just one field won't re-render when unrelated parts of the store update, unlike a component that reads the whole store object.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "state", "state-management", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can component composition reduce the need for prop drilling?",
+    "answer": "Instead of passing a value down through several layers just so a deeply nested component can use it, a parent can render the deeply nested component directly and pass it in as children or another element prop at the top level — the intermediate components never need to know about the value at all since they just render whatever element they were given.",
+    "example": null,
+    "code": "function Layout({ sidebar, content }) {\n  return <div><aside>{sidebar}</aside><main>{content}</main></div>;\n}\n// caller renders <Layout sidebar={<UserPanel user={user} />} content={...} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might you split one large Context into several smaller ones?",
+    "answer": "Since every consumer of a Context re-renders whenever its value changes, bundling unrelated data like theme, user, and notifications into one context means a change to any of them re-renders everything that reads any of them. Splitting into separate contexts per concern lets a component subscribe only to the slice it actually needs.",
+    "example": null,
+    "code": "<ThemeContext.Provider value={theme}>\n  <UserContext.Provider value={user}>\n    {children}\n  </UserContext.Provider>\n</ThemeContext.Provider>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "context", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does an effect depending on an object or array from state sometimes run more often than expected?",
+    "answer": "If that object or array is recreated as a new reference on every render, even with identical contents, an effect depending on it sees a \"changed\" dependency on every render and re-runs every time, since dependency comparison in React is by reference, not deep equality. Memoizing the object or array with useMemo, or depending on its primitive fields individually, fixes it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "useeffect"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you immutably update a single item inside an array of objects by its id?",
+    "answer": "Map over the array, returning a new object for the matching item with the changed fields spread in, and passing every other item through unchanged, then set that new array as state.",
+    "example": null,
+    "code": "setTodos(prev => prev.map(t => t.id === id ? { ...t, done: true } : t));",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "immutability"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the correct way to toggle a boolean piece of state?",
+    "answer": "Use the functional updater form, flipping the previous value, rather than referencing a possibly-stale captured variable — this works correctly even if the toggle is called multiple times in quick succession.",
+    "example": null,
+    "code": "setIsOpen(prev => !prev);",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Should a form's fields be tracked as one state object or as separate useState calls per field?",
+    "answer": "A single object usually scales better for forms with many fields since one generic onChange handler can update any field by key, whereas separate useState calls require a separate handler, or handler factory, per field but avoid needing to spread the whole object on every keystroke.",
+    "example": null,
+    "code": "const [form, setForm] = useState({ name: '', email: '' });\nfunction handleChange(e) {\n  setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does a controlled input's value relate to component state?",
+    "answer": "The input's displayed value is always driven by a state variable, and every keystroke fires onChange, which updates that state — meaning React, not the DOM, is the single source of truth for what's currently in the field at all times.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you debounce a state update that drives an expensive operation, like a search API call?",
+    "answer": "Keep the raw input value in state as-is for instant UI feedback, but derive a second, debounced value that's updated only after the user pauses typing for a delay using a small useEffect with setTimeout and clearTimeout, and trigger the expensive operation off that debounced value instead of the raw one.",
+    "example": null,
+    "code": "useEffect(() => {\n  const id = setTimeout(() => setDebounced(query), 300);\n  return () => clearTimeout(id);\n}, [query]);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you keep a piece of state in sync across multiple open browser tabs?",
+    "answer": "Persist the value to localStorage, and in each tab listen for the browser's native storage event, which fires in other tabs, not the one that made the change, whenever localStorage is modified — updating local state from that event keeps every open tab reflecting the same value.",
+    "example": null,
+    "code": "useEffect(() => {\n  function onStorage(e) {\n    if (e.key === 'theme') setTheme(e.newValue);\n  }\n  window.addEventListener('storage', onStorage);\n  return () => window.removeEventListener('storage', onStorage);\n}, []);",
+    "codeLanguage": "jsx",
+    "difficulty": "hard",
+    "tags": ["react", "state", "localstorage"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the tradeoffs between localStorage, sessionStorage, and cookies for persisting state?",
+    "answer": "localStorage persists indefinitely across tabs and browser restarts but isn't sent to the server and has no built-in expiry. sessionStorage is scoped to a single tab and cleared when it closes, useful for per-session drafts. Cookies are automatically sent with every request, useful for auth, but have a small size limit and add overhead to every network request if overused.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "localstorage"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is storing both an items array and a separate itemCount in state usually a mistake?",
+    "answer": "itemCount can always be derived as items.length, so keeping it as separate state means every place that adds or removes an item must remember to update both, and any place that forgets creates a silently incorrect count — deriving it on the fly avoids that entire class of bugs.",
+    "example": null,
+    "code": "const itemCount = items.length; // derive, don't store separately",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "derived-state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the \"single writer\" principle mean for shared state?",
+    "answer": "Only one clearly defined place, such as a specific reducer, store action, or component, should be responsible for actually changing a given piece of shared state — other parts of the app can read it or request a change through that single path, but shouldn't mutate it directly, which keeps changes traceable and prevents conflicting updates from different places.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "state-management"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is it ever appropriate to pass a setState function itself down to a child as a prop?",
+    "answer": "Yes — for simple cases, passing the setter directly is simpler than wrapping it in a named callback prop, and since a setState function's identity from useState is stable, it doesn't cause extra re-renders. Wrapping it in a more descriptive callback becomes worthwhile once the child needs more than a raw setter, like validation before updating.",
+    "example": null,
+    "code": "<Toggle open={open} setOpen={setOpen} />",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does using a reducer help keep related state changes atomic?",
+    "answer": "A single dispatched action can update multiple related fields together inside one reducer call, avoiding the situation with multiple separate setState calls where, due to batching or a re-render triggered mid-sequence, a component could theoretically be read in a state where only some of several related updates have landed.",
+    "example": null,
+    "code": "case 'FORM_SUBMIT_SUCCESS':\n  return { ...state, status: 'success', data: action.payload, error: null };",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "usereducer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a clean way to represent the state of an async operation like a fetch?",
+    "answer": "Model it as a single status field with a fixed set of values such as idle, loading, success, and error, alongside the data and error fields, rather than several independent booleans — so the UI can render one clear switch or if-chain based on status instead of untangling combinations of isLoading, isError, and hasData.",
+    "example": null,
+    "code": "const [state, setState] = useState({ status: 'idle', data: null, error: null });",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "data-fetching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the risk of one large component owning most of an app's state directly?",
+    "answer": "It becomes a bottleneck where any state change re-renders the whole subtree unless carefully optimized, it's hard to reason about which piece of state affects which part of the UI, and it discourages reusing the smaller pieces elsewhere — breaking state up and colocating it closer to where it's used keeps things more maintainable.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "composition"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you test a reducer's state transitions?",
+    "answer": "Since a reducer is a pure function of state and action producing a new state, you can call it directly in a test with a given starting state and action, and assert on the returned state — no component rendering or React testing utilities are needed at all.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state", "testing", "usereducer"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why doesn't a state variable reflect its new value immediately after calling its setter?",
+    "answer": "Calling a state setter schedules an update for the next render rather than mutating the variable in place — the variable inside the current function's closure still holds the old value until that component re-executes on the next render, which is why reading it on the very next line still shows the previous value.",
+    "example": null,
+    "code": "setCount(count + 1);\nconsole.log(count); // still logs the OLD value",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "If you need to act on a state value right after updating it, what should you do instead of reading the state variable on the next line?",
+    "answer": "Either compute the new value in a local variable and use that directly, or move the logic that depends on the new value into a useEffect that runs after the update has actually been applied and the component has re-rendered.",
+    "example": null,
+    "code": "const next = count + 1;\nsetCount(next);\ndoSomethingWith(next); // use the local variable, not 'count'",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "state", "usestate"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's a simple way to reset a component's state back to its initial values?",
+    "answer": "Store the initial state as a constant, or a function that produces it, and call the same setter again with that constant — with useReducer, dispatching a dedicated reset action that returns the original initial state works well for resetting several fields at once.",
+    "example": null,
+    "code": "const initialState = { name: '', email: '' };\nsetForm(initialState); // reset",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "state", "forms"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "If two pieces of state must always stay consistent with each other, what's the better approach than updating both in sync?",
+    "answer": "Store only one of them as actual state, and compute the other from it during render, using useMemo if the computation is costly — that way there's no possibility of them drifting apart, since the derived value can never be set to an inconsistent value on its own.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "state", "derived-state"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Is passing a prop through one or two intermediate components always a problem worth solving with Context?",
+    "answer": "No — passing a prop through a shallow, well-understood chain of one or two levels is often clearer and easier to trace than introducing Context, which adds an indirection that can make it harder to see where a value actually comes from. Context earns its complexity once the chain gets deep or the same value is needed from many unrelated branches of the tree.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "state", "context"],
+    "isFrequentlyAsked": false
+  }
+]

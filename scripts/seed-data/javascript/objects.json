@@ -1,0 +1,502 @@
+[
+  {
+    "question": "What does Object.keys(), Object.values(), and Object.entries() return?",
+    "answer": "Object.keys() returns an array of a given object's own enumerable string-keyed property names. Object.values() returns an array of the corresponding values, and Object.entries() returns an array of [key, value] pairs. All three only include own enumerable properties, not inherited ones.",
+    "example": null,
+    "code": "const obj = { a: 1, b: 2 };\nObject.keys(obj);   // ['a', 'b']\nObject.values(obj); // [1, 2]\nObject.entries(obj); // [['a',1],['b',2]]",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between Object.assign() and the object spread operator?",
+    "answer": "Both perform a shallow merge of one or more source objects into a target, copying only own enumerable properties. Object.assign() mutates and returns the first argument (the target), while the spread operator ({...a, ...b}) always creates a brand new object, leaving the originals untouched. Spread is generally preferred for immutable-style merging since it avoids accidentally mutating an existing object.",
+    "example": null,
+    "code": "const merged = Object.assign({}, a, b);\nconst merged2 = { ...a, ...b };",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Object.create() do and when would you use it?",
+    "answer": "Object.create(proto) creates a new object with the specified object as its prototype, without invoking a constructor. It's useful for building objects with a specific prototype chain directly, implementing prototypal inheritance without classes, or creating an object with no prototype at all via Object.create(null), which avoids inherited properties like toString.",
+    "example": null,
+    "code": "const animal = { speak() { return 'sound'; } };\nconst dog = Object.create(animal);\ndog.speak(); // 'sound'",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "prototype"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the prototype chain work when looking up a property?",
+    "answer": "When you access a property on an object, the JS engine first checks the object's own properties. If not found, it looks at the object's prototype (via the internal [[Prototype]] link), then that prototype's prototype, and so on, until it reaches Object.prototype or finds the property. If the chain ends at null without a match, the result is undefined.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "prototype"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the difference between __proto__ and Object.getPrototypeOf()?",
+    "answer": "__proto__ is a legacy, non-standard (though widely implemented) accessor property that exposes an object's prototype, primarily kept for browser compatibility. Object.getPrototypeOf() is the standard, recommended way to read an object's prototype, and Object.setPrototypeOf() is the standard way to change it. Modern code should avoid __proto__ in favor of these methods or Object.create().",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "prototype"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do ES6 classes relate to JavaScript's prototype-based inheritance?",
+    "answer": "ES6 class syntax is primarily syntactic sugar over the existing prototype-based inheritance model — methods defined in a class body are added to the class's prototype object, not to each instance. Under the hood, class Dog extends Animal still sets up a prototype chain: Dog.prototype's [[Prototype]] is Animal.prototype. Classes don't introduce a fundamentally new inheritance model, just a cleaner syntax on top of the existing one.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are private class fields and how do you declare one?",
+    "answer": "Private class fields, prefixed with #, are properties that can only be accessed from within the class body itself — not from outside instances or subclasses. They were standardized in ES2022 and provide true encapsulation, unlike the older convention of prefixing a property with an underscore, which is just a naming convention with no actual enforcement.",
+    "example": null,
+    "code": "class Counter {\n  #count = 0;\n  increment() { return ++this.#count; }\n}\nconst c = new Counter();\nc.increment(); // 1",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are static class members and when are they useful?",
+    "answer": "Static members are declared with the static keyword and belong to the class itself rather than to instances — they're accessed as ClassName.member rather than instance.member. They're useful for utility/factory methods, constants, or counters that logically relate to the class as a whole rather than any particular instance.",
+    "example": null,
+    "code": "class MathUtils {\n  static PI = 3.14159;\n  static square(n) { return n * n; }\n}\nMathUtils.square(4); // 16",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you define getters and setters inside a class?",
+    "answer": "Getters and setters are declared with the get and set keywords before a method name, and they let a property look like a plain field from the outside while running custom logic on read or write. They're commonly used for computed properties or to add validation when a property is assigned.",
+    "example": null,
+    "code": "class Circle {\n  constructor(radius) { this._radius = radius; }\n  get area() { return Math.PI * this._radius ** 2; }\n  set radius(r) { if (r > 0) this._radius = r; }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are computed property names in object literals?",
+    "answer": "Computed property names let you use a bracketed expression as an object key at creation time, so the actual key name can be determined dynamically at runtime rather than being a static identifier. This is especially useful when building objects keyed by a variable or function result.",
+    "example": null,
+    "code": "const key = 'score';\nconst obj = { [key]: 100 }; // { score: 100 }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Object.defineProperty() let you control that a normal assignment doesn't?",
+    "answer": "Object.defineProperty() lets you precisely configure a property's descriptor: whether it's writable, enumerable (shows up in for...in/Object.keys), and configurable (can be redefined or deleted), or define it as an accessor with get/set functions. A plain assignment always creates a writable, enumerable, configurable property, so defineProperty is needed for anything more restrictive.",
+    "example": null,
+    "code": "const obj = {};\nObject.defineProperty(obj, 'id', { value: 1, writable: false, enumerable: false });",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between hasOwnProperty() and the in operator?",
+    "answer": "obj.hasOwnProperty(key) checks only the object's own properties, ignoring the prototype chain. The in operator checks both own properties and inherited ones from the entire prototype chain. So 'toString' in {} is true (inherited from Object.prototype), but {}.hasOwnProperty('toString') is false.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "prototype"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you correctly compare two objects for equality in JavaScript?",
+    "answer": "Both == and === compare objects by reference, not by their contents, so two objects with identical properties are never === unless they're literally the same reference. To compare structural equality you need a deep-equality check — either a manual recursive comparison, JSON.stringify() for simple cases (with caveats around key order and unsupported types), or a library like lodash's isEqual.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is structuredClone() and how does it differ from JSON-based deep cloning?",
+    "answer": "structuredClone() is a built-in browser/Node API that performs a true deep clone of an object, correctly handling Dates, Maps, Sets, ArrayBuffers, and circular references. The older JSON.parse(JSON.stringify(obj)) trick fails on those cases — it silently drops functions and undefined, breaks Dates into strings, and throws on circular references.",
+    "example": null,
+    "code": "const clone = structuredClone({ date: new Date(), nested: { a: 1 } });",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "When would you use a Map instead of a plain object?",
+    "answer": "Map is preferable when keys aren't simple strings (Map allows objects, functions, or any value as a key), when insertion order matters for iteration (which Map guarantees), when you need a reliable .size, or when you're frequently adding/removing keys, since Map doesn't carry inherited prototype properties that could collide with data. Plain objects remain fine for simple, known-shape records.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why would you use a Set instead of an array to track unique values?",
+    "answer": "A Set automatically enforces uniqueness — adding a duplicate value is a no-op — and its .has() lookup is O(1) on average versus an array's O(n) .includes() scan. This makes Set the natural choice for deduplication and fast membership checks, though arrays remain better when you need ordering by index or duplicate values.",
+    "example": null,
+    "code": "const unique = [...new Set([1, 2, 2, 3])]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What problem do WeakMap and WeakSet solve?",
+    "answer": "WeakMap and WeakSet hold their keys (WeakMap) or values (WeakSet) weakly, meaning those references don't prevent garbage collection — once nothing else references an object used as a key, it (and its associated value) can be collected. This makes them ideal for associating metadata with objects (like caching or private data) without causing memory leaks by keeping objects alive indefinitely.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a mixin in JavaScript and how is it typically implemented?",
+    "answer": "A mixin is a pattern for sharing reusable behavior across classes that don't share a common ancestor, working around JavaScript's lack of multiple inheritance. It's commonly implemented as a function that takes a base class and returns a new subclass with additional methods mixed in, allowing you to compose several mixins onto one class.",
+    "example": null,
+    "code": "const Serializable = (Base) => class extends Base {\n  serialize() { return JSON.stringify(this); }\n};\nclass Model extends Serializable(Object) {}",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the instanceof operator actually work?",
+    "answer": "obj instanceof Constructor checks whether Constructor.prototype appears anywhere in obj's prototype chain, not whether obj was literally created by that constructor. This means you can make instanceof return true or false in unexpected ways by manually altering the prototype chain, and it doesn't work reliably across different realms (e.g., iframes) since each has its own constructor identity.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "prototype"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you make a custom object iterable with for...of?",
+    "answer": "You implement the Symbol.iterator method on the object, returning an iterator object with a next() method that yields { value, done } pairs. Once an object has this method, it can be used directly with for...of, spread syntax, and destructuring.",
+    "example": null,
+    "code": "const range = {\n  from: 1, to: 3,\n  [Symbol.iterator]() {\n    let cur = this.from, last = this.to;\n    return { next: () => cur <= last ? { value: cur++, done: false } : { done: true } };\n  }\n};\n[...range]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "iterators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between spreading an object ({...obj}) and Object.assign({}, obj)?",
+    "answer": "Functionally they both produce a shallow copy merged into a new object, and in most cases are interchangeable. Object spread is generally considered more readable and slightly faster in modern engines, while Object.assign is still useful when the set of source objects is dynamic (an array of objects) since it can be called with apply or spread arguments itself.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are common pitfalls when serializing objects to JSON?",
+    "answer": "JSON.stringify() silently omits properties whose value is undefined, a function, or a Symbol; it converts Date objects to ISO strings (losing the Date type on parse); and it throws a TypeError on circular references unless you supply a custom replacer function. NaN and Infinity are serialized as null, which can silently corrupt numeric data.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "json"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is property shorthand syntax in object literals?",
+    "answer": "When a variable's name matches the key you want in an object literal, you can write just the variable name instead of key: value. This reduces repetition and is extremely common when returning multiple values from a function as an object.",
+    "example": null,
+    "code": "const name = 'Amy', age = 30;\nconst user = { name, age }; // same as { name: name, age: age }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does optional chaining interact with method calls?",
+    "answer": "obj?.method?.() calls method only if both obj and obj.method are not null/undefined, short-circuiting to undefined otherwise instead of throwing a TypeError. This is especially useful for calling optional callback props or methods on objects that might not have been initialized yet.",
+    "example": null,
+    "code": "user.onLogin?.(); // only calls onLogin if it exists",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does Object.freeze() perform a deep freeze?",
+    "answer": "No — Object.freeze() only freezes the object's own top-level properties; any nested objects remain fully mutable. To achieve a deep freeze you need to recursively freeze each nested object yourself, which is a common gotcha when developers assume immutability extends further than it does.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the super keyword work in class inheritance?",
+    "answer": "Inside a subclass constructor, super(...) calls the parent class's constructor and must be called before this can be used. Inside a method, super.methodName() calls the parent class's version of that method, which is useful for extending rather than fully replacing inherited behavior.",
+    "example": null,
+    "code": "class Animal {\n  speak() { return 'generic sound'; }\n}\nclass Dog extends Animal {\n  speak() { return super.speak() + ' (barks)'; }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you simulate an abstract class in JavaScript, which has no built-in abstract keyword?",
+    "answer": "A common pattern is to check in the base class's constructor whether new.target === BaseClass and throw an error if so, preventing direct instantiation. Methods meant to be 'abstract' can throw an error like 'must be implemented by subclass' if not overridden, giving a runtime approximation of an abstract contract.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "classes", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is method overriding in JavaScript classes?",
+    "answer": "Method overriding happens when a subclass defines a method with the same name as one on its parent class, replacing the inherited implementation for instances of the subclass. Unlike some languages, JS doesn't require any special keyword or check signature compatibility — any method name can simply be redefined.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is composition often preferred over inheritance in JavaScript?",
+    "answer": "Composition — building objects by combining smaller, focused pieces of behavior — tends to produce more flexible code than deep inheritance hierarchies, which can become rigid and hard to change as a codebase grows (the fragile base class problem). JS's functions-as-values and object literals make composition (passing behavior in, combining small objects) especially natural compared to class-based inheritance chains.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do toString() and valueOf() affect type coercion of objects?",
+    "answer": "When an object is used in a context expecting a primitive (like string concatenation or arithmetic), JS calls valueOf() first for numeric contexts and toString() first for string contexts (this is now more precisely governed by Symbol.toPrimitive if defined). Overriding these methods lets you control how a custom object behaves when coerced, e.g., in template literals or comparisons.",
+    "example": null,
+    "code": "class Money {\n  constructor(cents) { this.cents = cents; }\n  valueOf() { return this.cents; }\n}\nnew Money(500) + new Money(250); // 750",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "coercion"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a discriminated union pattern using plain objects, and why is it useful?",
+    "answer": "It's a pattern where related object shapes share a common 'tag' or 'type' field whose value determines which other fields are present, letting code branch (often with a switch) on that field to safely narrow the shape. It's commonly used to model state machines or API responses (e.g. { status: 'loading' } vs { status: 'success', data } vs { status: 'error', error }) in a self-describing way.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you enforce immutability in JavaScript without an external library?",
+    "answer": "Combine Object.freeze() (applied recursively for deep immutability) with consistently returning new objects/arrays instead of mutating in place (using spread syntax or array methods like map/filter that don't mutate). This convention-plus-freeze approach mimics immutable data structures without needing a library like Immutable.js, though it doesn't give you the structural-sharing performance benefits those libraries provide.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does it mean for an object property to be 'enumerable'?",
+    "answer": "Enumerable properties show up in for...in loops, Object.keys(), Object.entries(), and JSON.stringify() output; non-enumerable ones (like most built-in methods on Object.prototype, or properties defined via defineProperty without enumerable: true) are hidden from those but still directly accessible. This distinction lets built-in and library code attach 'hidden' metadata to objects without polluting normal iteration.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the Reflect object used for?",
+    "answer": "Reflect provides methods that mirror many object-level operations (like Reflect.get, Reflect.set, Reflect.ownKeys, Reflect.deleteProperty) as regular functions with consistent, predictable return values, rather than operators or statements that can throw or behave inconsistently. It's most commonly used alongside Proxy, where trap handlers often forward to the corresponding Reflect method for default behavior.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "reflect"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Object.fromEntries() do?",
+    "answer": "Object.fromEntries() is the inverse of Object.entries() — it builds a plain object from an iterable of [key, value] pairs, such as an array of entries or a Map. It's commonly used to convert a Map back into a plain object, or to transform an object's entries with map/filter and rebuild a new object from the result.",
+    "example": null,
+    "code": "Object.fromEntries([['a', 1], ['b', 2]]); // { a: 1, b: 2 }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the basic traps a Proxy can intercept, and what is a Proxy used for?",
+    "answer": "A Proxy wraps a target object and lets you intercept fundamental operations via 'traps' — most commonly get (property read), set (property write), has (the in operator), and deleteProperty. Proxies are used for validation, logging/debugging property access, creating reactive objects (as Vue's reactivity system does), or implementing virtual/computed properties.",
+    "example": null,
+    "code": "const logged = new Proxy({}, {\n  set(target, key, value) { console.log(`set ${key}`); target[key] = value; return true; }\n});\nlogged.x = 5; // logs 'set x'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "proxy"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Object.seal() and Object.preventExtensions()?",
+    "answer": "Object.preventExtensions() only stops new properties from being added, but existing ones can still be modified or deleted. Object.seal() goes further — it also marks all existing properties as non-configurable (so they can't be deleted or reconfigured, though writable ones can still have their value changed), sitting between preventExtensions and the fully locked-down freeze.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is duck typing and how does it relate to polymorphism in JavaScript?",
+    "answer": "Duck typing means code cares only about whether an object has the methods/properties it needs at the moment it's used ('if it walks like a duck and quacks like a duck...'), rather than its declared type or class. Because JavaScript is dynamically typed, this enables a lightweight form of polymorphism — different objects can be used interchangeably anywhere they implement the expected shape, without needing a shared base class or interface.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is method chaining and how do you implement a fluent interface?",
+    "answer": "Method chaining lets you call multiple methods on the same object in a single expression (obj.a().b().c()), which is achieved simply by having each method return this (or a new instance of the same type) instead of undefined. It's commonly seen in builder patterns, query builders, and libraries like jQuery or array methods that return arrays.",
+    "example": null,
+    "code": "class QueryBuilder {\n  where(cond) { this.conditions = cond; return this; }\n  build() { return `WHERE ${this.conditions}`; }\n}\nnew QueryBuilder().where('id=1').build();",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "objects", "patterns"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you implement a simple object pool, and why might you need one?",
+    "answer": "An object pool pre-allocates and reuses a fixed set of objects instead of constantly creating and discarding them, which reduces garbage collection pressure in performance-sensitive code like games or high-frequency event handling. It typically exposes acquire() (returns a free object from the pool, creating one if needed) and release(obj) (returns the object to the pool for reuse) methods.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you clone a class instance while preserving its prototype (and thus its methods)?",
+    "answer": "A plain spread ({...instance}) or Object.assign({}, instance) copies own properties but loses the prototype, turning the result into a plain object without the class's methods. To preserve the prototype, use Object.create(Object.getPrototypeOf(instance), Object.getOwnPropertyDescriptors(instance)), or simply pass the instance's properties into new instance.constructor(...) if the constructor supports it.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Does JavaScript guarantee the iteration order of object properties?",
+    "answer": "Mostly yes, per the ES2015+ specification: integer-like keys are iterated first in ascending numeric order, followed by string keys in insertion order, followed by Symbol keys in insertion order. This is a common point of confusion since older mental models assumed object key order was entirely unspecified.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use a plain object or Map to memoize a function's results?",
+    "answer": "Memoization caches a function's return value keyed by its arguments (often serialized to a string, or used directly as a Map key for object/array arguments) so that a repeated call with the same input returns the cached result instead of recomputing. This trades memory for speed and is especially effective for expensive, pure (side-effect-free) computations.",
+    "example": null,
+    "code": "function memoize(fn) {\n  const cache = new Map();\n  return (arg) => {\n    if (cache.has(arg)) return cache.get(arg);\n    const result = fn(arg);\n    cache.set(arg, result);\n    return result;\n  };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Object.is() and the === operator?",
+    "answer": "Object.is() behaves like === for almost all values, but corrects two edge cases: Object.is(NaN, NaN) is true (whereas NaN === NaN is false), and Object.is(0, -0) is false (whereas 0 === -0 is true). It's mainly used internally by React and other libraries for precise equality checks, and rarely needed in everyday application code.",
+    "example": null,
+    "code": "Object.is(NaN, NaN); // true\nNaN === NaN; // false",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do you declare a private method inside a class?",
+    "answer": "Prefix the method name with # just like a private field: #helper() { ... }. It can only be called from within the class body (this.#helper()), and attempting to access it from outside — even via bracket notation — throws a syntax/reference error, giving genuine encapsulation rather than convention-based privacy.",
+    "example": null,
+    "code": "class Auth {\n  #hash(password) { return password.split('').reverse().join(''); }\n  login(password) { return this.#hash(password) === this.storedHash; }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can static fields be private, and what's a use case?",
+    "answer": "Yes — combining static and # (e.g. static #instances = 0) creates a private field shared across the class itself rather than instances, inaccessible from outside. A common use case is a private static counter tracking how many instances have been created, exposed only through a public static getter.",
+    "example": null,
+    "code": "class Widget {\n  static #count = 0;\n  constructor() { Widget.#count++; }\n  static get count() { return Widget.#count; }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might you validate input inside a setter rather than in the constructor alone?",
+    "answer": "Validating in a setter ensures the invariant holds not just at construction time but every time the property is reassigned later in the object's lifetime, since the constructor typically delegates to the same setter (this.radius = radius) rather than duplicating the check. This centralizes validation logic in one place instead of scattering it across every assignment site.",
+    "example": null,
+    "code": "class Circle {\n  set radius(r) {\n    if (r <= 0) throw new Error('radius must be positive');\n    this._radius = r;\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the risk of using object keys derived from user input without sanitization?",
+    "answer": "If user input is used directly as an object key without care, it can collide with inherited properties like __proto__, constructor, or toString, potentially leading to prototype pollution — where an attacker manipulates an object's prototype to affect unrelated code. Using a Map (which has no prototype pollution risk) or Object.create(null) for such lookup tables avoids this class of bug entirely.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "objects", "security"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between a plain object literal and a class instance in terms of underlying representation?",
+    "answer": "Both are ultimately objects with an internal prototype link — a class instance's [[Prototype]] points to the class's prototype (carrying its methods), while an object literal's [[Prototype]] points directly to Object.prototype by default. Functionally, a class is really just a more structured, conventionalized way to produce objects with a shared prototype and consistent initialization via the constructor.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "objects", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you deeply merge two nested objects, unlike Object.assign's shallow merge?",
+    "answer": "A deep merge recursively walks both objects, and whenever a key exists in both and both values are plain objects, it merges them recursively instead of letting one simply overwrite the other; for non-object values, the source typically takes precedence. There's no built-in deep merge in JS, so it's either hand-written recursively or delegated to a utility library like lodash's merge.",
+    "example": null,
+    "code": "function deepMerge(target, source) {\n  for (const key in source) {\n    if (source[key] instanceof Object && key in target) {\n      Object.assign(source[key], deepMerge(target[key], source[key]));\n    }\n  }\n  return { ...target, ...source };\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "objects"],
+    "isFrequentlyAsked": false
+  }
+]

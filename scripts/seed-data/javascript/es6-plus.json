@@ -1,0 +1,482 @@
+[
+  {
+    "question": "What is the temporal dead zone in JavaScript?",
+    "answer": "The temporal dead zone (TDZ) is the span between entering a scope and the point where a `let` or `const` declaration is actually executed. Accessing the variable anywhere in that span throws a ReferenceError, even though the declaration is technically hoisted — unlike `var`, which is hoisted and initialized to `undefined`.",
+    "example": null,
+    "code": "console.log(x); // ReferenceError\nlet x = 5;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "scope"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does array destructuring work in JavaScript?",
+    "answer": "Array destructuring unpacks values from an array into distinct variables based on position, using square-bracket syntax on the left-hand side of an assignment. Elements can be skipped with empty commas, and default values can be supplied for positions that are undefined.",
+    "example": null,
+    "code": "const [first, , third = 'default'] = [1, 2];\n// first = 1, third = 'default'",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "destructuring"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How do you destructure a deeply nested object?",
+    "answer": "Nested destructuring mirrors the shape of the object being unpacked, using nested braces to reach into sub-objects and optionally renaming variables along the way. If an intermediate property might be missing, a default value should be provided for it to avoid a TypeError when destructuring further.",
+    "example": null,
+    "code": "const { user: { address: { city = 'Unknown' } = {} } = {} } = response;",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "destructuring"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do default values work in destructuring assignments?",
+    "answer": "A default value in a destructuring pattern is used only when the corresponding property or array element is `undefined` — not when it is `null` or any other falsy value. This makes destructuring defaults a convenient way to handle optional function arguments or optional object properties.",
+    "example": "function greet({ name = 'Guest' } = {}) { return `Hi ${name}`; }",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "destructuring"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you swap two variables without a temporary variable using ES6?",
+    "answer": "Array destructuring lets you swap two variables in a single expression by destructuring a new array literal containing them in reversed order — the right-hand side array is fully evaluated before assignment, so no temporary variable is needed.",
+    "example": null,
+    "code": "let a = 1, b = 2;\n[a, b] = [b, a];\n// a = 2, b = 1",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "destructuring"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does a Set differ from an array for storing unique values?",
+    "answer": "A Set automatically enforces uniqueness — adding a value that already exists is a no-op — whereas an array allows duplicates and requires manual filtering (e.g. `indexOf` or `includes`) to deduplicate. Sets also provide O(1) average `has()` lookups compared to an array's O(n) `includes()`.",
+    "example": null,
+    "code": "const unique = [...new Set([1, 2, 2, 3])]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "set"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a WeakMap and how does it differ from a Map?",
+    "answer": "A WeakMap only accepts objects as keys and holds those keys weakly, meaning an entry doesn't prevent its key object from being garbage collected once there are no other references to it. This makes WeakMap useful for associating metadata with an object (like private data or caches) without causing memory leaks, but it isn't iterable and has no `size` property.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "map", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a WeakSet used for?",
+    "answer": "A WeakSet stores a collection of objects (not primitives) weakly, so an object present only in a WeakSet can still be garbage collected. It's commonly used to track whether an object has been 'seen' or 'processed' before (like marking DOM nodes) without preventing that object from being cleaned up.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "set", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the purpose of the Symbol type in JavaScript?",
+    "answer": "Symbol is a primitive type that produces a guaranteed-unique value each time it's created, even if given the same description string. It's primarily used to create object property keys that won't collide with string keys or with properties added by other code, enabling a form of weak namespacing.",
+    "example": "const id = Symbol('id');\nconst obj = { [id]: 123 };",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "symbol"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a well-known symbol, and what does Symbol.iterator do?",
+    "answer": "Well-known symbols are built-in Symbol values (like `Symbol.iterator`, `Symbol.asyncIterator`, `Symbol.hasInstance`) that JavaScript itself uses as extension points to customize built-in behavior. `Symbol.iterator` specifically defines the default iterator for an object, which is what `for...of` and the spread operator call to iterate over it.",
+    "example": null,
+    "code": "const range = {\n  [Symbol.iterator]() {\n    let i = 0;\n    return { next: () => (i < 3 ? { value: i++, done: false } : { value: undefined, done: true }) };\n  }\n};\n[...range]; // [0, 1, 2]",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "symbol", "iterators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between for...of and for...in?",
+    "answer": "`for...of` iterates over the values produced by an iterable's iterator (arrays, strings, Maps, Sets), which is what you usually want. `for...in` iterates over the enumerable property keys of an object, including inherited ones, which makes it error-prone on arrays since it can pick up non-index properties and doesn't guarantee order.",
+    "example": null,
+    "code": "for (const value of [10, 20]) { /* 10, 20 */ }\nfor (const key in { a: 1, b: 2 }) { /* 'a', 'b' */ }",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "loops"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What makes an object iterable in JavaScript?",
+    "answer": "An object is iterable if it implements the iterable protocol by defining a `[Symbol.iterator]` method that returns an iterator — an object with a `.next()` method returning `{ value, done }` pairs. This is the mechanism that lets built-in constructs like `for...of`, spread syntax, and destructuring work uniformly across arrays, strings, Maps, and Sets.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "iterators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are generator functions and what problem do they solve?",
+    "answer": "A generator function, declared with `function*`, can pause its execution at `yield` expressions and resume later, producing a sequence of values lazily over time instead of computing them all at once. This makes generators well suited for representing infinite sequences, custom iterators, and cooperative, step-by-step computations.",
+    "example": null,
+    "code": "function* counter() {\n  yield 1;\n  yield 2;\n  yield 3;\n}\nconst it = counter();\nit.next(); // { value: 1, done: false }",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "generators"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How can you pass a value back into a generator via next()?",
+    "answer": "Calling `.next(value)` on a generator resumes it and makes `value` become the result of the `yield` expression the generator was paused at, enabling two-way communication between the generator and its caller. This allows generators to act as coroutines that both produce and consume values across multiple resumptions.",
+    "example": null,
+    "code": "function* echo() {\n  const input = yield 'ready';\n  console.log(input); // 'hello'\n}\nconst g = echo();\ng.next();\ng.next('hello');",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does yield* do inside a generator?",
+    "answer": "`yield*` delegates iteration to another iterable (often another generator), forwarding each of its yielded values as if they were yielded directly by the outer generator. It's a concise way to compose generators without manually looping over the inner one with `for...of`.",
+    "example": null,
+    "code": "function* inner() { yield 1; yield 2; }\nfunction* outer() {\n  yield* inner();\n  yield 3;\n}\n[...outer()]; // [1, 2, 3]",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "generators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How do static methods work on ES6 classes?",
+    "answer": "A method marked `static` belongs to the class itself rather than to instances, and is called directly on the class (e.g. `MyClass.method()`) instead of on an object created with `new`. Static methods are commonly used for factory functions or utility helpers that logically relate to the class but don't need instance state.",
+    "example": null,
+    "code": "class MathUtil {\n  static square(x) { return x * x; }\n}\nMathUtil.square(4); // 16",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are private class fields in JavaScript?",
+    "answer": "Private fields, declared with a `#` prefix, are only accessible from within the class body itself — any access from outside, even from a subclass, throws a SyntaxError at parse time. This gives classes true encapsulation, unlike the older convention of prefixing a property name with an underscore, which is just a naming convention with no actual enforcement.",
+    "example": null,
+    "code": "class Counter {\n  #count = 0;\n  increment() { return ++this.#count; }\n}\nconst c = new Counter();\nc.increment(); // 1\nc.#count; // SyntaxError",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a class expression and how does it differ from a class declaration?",
+    "answer": "A class expression defines a class as part of an expression (often assigned to a variable) and can be anonymous, whereas a class declaration uses the `class Name {}` statement form. Unlike function declarations, class declarations are not hoisted in a usable way — both forms are only usable after their definition runs, due to the same temporal dead zone rules as `let`/`const`.",
+    "example": "const Shape = class { area() { return 0; } };",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a static initialization block in a class?",
+    "answer": "A static initialization block (`static { ... }`) runs once when the class itself is defined, letting you perform more complex setup for static fields than a single expression allows — including try/catch and access to private static fields. It executes in the order it appears among other static members.",
+    "example": null,
+    "code": "class Config {\n  static settings;\n  static {\n    Config.settings = loadDefaults();\n  }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can classes have private methods, not just private fields?",
+    "answer": "Yes — prefixing a method name with `#` makes it a private method, callable only from within the class body, following the same access rules as private fields. This lets a class expose a small public API while keeping internal helper logic fully hidden from consumers.",
+    "example": null,
+    "code": "class Validator {\n  #isValidFormat(v) { return /^\\d+$/.test(v); }\n  check(v) { return this.#isValidFormat(v); }\n}",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "classes"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a Proxy in JavaScript and what is it used for?",
+    "answer": "A Proxy wraps a target object and lets you intercept and customize fundamental operations on it — like property reads, writes, and deletion — through a set of trap functions defined in a handler object. It's used for things like validation, logging, reactive frameworks (tracking reads/writes for reactivity), and default values for missing properties.",
+    "example": null,
+    "code": "const target = {};\nconst proxy = new Proxy(target, {\n  get(obj, prop) { return prop in obj ? obj[prop] : 'N/A'; }\n});\nproxy.missing; // 'N/A'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "proxy"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is the Reflect object and how does it relate to Proxy?",
+    "answer": "Reflect is a built-in object that exposes the same set of fundamental operations (get, set, has, deleteProperty, etc.) as static methods, mirroring the trap names used by Proxy. Inside a Proxy trap, calling the corresponding `Reflect` method is the standard way to forward an operation to the target with correct default semantics, rather than reimplementing it manually.",
+    "example": null,
+    "code": "const proxy = new Proxy(target, {\n  get(obj, prop, receiver) { return Reflect.get(obj, prop, receiver); }\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "proxy", "reflect"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Array.from() do and when would you use it?",
+    "answer": "`Array.from()` creates a real array from an array-like object (something with a `length` and indexed elements, like `arguments` or a NodeList) or from any iterable (like a Set or Map). It also accepts an optional mapping function as a second argument, letting you transform elements while converting them.",
+    "example": null,
+    "code": "Array.from({ length: 3 }, (_, i) => i * 2); // [0, 2, 4]\nArray.from(document.querySelectorAll('li'));",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Array.of() and the Array constructor?",
+    "answer": "`Array.of(7)` creates a single-element array `[7]`, while `Array(7)` creates a sparse array with `length` 7 and no actual elements — a well-known footgun of the `Array` constructor when called with a single numeric argument. `Array.of()` always treats its arguments as elements regardless of how many or what type they are.",
+    "example": null,
+    "code": "Array.of(7); // [7]\nArray(7);    // [ <7 empty items> ]",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Array.prototype.find, findIndex, and findLast?",
+    "answer": "`find()` returns the first element matching a predicate (or `undefined` if none match), `findIndex()` returns that element's index instead (or -1), and `findLast()` (ES2023) scans from the end of the array to find the last matching element. All three short-circuit as soon as a match is found, unlike `filter()` which always scans the whole array.",
+    "example": null,
+    "code": "[1, 5, 10, 15].find(n => n > 4);      // 5\n[1, 5, 10, 15].findLast(n => n > 4);  // 15",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between Array.prototype.includes() and indexOf()?",
+    "answer": "`includes()` returns a boolean indicating whether a value is present, and correctly detects `NaN` using the SameValueZero algorithm, whereas `indexOf()` uses strict equality and can never find `NaN` (since `NaN !== NaN`). `includes()` is generally preferred when you only care about presence, not position.",
+    "example": null,
+    "code": "[NaN].includes(NaN); // true\n[NaN].indexOf(NaN);  // -1",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Array.prototype.at() offer over bracket notation?",
+    "answer": "`at()` accepts negative indices to count from the end of the array (e.g. `arr.at(-1)` for the last element), something bracket notation can't do directly since `arr[-1]` just looks up a non-existent property. It works identically to bracket access for non-negative indices.",
+    "example": "const last = [10, 20, 30].at(-1); // 30",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is optional chaining and what problem does it solve?",
+    "answer": "Optional chaining (`?.`) short-circuits to `undefined` instead of throwing when accessing a property, calling a method, or indexing on a value that is `null` or `undefined` along the chain. It replaces verbose manual checks like `obj && obj.a && obj.a.b` with a single concise expression, `obj?.a?.b`.",
+    "example": null,
+    "code": "const city = user?.address?.city; // undefined instead of a TypeError\nuser?.getName?.();",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "optional-chaining"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does the nullish coalescing operator (??) differ from ||?",
+    "answer": "`??` returns its right-hand operand only when the left-hand operand is `null` or `undefined`, whereas `||` returns the right-hand operand for any falsy left value, including `0`, `''`, and `false`. This makes `??` the safer choice for defaulting a value that might legitimately be `0` or an empty string.",
+    "example": null,
+    "code": "const count = 0;\ncount || 10; // 10 (wrong — 0 is a valid count)\ncount ?? 10; // 0 (correct)",
+    "codeLanguage": "javascript",
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "operators"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does the exponentiation operator (**) do?",
+    "answer": "The `**` operator raises the left operand to the power of the right operand, providing a more concise, readable alternative to calling `Math.pow()`. It is right-associative, so `2 ** 3 ** 2` evaluates as `2 ** (3 ** 2)`, i.e. 512.",
+    "example": "const cube = 3 ** 3; // 27",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "operators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Promise.allSettled() do differently from Promise.all()?",
+    "answer": "`Promise.allSettled()` waits for every promise in the input to settle — whether fulfilled or rejected — and resolves with an array of `{ status, value }` or `{ status, reason }` objects describing each outcome, never short-circuiting on a single rejection. This is useful when you need the results of all operations regardless of individual failures, unlike `Promise.all()` which rejects immediately on the first failure.",
+    "example": null,
+    "code": "const results = await Promise.allSettled([p1, p2, p3]);\nresults.forEach(r => console.log(r.status));",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does Promise.any() do?",
+    "answer": "`Promise.any()` resolves as soon as any one of the input promises fulfills, ignoring rejections unless every promise rejects — in that case it rejects with an `AggregateError` containing all the individual errors. It's the fulfillment-focused counterpart to `Promise.race()`, which settles on the first outcome regardless of success or failure.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "promises"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What do the logical assignment operators &&=, ||=, and ??= do?",
+    "answer": "These operators conditionally assign based on the current value: `a ||= b` assigns `b` only if `a` is falsy, `a &&= b` assigns `b` only if `a` is truthy, and `a ??= b` assigns `b` only if `a` is `null` or `undefined`. They're shorthand for the equivalent `if` statement or ternary, and importantly they short-circuit — the right-hand side isn't evaluated unless the assignment will actually happen.",
+    "example": null,
+    "code": "let config = {};\nconfig.timeout ??= 3000; // only sets if undefined/null",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "operators"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are numeric separators in JavaScript?",
+    "answer": "Numeric separators let you insert underscores into number literals purely for readability, with no effect on the value — for example `1_000_000` is identical to `1000000`. They're especially useful for large numbers, hex values, and binary literals where digit grouping helps at a glance.",
+    "example": "const billion = 1_000_000_000;",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6", "numbers"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is top-level await and what constraint does it have?",
+    "answer": "Top-level await lets you use `await` directly in the top-level scope of an ES module, without wrapping it in an async function, which is convenient for one-time async setup like loading configuration before the rest of the module runs. It only works inside actual ES modules — using it in a regular script or a CommonJS file is a syntax error.",
+    "example": null,
+    "code": "// inside an ES module\nconst config = await fetch('/config.json').then(r => r.json());",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules", "async"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is dynamic import() and how does it differ from static import?",
+    "answer": "`import()` is a function-like expression that asynchronously loads a module and returns a Promise resolving to its exports namespace object, and it can be called anywhere at runtime — including conditionally inside an `if` block. Static `import` statements, by contrast, must appear at the top level of a module and are resolved before any module code runs, which is what enables features like tree-shaking.",
+    "example": null,
+    "code": "button.addEventListener('click', async () => {\n  const { renderChart } = await import('./chart.js');\n  renderChart();\n});",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is globalThis and why was it introduced?",
+    "answer": "`globalThis` provides a standard way to access the global object regardless of environment — `window` in browsers, `self` in web workers, `global` in Node.js — removing the need for environment-specific detection code. Before it existed, writing cross-environment code that needed the global object required awkward feature detection.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["javascript", "es6"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are tagged template literals used for?",
+    "answer": "A tagged template literal calls a function (the 'tag') with the template's literal string parts and its interpolated expression values passed separately, instead of producing a plain concatenated string. This is the mechanism libraries like styled-components use to parse CSS-in-JS, and it's also useful for automatically escaping/sanitizing interpolated values (e.g. for safe SQL or HTML construction).",
+    "example": null,
+    "code": "function highlight(strings, ...values) {\n  return strings.reduce((acc, s, i) => `${acc}${s}${values[i] ? `**${values[i]}**` : ''}`, '');\n}\nhighlight`Score: ${42}`; // 'Score: **42**'",
+    "codeLanguage": "javascript",
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "template-literals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does the Intl object provide for formatting numbers and dates?",
+    "answer": "The `Intl` namespace provides locale-aware formatting built into the JavaScript engine, without needing a library — `Intl.NumberFormat` formats numbers, currencies, and percentages, and `Intl.DateTimeFormat` formats dates and times according to a given locale's conventions. This avoids manually implementing locale-specific separators, currency symbols, and date orderings.",
+    "example": null,
+    "code": "new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(1234.5);\n// \"$1,234.50\"",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "intl"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is BigInt and when would you need it?",
+    "answer": "BigInt is a primitive type for representing integers of arbitrary precision, created with an `n` suffix (e.g. `10n`) or `BigInt()`, used when a value exceeds `Number.MAX_SAFE_INTEGER` (2^53 - 1) and precision would otherwise be lost. BigInt values can't be mixed with regular numbers in arithmetic without explicit conversion, and they aren't supported by `JSON.stringify()` without a custom replacer.",
+    "example": null,
+    "code": "const big = 9007199254740993n;\ntypeof big; // 'bigint'",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "bigint"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does export * from './module' do?",
+    "answer": "`export * from './module'` re-exports every named export from another module through the current module, without needing to import and re-export each one individually — useful for building a single \"barrel\" entry point that aggregates a folder's exports. It does not forward that module's default export; that needs a separate explicit re-export.",
+    "example": "// index.js\nexport * from './button.js';\nexport * from './input.js';",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What are the trade-offs between named exports and a default export?",
+    "answer": "Named exports make a module's API explicit and enable better auto-import and refactoring tooling since each import must match an actual exported name, and they support tree-shaking cleanly since bundlers can see exactly what's used. A default export is convenient for modules that expose one primary thing, but its imported name is arbitrary at the call site, which can lead to inconsistent naming across a codebase.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What happens with circular dependencies between ES modules?",
+    "answer": "ES modules can have circular imports — module A importing from B while B imports from A — because the module system uses live bindings resolved lazily rather than eagerly copying values. If module A tries to use a binding from B before B has finished initializing it, that binding may still be `undefined` at that point in execution, so code relying on circular imports needs to be careful about what it accesses at module-evaluation time versus later.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the static structure of ES modules enable tree-shaking?",
+    "answer": "Because ES module `import`/`export` declarations are static — they can't be conditionally constructed at runtime like CommonJS's `require()` can — a bundler can analyze the full dependency graph ahead of time and determine exactly which exports are actually used. Unused exports can then be safely stripped from the final bundle, a process known as tree-shaking, which isn't reliably possible with CommonJS's dynamic module system.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is import.meta used for?",
+    "answer": "`import.meta` is an object available inside ES modules that exposes metadata about the current module, most commonly `import.meta.url`, which gives the module's own URL — useful for resolving relative asset paths or constructing worker URLs without hardcoding an absolute path.",
+    "example": "const workerUrl = new URL('./worker.js', import.meta.url);",
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "modules"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is Object.groupBy() and what problem does it solve?",
+    "answer": "`Object.groupBy()` (a newer addition to the language) takes an iterable and a callback, and returns a plain object whose keys are the callback's return values and whose values are arrays of the original items that produced each key — replacing the common manual `reduce()` pattern used to bucket items by some property. `Map.groupBy()` is the equivalent that returns a Map instead of a plain object, useful when group keys aren't strings.",
+    "example": null,
+    "code": "Object.groupBy([1, 2, 3, 4], n => n % 2 === 0 ? 'even' : 'odd');\n// { odd: [1, 3], even: [2, 4] }",
+    "codeLanguage": "javascript",
+    "difficulty": "medium",
+    "tags": ["javascript", "es6", "arrays"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is a WeakRef and when would you use one?",
+    "answer": "A `WeakRef` holds a weak reference to an object, letting you access it (via `.deref()`) while it's still alive without preventing it from being garbage collected. It's an advanced, rarely-needed tool for building caches where entries should be automatically reclaimed under memory pressure — most application code should prefer regular references and let normal scoping manage lifetime.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "memory"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does a FinalizationRegistry do?",
+    "answer": "A `FinalizationRegistry` lets you register a callback to run after an object has been garbage collected, typically used alongside `WeakRef` to clean up external resources (like a native handle) associated with an object once it's gone. Because garbage collection timing is not guaranteed or deterministic, this callback should never be relied on for correctness-critical cleanup, only for best-effort resource reclamation.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["javascript", "es6", "memory"],
+    "isFrequentlyAsked": false
+  }
+]

@@ -1,11 +1,14 @@
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
+export type LanguageCategory = 'frontend' | 'backend' | 'database'
+
 export interface Language {
   id: string
   name: string
   slug: string
   description: string | null
   icon: string | null
+  category: LanguageCategory
   display_order: number
   created_at: string
 }
@@ -32,6 +35,7 @@ export interface Question {
   code_language: string | null
   difficulty: Difficulty
   tags: string[] | null
+  is_frequently_asked: boolean
   display_order: number
   created_at: string
   updated_at: string

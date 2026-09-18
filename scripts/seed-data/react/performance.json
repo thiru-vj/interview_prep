@@ -1,0 +1,502 @@
+[
+  {
+    "question": "How do you use the React DevTools Profiler to diagnose a performance problem?",
+    "answer": "The Profiler tab records a session while you interact with the app, then shows a flame graph of every commit with how long each component took to render and why it rendered (props changed, state changed, parent re-rendered, etc.). You look for components that render often or take disproportionately long, then work backward to find the state update or prop change triggering them. It's the standard first step before reaching for memoization, since it tells you where the actual cost is instead of guessing.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "devtools"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How would you identify which prop or state change caused a slow re-render?",
+    "answer": "The DevTools Profiler can highlight the reason for each render (\"why did this render\") when that setting is enabled, showing which props or state changed. For a manual check, a useEffect that logs the changed props/state on every render, or a small custom hook that diffs the previous and current props, can pinpoint the culprit without any extra tooling.",
+    "example": null,
+    "code": "function useWhyDidYouUpdate(name, props) {\n  const prev = useRef(props);\n  useEffect(() => {\n    const changed = Object.entries(props).filter(([k, v]) => prev.current[k] !== v);\n    if (changed.length) console.log(name, 'changed:', changed);\n    prev.current = props;\n  });\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "debugging"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Give an example of using useMemo to avoid recomputing an expensive value on every render.",
+    "answer": "useMemo caches the result of a computation and only recalculates it when the values in its dependency array change, instead of on every render. It's most useful for genuinely expensive work like sorting or filtering a large array, not trivial arithmetic where the memoization overhead can outweigh the savings.",
+    "example": null,
+    "code": "const sortedUsers = useMemo(\n  () => [...users].sort((a, b) => b.score - a.score),\n  [users]\n);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usememo"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How does useCallback prevent a memoized child component from re-rendering unnecessarily?",
+    "answer": "Without useCallback, a function defined inside a component body is a new reference on every render, which breaks React.memo's shallow prop comparison on any child that receives it as a prop. useCallback returns the same function reference across renders as long as its dependencies haven't changed, so a memoized child receiving it as a prop can correctly skip re-rendering.",
+    "example": null,
+    "code": "const handleSelect = useCallback((id) => setSelectedId(id), []);\nreturn <MemoizedList items={items} onSelect={handleSelect} />;",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usecallback"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can changing a component's key be used to reset its internal state and remount it?",
+    "answer": "React uses the key prop to decide whether to reuse or discard a component instance between renders. Changing the key forces React to unmount the old instance (discarding all its internal state and effects) and mount a fresh one, which is a simple way to fully reset a complex form or widget instead of manually clearing every piece of state.",
+    "example": null,
+    "code": "<UserForm key={selectedUserId} userId={selectedUserId} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "key"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does passing a new object or array literal as a prop on every render defeat React.memo?",
+    "answer": "React.memo does a shallow comparison of props, and object/array literals created inline (e.g. style={{ color: 'red' }}) produce a brand-new reference every render even if the contents are identical. That means the shallow comparison always reports \"changed,\" so the memoized child re-renders anyway — the fix is to hoist the literal outside the component or wrap it in useMemo.",
+    "example": null,
+    "code": "// Bad: new object every render\n<Chart options={{ responsive: true }} />\n\n// Better: stable reference\nconst chartOptions = useMemo(() => ({ responsive: true }), []);\n<Chart options={chartOptions} />",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "memo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Are inline arrow functions in JSX actually a performance problem?",
+    "answer": "In most apps, no — creating a new function on every render is cheap, and modern JS engines handle it fine. It only becomes a real problem when that function is passed as a prop to a component wrapped in React.memo, because the new reference breaks the memoization and causes an otherwise-avoidable re-render; in that specific case, useCallback is worth reaching for.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you lazy-load an image that's below the fold in a React app?",
+    "answer": "The simplest approach is the native loading=\"lazy\" attribute on an <img> tag, which defers loading until the image is near the viewport with no JavaScript required. For more control (like showing a placeholder or triggering earlier), an IntersectionObserver-based custom hook can toggle the image's src only once it's about to enter view.",
+    "example": null,
+    "code": "<img src={photo.url} loading=\"lazy\" alt={photo.alt} />",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "performance", "images"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is route-based code splitting and how does it differ from lazy-loading a single component?",
+    "answer": "Route-based code splitting applies React.lazy at the routing layer so each page's JS bundle is only downloaded when the user actually navigates to that route, rather than as part of the initial bundle. It differs from lazy-loading one component (like a modal) in scale and intent: it's a deliberate architectural strategy to keep the initial load small, applied consistently across every top-level route rather than to a single heavy widget.",
+    "example": null,
+    "code": "const Dashboard = lazy(() => import('./pages/Dashboard'));\nconst Settings = lazy(() => import('./pages/Settings'));\n\n<Routes>\n  <Route path=\"/dashboard\" element={<Dashboard />} />\n  <Route path=\"/settings\" element={<Settings />} />\n</Routes>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "code-splitting"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does tree-shaking reduce bundle size, and what can prevent it from working?",
+    "answer": "Tree-shaking is a build-time step where the bundler analyzes ES module imports/exports and removes code that's never actually used, relying on the static (not dynamic) nature of ES module syntax to prove what's safe to drop. It's defeated by importing an entire library's default export (e.g. import _ from 'lodash' instead of import debounce from 'lodash/debounce'), by libraries shipped only as CommonJS, or by side-effectful module code the bundler can't prove is safe to remove.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "bundling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why should selectors reading from a global store be memoized?",
+    "answer": "A selector that derives a new array or object from store state (e.g. filtering a list) returns a new reference every time it runs, which can make consuming components think the data changed even when the underlying source didn't, triggering unnecessary re-renders. Memoizing the selector (e.g. with reselect-style caching) ensures it only recomputes and returns a new reference when its actual inputs change.",
+    "example": null,
+    "code": "const selectActiveUsers = createSelector(\n  (state) => state.users,\n  (users) => users.filter((u) => u.active)\n);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "state-management"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can prop drilling contribute to unnecessary re-renders across a wide component tree?",
+    "answer": "When a value is passed down through several intermediate components just to reach a deeply nested one, every intermediate component re-renders whenever that value changes, even if it never uses the value itself. Lifting the value into Context or a store lets only the components that actually consume it re-render, rather than the whole chain in between.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "prop-drilling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can a Context value cause every consumer to re-render even if only part of the value changed?",
+    "answer": "Context consumers re-render whenever the Provider's value prop changes by reference, regardless of which specific field inside that value actually changed. If the value is a single object containing many unrelated pieces of state, updating any one of them creates a new object and re-renders every consumer, even ones that only cared about a field that didn't change.",
+    "example": null,
+    "code": "// One consumer only needs `theme`, but re-renders when `user` changes too\nconst { theme, user } = useContext(AppContext);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you debounce a search input's onChange handler in a React component?",
+    "answer": "Keep the input's displayed value in local state so typing feels instant, but wrap the expensive operation (an API call or a heavy filter) in a debounced function via useMemo or useEffect with a timeout, so it only fires once the user pauses typing. useDeferredValue in React 18 offers a related, built-in alternative for deferring a derived render without manually managing timers.",
+    "example": null,
+    "code": "const [query, setQuery] = useState('');\nuseEffect(() => {\n  const id = setTimeout(() => fetchResults(query), 300);\n  return () => clearTimeout(id);\n}, [query]);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "debounce"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What are the trade-offs of using react-window or react-virtualized for large lists?",
+    "answer": "Both libraries render only the rows currently visible in the viewport (plus a small buffer), dramatically cutting DOM node count and improving scroll performance for lists with thousands of items. The trade-off is added complexity: rows typically need a fixed or measurable height, browser find-in-page and some accessibility patterns need extra handling, and the API adds a layer of indirection compared to a plain .map().",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "virtualization"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can reading layout properties like offsetHeight inside a useEffect cause layout thrashing?",
+    "answer": "Reading a layout property forces the browser to synchronously recalculate layout if any pending DOM writes haven't been flushed yet. Interleaving reads and writes across multiple effects (read, write, read, write) forces this recalculation repeatedly in the same frame instead of once, which can visibly slow down updates — batching all reads before all writes, or using useLayoutEffect deliberately and sparingly, avoids the thrashing.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "dom"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What performance benefit does React 18's automatic batching provide?",
+    "answer": "Before React 18, multiple setState calls inside a promise callback, setTimeout, or native event handler each triggered a separate re-render. React 18 batches all state updates within a single tick automatically regardless of where they occur, so several setState calls in an async handler now produce just one re-render instead of several.",
+    "example": null,
+    "code": "function handleClick() {\n  fetchData().then(() => {\n    setLoading(false); // batched\n    setData(result);   // batched — only one re-render total\n  });\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "react-18"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What does \"concurrent rendering\" mean in React 18+?",
+    "answer": "Concurrent rendering lets React prepare (render) multiple versions of the UI without committing them, and interrupt, pause, or abandon a render in progress if something more urgent (like user input) comes in. This is what enables features like useTransition and Suspense to keep an app responsive during expensive updates, in contrast to React's older synchronous renderer which always ran a render to completion once started.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "concurrent-rendering"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What problem does useTransition solve?",
+    "answer": "useTransition lets you mark a state update as non-urgent, so React can render it in the background and keep the UI responsive to more urgent updates (like typing) instead of blocking the main thread. A common use case is filtering a large list as the user types: the input stays instantly responsive while the (potentially slow) filtered list update happens as a lower-priority transition.",
+    "example": null,
+    "code": "const [isPending, startTransition] = useTransition();\n\nfunction handleChange(e) {\n  setQuery(e.target.value); // urgent\n  startTransition(() => {\n    setFilteredList(filterItems(e.target.value)); // non-urgent\n  });\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usetransition"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What does useDeferredValue do and how does it differ from debouncing?",
+    "answer": "useDeferredValue returns a version of a value that \"lags behind\" the real value during expensive renders, letting React prioritize more urgent updates first and catch up when it has spare time. Unlike debouncing, it doesn't use a fixed timer — React decides when to update the deferred value based on actual rendering capacity, so it adapts to the device's performance instead of an arbitrary delay.",
+    "example": null,
+    "code": "const deferredQuery = useDeferredValue(query);\nconst results = useMemo(() => search(deferredQuery), [deferredQuery]);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usedeferredvalue"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Which Web Vitals metrics are most relevant to a React app's perceived performance?",
+    "answer": "Largest Contentful Paint (LCP) measures how long the main content takes to appear, which is heavily influenced by initial bundle size and data-fetch waterfalls in a React SPA. Interaction to Next Paint (INP) measures how responsive the app feels to clicks and typing, which is directly affected by expensive re-renders and long-running synchronous work on the main thread — exactly what memoization and transitions aim to fix.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "web-vitals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might having too many separate Context consumers hurt performance?",
+    "answer": "Every component that calls useContext subscribes to that Context and re-renders whenever its value changes, so spreading dozens of components across the tree as direct consumers of a frequently-updating Context means dozens of re-renders per update. Reducing the number of direct consumers (by reading the value once near the top and passing down only what's needed, or splitting the Context) limits the blast radius of each update.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why would you split one large Context into several smaller ones?",
+    "answer": "If unrelated pieces of state (like theme and user session) live in one Context object, updating either one re-renders every consumer of the whole Context, including ones that only care about the other piece. Splitting into separate Context providers means a component only re-renders when the specific slice of state it actually reads changes.",
+    "example": null,
+    "code": "// Instead of one AppContext with { theme, user, cart }\nconst ThemeContext = createContext();\nconst UserContext = createContext();\nconst CartContext = createContext();",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Can over-memoizing a component ever hurt performance?",
+    "answer": "Yes — every useMemo, useCallback, or React.memo adds a comparison check that itself costs time and memory, so wrapping cheap components or trivial computations in memoization can end up being slower than just letting them re-render normally. Memoization pays off when the wrapped work is genuinely expensive or the component re-renders very frequently with unchanged props; it shouldn't be applied by default everywhere.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "memoization"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between React's render phase and commit phase, and why do side effects belong in the commit phase?",
+    "answer": "The render phase is where React calls your component functions to figure out what should change — it's meant to be pure and can be paused, aborted, or restarted by React (especially under concurrent rendering), so it must have no side effects. The commit phase is where React actually applies changes to the real DOM and is guaranteed to run to completion, which is why useEffect (and DOM mutations, subscriptions, etc.) runs after commit rather than during render.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "internals"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "Why can inline style objects in JSX be less performant than CSS classes?",
+    "answer": "An inline style={{ ... }} object is a new object on every render, which both forces a new style recalculation and (as with any inline object) can break shallow prop comparisons on memoized children. CSS classes are parsed once by the browser and applying/removing them is comparatively cheap, and they also allow the browser to cache computed styles more effectively.",
+    "example": null,
+    "code": "// Less ideal\n<div style={{ color: isActive ? 'blue' : 'gray' }} />\n\n// Better\n<div className={isActive ? 'text-active' : 'text-inactive'} />",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "performance", "styling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does using array index as a key combined with .map() sometimes cause unnecessary re-renders?",
+    "answer": "When items are reordered, inserted, or removed, an index-based key stays attached to the same position rather than the same logical item, so React thinks the item at that position simply \"changed\" and re-renders/reconciles it with new props instead of recognizing it moved. Using a stable, unique identifier from the data itself (like an id) lets React correctly match items across renders and skip unnecessary work for items that didn't actually change.",
+    "example": null,
+    "code": "// Fragile: index changes when list is reordered\n{items.map((item, i) => <Row key={i} {...item} />)}\n\n// Stable\n{items.map((item) => <Row key={item.id} {...item} />)}",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "key"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What strategies exist for optimizing images in a React application?",
+    "answer": "Serving correctly sized and modern-format images (WebP/AVIF), using loading=\"lazy\" for offscreen images, specifying width/height to avoid layout shift, and using a CDN or image optimization service to generate responsive srcset variants are the main levers. None of these are React-specific, but they matter disproportionately in SPAs since images are often the largest contributor to LCP.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "images"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "At a high level, how do React Server Components reduce client-side work?",
+    "answer": "Server Components render on the server and send the result to the client as a lightweight description rather than shipping the component's JavaScript to the browser at all, which reduces both bundle size and the amount of client-side rendering work. This is distinct from traditional SSR, which still ships the component code to the client for hydration — Server Components never run on the client in the first place.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "server-components"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "What is a request waterfall in data fetching and how can you avoid one in a React app?",
+    "answer": "A waterfall happens when a child component's data fetch only starts after its parent's fetch has finished and it has rendered, turning what could be parallel requests into a slow sequential chain. Avoiding it means starting independent fetches as early and in parallel as possible — for example, kicking off all needed requests at the top of a route before rendering children, or using Promise.all, rather than letting each nested component trigger its own fetch on mount.",
+    "example": null,
+    "code": "// Waterfall: profile fetch waits, then posts fetch waits\n// Better: fire both immediately\nconst [profile, posts] = await Promise.all([fetchProfile(id), fetchPosts(id)]);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "data-fetching"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How can you use the <Profiler> component programmatically instead of just the DevTools Profiler UI?",
+    "answer": "Wrapping part of the tree in React's built-in <Profiler> component with an onRender callback lets you capture render timings (actual duration, base duration, phase) in code, which is useful for automated performance regression tests or logging real-user render times in production, not just manual inspection in DevTools.",
+    "example": null,
+    "code": "<Profiler id=\"Dashboard\" onRender={(id, phase, actualDuration) => {\n  console.log(id, phase, actualDuration);\n}}>\n  <Dashboard />\n</Profiler>",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "profiler"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might a large component tree benefit from splitting into smaller components even without memoization?",
+    "answer": "Splitting a large component into smaller ones creates natural re-render boundaries: when state changes inside a small child, only that child (and its own children) re-renders, rather than the entire large component and everything inside it having to re-execute. This structural benefit comes for free from component composition, before any memoization is even introduced.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "components"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What is the difference between the shallow comparison used by React.memo and deep equality?",
+    "answer": "React.memo's default comparison checks each prop with Object.is (reference equality for objects/arrays/functions, value equality for primitives) one level deep — it does not look inside nested objects to see if their contents match. Deep equality would recursively compare every nested value, which is more accurate but far more expensive to run on every render, which is why React deliberately defaults to the cheaper shallow check.",
+    "example": null,
+    "code": "// Same content, different reference — shallow comparison says \"changed\"\nReact.memo(Chart)({ config: { color: 'red' } });\nReact.memo(Chart)({ config: { color: 'red' } });",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "memo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does the useState functional updater form help avoid unnecessary effect dependencies?",
+    "answer": "Using setCount(c => c + 1) instead of setCount(count + 1) lets a callback update state based on the latest value without needing count itself in its closure or a useEffect dependency array, which avoids re-creating that callback (and re-running effects that depend on it) every time count changes.",
+    "example": null,
+    "code": "const increment = useCallback(() => {\n  setCount((c) => c + 1); // no need to list `count` as a dependency\n}, []);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usestate"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can spreading all props ({...props}) onto a DOM element hurt performance and cause bugs?",
+    "answer": "Spreading an entire props object onto a native DOM element passes through anything the caller included, including props that aren't valid HTML attributes, which React will warn about and the browser will ignore or mishandle. It also makes it harder for React (and the developer) to reason about which specific values actually affect rendering, since the element re-renders whenever any prop in that spread object changes, even unrelated ones.",
+    "example": null,
+    "code": "// Risky: passes through arbitrary props, including invalid HTML attrs\nfunction Input(props) { return <input {...props} />; }",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "performance", "props"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the performance cost of creating a new array with .filter().map() on every render for a large list?",
+    "answer": "For a large array, chaining .filter().map() allocates two new arrays and does two full passes every single render, even if the underlying data hasn't changed. Wrapping the derived array in useMemo keyed on the actual dependencies (the source array and filter criteria) avoids redoing that work on renders where nothing relevant changed.",
+    "example": null,
+    "code": "const visibleItems = useMemo(\n  () => items.filter((i) => i.active).map((i) => ({ ...i, label: i.name.toUpperCase() })),\n  [items]\n);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "usememo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you avoid re-creating a regex or complex object on every render?",
+    "answer": "If the value never depends on props or state, define it once outside the component (as a module-level constant) instead of inside the render function, so it's created a single time regardless of how many times the component re-renders. If it does depend on props/state but is expensive to build, useMemo is the right tool instead.",
+    "example": null,
+    "code": "// Outside the component — created once, not per render\nconst EMAIL_REGEX = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\nfunction validate(email) { return EMAIL_REGEX.test(email); }",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "performance"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What role does the diffing algorithm's O(n) heuristic play in keeping reconciliation fast?",
+    "answer": "A fully general tree-diffing algorithm is O(n^3) in the number of nodes, which would be far too slow for UI updates. React's reconciler instead uses heuristics — comparing elements of the same type at the same tree position, and using keys to match items in a list — reducing the comparison to roughly O(n), trading some theoretical accuracy (it can miss some optimal diffs) for practical speed.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "internals"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why is it recommended to avoid deeply nested Context providers for frequently changing values?",
+    "answer": "Every level of nested Context adds another subscription point, and if a frequently-updating value sits high in a deeply nested provider tree, every consumer anywhere below it re-renders on each update regardless of how deep it's nested. For fast-changing values, keeping the state as local as possible, or using a store with fine-grained subscriptions instead of Context, avoids that broad re-render fan-out.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the benefit of colocating state as close as possible to where it's used (\"state colocation\")?",
+    "answer": "Keeping state in the smallest, lowest component that needs it means updates to that state only re-render that component and its children, instead of a higher-up ancestor and its entire subtree. It also makes the codebase easier to reason about, since state that's only relevant to one small piece of UI doesn't leak into a larger shared scope.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "state"],
+    "isFrequentlyAsked": true
+  },
+  {
+    "question": "How can you measure the actual bundle size impact of a dependency before adding it?",
+    "answer": "Tools like a bundler's built-in analyzer (e.g. rollup-plugin-visualizer, webpack-bundle-analyzer) or bundlephobia.com show the real minified/gzipped size a package adds, including its own transitive dependencies, before you commit to using it. This catches cases where a convenience library turns out to add far more weight than its usefulness justifies.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "bundling"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the difference between prefetching and lazy-loading a route in a React SPA?",
+    "answer": "Lazy-loading defers downloading a route's code until the user actually navigates to it, which keeps the initial bundle small but adds a delay the first time that route is visited. Prefetching goes a step further by downloading a lazily-loaded route's code ahead of time — for example, when the user hovers a link — so that by the time they click, the code is already cached and the navigation feels instant.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "code-splitting"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why might a large useEffect dependency array with unstable references cause performance issues?",
+    "answer": "If any dependency in the array is a new object, array, or function reference on every render, the effect re-runs on every render regardless of whether anything meaningful actually changed — potentially re-subscribing, re-fetching, or re-computing on every single render. Stabilizing those dependencies with useMemo/useCallback, or restructuring the effect to depend on primitive values instead, fixes the thrashing.",
+    "example": null,
+    "code": "// Runs every render because `options` is a new object each time\nuseEffect(() => { subscribe(options); }, [options]);",
+    "codeLanguage": "jsx",
+    "difficulty": "medium",
+    "tags": ["react", "performance", "useeffect"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What performance considerations apply when rendering a table with thousands of rows and interactive cells?",
+    "answer": "Beyond virtualizing the rows themselves, each interactive cell (inputs, buttons, dropdowns) multiplies the DOM node count and event listener overhead, so it's worth minimizing per-cell complexity and memoizing row components so editing one cell doesn't re-render the entire table. Sorting, filtering, and aggregation should also happen off the render path (memoized or computed incrementally) rather than being recalculated from scratch on every keystroke or click.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "tables"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How does memoizing a component with children still allow the children to re-render when they should?",
+    "answer": "React.memo only controls whether the wrapped component itself re-executes based on its own props; the children prop is just another prop, and if the parent passing those children re-renders and creates new child elements, the memoized wrapper still receives a \"changed\" children prop and re-renders, which then lets those children render normally. Memoization only helps when the children passed in are themselves stable across renders (e.g. passed down unchanged from a higher, less-frequently-updating ancestor).",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "hard",
+    "tags": ["react", "performance", "memo"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why can excessive use of the Context API for frequently updating values be worse than prop drilling?",
+    "answer": "Prop drilling at least lets intermediate components stay untouched if you thread props manually with care, and tools exist to flag unnecessary passes; Context, by contrast, silently subscribes every consumer in the tree to updates, so a fast-changing Context value can cause far more widespread re-rendering than explicit prop passing would, especially if consumers are spread across many unrelated branches.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "context"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What tools can you use to detect memory leaks caused by uncanceled subscriptions in React components?",
+    "answer": "The browser DevTools Memory tab (taking heap snapshots before/after mounting and unmounting a component repeatedly) can reveal detached DOM nodes or growing listener counts that indicate a leak. React's Strict Mode also helps surface these bugs in development by intentionally double-invoking effects, which exposes missing cleanup functions that would otherwise leak a subscription, timer, or event listener on unmount.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "memory-leaks"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "How would you profile and optimize a slow initial page load in a React app, beyond just code splitting?",
+    "answer": "Beyond splitting the bundle, look at the network waterfall for render-blocking resources, minimize the critical CSS/JS needed for first paint, preload key fonts and above-the-fold images, and check whether server-side rendering or static generation could deliver meaningful content before the JS bundle even finishes downloading. Lighthouse and the Performance tab in DevTools are the standard tools for surfacing exactly which resource or task is dominating the load timeline.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "medium",
+    "tags": ["react", "performance", "initial-load"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "What's the performance impact of anonymous inline event handlers versus useCallback-wrapped ones in most apps?",
+    "answer": "For a plain DOM element (a button, an input) the difference is negligible — React doesn't need a stable reference to attach an event listener efficiently, so an inline arrow function is perfectly fine there. The distinction only matters when that handler is passed down as a prop to a child wrapped in React.memo, where an unstable reference would defeat the memoization; outside of that specific case, reaching for useCallback everywhere is unnecessary overhead.",
+    "example": null,
+    "code": null,
+    "codeLanguage": null,
+    "difficulty": "easy",
+    "tags": ["react", "performance", "usecallback"],
+    "isFrequentlyAsked": false
+  },
+  {
+    "question": "Why does batching multiple setState calls into one render matter for performance?",
+    "answer": "Without batching, each setState call would trigger its own full render-and-commit cycle, so an event handler that calls setState three times would re-render the component three times in a row for work that only needed to happen once. Batching collects all the updates that occur within the same tick and applies them together in a single render, which is both faster and avoids showing the UI in a series of inconsistent intermediate states.",
+    "example": null,
+    "code": "function handleSubmit() {\n  setLoading(false);\n  setError(null);\n  setData(result); // all three batched into a single re-render\n}",
+    "codeLanguage": "jsx",
+    "difficulty": "easy",
+    "tags": ["react", "performance", "batching"],
+    "isFrequentlyAsked": true
+  }
+]
