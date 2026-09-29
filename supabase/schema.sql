@@ -288,3 +288,78 @@ create policy "Public can read cheatsheet items"
 
 -- No insert/update/delete policies for anon/authenticated here either — same
 -- SQL-Editor-only content management model as languages/topics/questions.
+
+-- =============================================================================
+-- DSA — data structures & algorithms problems grouped by topic (Arrays, Trees,
+-- Dynamic Programming, ...). Separate from languages/topics/questions: a DSA
+-- problem isn't tied to one language — every solution carries code in
+-- JavaScript, Java and Python, stored together in the `solutions` jsonb column.
+-- =============================================================================
+create table if not exists public.dsa_topics (
+  id            uuid primary key default gen_random_uuid(),
+  name          text not null,
+  slug          text not null unique,
+  description   text,
+  display_order integer not null default 0,
+  created_at    timestamptz not null default now()
+);
+
+comment on table public.dsa_topics is 'DSA problem topics (Arrays & Hashing, Two Pointers, Trees, Graphs, ...).';
+
+create table if not exists public.dsa_problems (
+  id                  uuid primary key default gen_random_uuid(),
+  topic_id            uuid not null references public.dsa_topics(id) on delete cascade,
+  slug                text not null unique,
+  title               text not null,
+  difficulty          text not null default 'medium',
+  question            text not null,
+  answer              text not null,
+  explanation         text not null,
+  -- Array of { type: 'brute' | 'optimal' | 'alternate', name, description, time, space,
+  --            code: { javascript, java, python } } — see scripts/seed-data-dsa/README.md.
+  solutions           jsonb not null default '[]'::jsonb,
+  -- Test cases + starter code for the in-browser practice runner (null = no practice mode);
+  -- see "### Tests" in scripts/seed-data-dsa/README.md.
+  practice            jsonb,
+  tags                text[],
+  is_frequently_asked boolean not null default false,
+  display_order       integer not null default 0,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now(),
+  constraint dsa_problems_difficulty_check check (difficulty in ('easy', 'medium', 'hard'))
+);
+
+-- Upgrade path for databases created before the practice runner existed.
+alter table public.dsa_problems
+  add column if not exists practice jsonb;
+
+comment on table public.dsa_problems is 'DSA problems with statement, answer, explanation and multi-language solutions.';
+
+drop trigger if exists set_dsa_problems_updated_at on public.dsa_problems;
+create trigger set_dsa_problems_updated_at
+  before update on public.dsa_problems
+  for each row
+  execute function public.set_updated_at();
+
+create index if not exists idx_dsa_topics_slug on public.dsa_topics (slug);
+create index if not exists idx_dsa_problems_topic_id on public.dsa_problems (topic_id);
+create index if not exists idx_dsa_problems_slug on public.dsa_problems (slug);
+
+alter table public.dsa_topics enable row level security;
+alter table public.dsa_problems enable row level security;
+
+drop policy if exists "Public can read dsa topics" on public.dsa_topics;
+create policy "Public can read dsa topics"
+  on public.dsa_topics
+  for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Public can read dsa problems" on public.dsa_problems;
+create policy "Public can read dsa problems"
+  on public.dsa_problems
+  for select
+  to anon, authenticated
+  using (true);
+
+-- Same SQL-Editor-only content management model as everything above.

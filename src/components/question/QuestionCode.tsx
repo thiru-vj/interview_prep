@@ -9,6 +9,7 @@ import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx'
 import sql from 'react-syntax-highlighter/dist/esm/languages/prism/sql'
 import markup from 'react-syntax-highlighter/dist/esm/languages/prism/markup'
 import css from 'react-syntax-highlighter/dist/esm/languages/prism/css'
+import python from 'react-syntax-highlighter/dist/esm/languages/prism/python'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -20,6 +21,7 @@ SyntaxHighlighter.registerLanguage('tsx', tsx)
 SyntaxHighlighter.registerLanguage('sql', sql)
 SyntaxHighlighter.registerLanguage('html', markup)
 SyntaxHighlighter.registerLanguage('css', css)
+SyntaxHighlighter.registerLanguage('python', python)
 
 interface QuestionCodeProps {
   code: string
@@ -27,7 +29,7 @@ interface QuestionCodeProps {
   wrap?: boolean
 }
 
-const SUPPORTED_LANGUAGES = new Set(['java', 'javascript', 'typescript', 'jsx', 'tsx', 'sql', 'html', 'css'])
+const SUPPORTED_LANGUAGES = new Set(['java', 'javascript', 'typescript', 'jsx', 'tsx', 'sql', 'html', 'css', 'python'])
 
 export function QuestionCode({ code, language, wrap = false }: QuestionCodeProps) {
   const [copied, setCopied] = useState(false)

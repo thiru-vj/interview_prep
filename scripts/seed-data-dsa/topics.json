@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Arrays & Hashing",
+    "slug": "arrays-hashing",
+    "description": "Frequency maps, prefix sums and in-place array tricks."
+  },
+  {
+    "name": "Two Pointers",
+    "slug": "two-pointers",
+    "description": "Walking two indices toward (or alongside) each other over sorted or symmetric data."
+  },
+  {
+    "name": "Sliding Window",
+    "slug": "sliding-window",
+    "description": "Maintaining a moving range over an array or string in linear time."
+  },
+  { "name": "Stack", "slug": "stack", "description": "LIFO processing, bracket matching and monotonic stacks." },
+  {
+    "name": "Binary Search",
+    "slug": "binary-search",
+    "description": "Halving a sorted search space — on indices or on the answer itself."
+  },
+  {
+    "name": "Linked List",
+    "slug": "linked-list",
+    "description": "Pointer manipulation, fast/slow pointers and dummy nodes."
+  },
+  { "name": "Trees", "slug": "trees", "description": "Binary tree and BST traversals, recursion and level-order BFS." },
+  {
+    "name": "Heap / Priority Queue",
+    "slug": "heap",
+    "description": "Top-K, streaming medians and k-way merges with heaps."
+  },
+  {
+    "name": "Graphs",
+    "slug": "graphs",
+    "description": "BFS, DFS, topological sort and union-find on grids and adjacency lists."
+  },
+  {
+    "name": "Backtracking",
+    "slug": "backtracking",
+    "description": "Exploring choices recursively and undoing them to enumerate solutions."
+  },
+  {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming",
+    "description": "Overlapping subproblems solved with memoization or bottom-up tables."
+  },
+  {
+    "name": "Greedy",
+    "slug": "greedy",
+    "description": "Locally optimal choices that provably lead to a global optimum."
+  },
+  { "name": "Intervals", "slug": "intervals", "description": "Sorting, merging and sweeping over ranges." },
+  { "name": "Bit Manipulation", "slug": "bit-manipulation", "description": "XOR tricks, bit counting and masks." },
+  { "name": "Tries", "slug": "tries", "description": "Prefix trees for fast word and prefix lookups." }
+]

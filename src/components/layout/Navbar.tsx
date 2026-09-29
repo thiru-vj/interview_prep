@@ -1,17 +1,23 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Code2, Menu, X } from 'lucide-react'
+import { Code2, Menu, Trophy, X } from 'lucide-react'
 import { ThemeToggle } from '@/components/common/ThemeToggle'
 import { SearchBar } from '@/components/search/SearchBar'
+import { useProgress } from '@/hooks/useProgress'
+import { getDueReviews } from '@/lib/progress'
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'Languages', to: '/languages' },
+  { label: 'DSA', to: '/dsa' },
   { label: 'Cheatsheets', to: '/cheatsheets' },
+  { label: 'Roadmap', to: '/roadmap' },
+  { label: 'Study', to: '/study' },
 ]
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const dueCount = getDueReviews(useProgress()).length
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
@@ -21,7 +27,7 @@ export function Navbar() {
           <span>Interview Prep</span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => (
             <NavLink
               key={link.to}
@@ -45,10 +51,23 @@ export function Navbar() {
         </div>
 
         <div className="ml-auto flex items-center gap-2 md:ml-0">
+          <Link
+            to="/progress"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+            aria-label={dueCount > 0 ? `My progress (${dueCount} due for review)` : 'My progress'}
+            title="My progress"
+          >
+            <Trophy className="h-4 w-4" aria-hidden="true" />
+            {dueCount > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 min-w-[18px] rounded-full bg-amber-500 px-1 text-center text-[10px] font-bold leading-[18px] text-white">
+                {dueCount > 99 ? '99+' : dueCount}
+              </span>
+            )}
+          </Link>
           <ThemeToggle />
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-600 dark:border-slate-700 dark:text-slate-300 md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-slate-200 text-slate-600 dark:border-slate-700 dark:text-slate-300 lg:hidden"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -60,8 +79,8 @@ export function Navbar() {
       </div>
 
       {menuOpen && (
-        <div id="mobile-menu" className="border-t border-slate-200 px-4 py-4 dark:border-slate-800 md:hidden">
-          <div className="mb-4">
+        <div id="mobile-menu" className="border-t border-slate-200 px-4 py-4 dark:border-slate-800 lg:hidden">
+          <div className="mb-4 md:hidden">
             <SearchBar compact onNavigate={() => setMenuOpen(false)} />
           </div>
           <nav aria-label="Mobile" className="flex flex-col gap-1">

@@ -11,10 +11,20 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "seed:generate": "node scripts/generate-seed.mjs",
-    "seed:cheatsheet:generate": "node scripts/generate-cheatsheet-seed.mjs"
+    "seed:cheatsheet:generate": "node scripts/generate-cheatsheet-seed.mjs",
+    "seed:dsa:generate": "node scripts/generate-dsa-seed.mjs",
+    "access:hash-key": "node scripts/hash-access-key.mjs"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.43.13",
     "@supabase/supabase-js": "^2.116.0",
+    "codemirror": "^6.0.2",
     "lucide-react": "^1.47.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

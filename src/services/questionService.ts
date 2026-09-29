@@ -1,8 +1,9 @@
-import { supabase } from '@/lib/supabase'
+import { withFallback } from '@/lib/withFallback'
+import { mockQueries } from './mockQueries'
 import type { Difficulty, QuestionWithContext } from '@/types/database'
 import { buildPaginatedResult, getRange, PAGE_SIZE, type PaginatedResult } from '@/utils/pagination'
 
-const QUESTION_WITH_CONTEXT_SELECT = `
+export const QUESTION_WITH_CONTEXT_SELECT = `
   *,
   language:languages!questions_language_id_fkey ( id, name, slug ),
   topic:topics!questions_topic_id_fkey ( id, name, slug )
@@ -20,67 +21,90 @@ function applyFilters<T extends { eq: (col: string, val: unknown) => T }>(query:
   return next
 }
 
-export async function getQuestionCount(languageId: string, filters?: QuestionFilters): Promise<number> {
-  const query = supabase.from('questions').select('id', { count: 'exact', head: true }).eq('language_id', languageId)
+export function getQuestionCount(languageId: string, filters?: QuestionFilters): Promise<number> {
+  return withFallback(
+    async (supabase) => {
+      const query = supabase
+        .from('questions')
+        .select('id', { count: 'exact', head: true })
+        .eq('language_id', languageId)
 
-  const { count, error } = await applyFilters(query, filters)
-  if (error) throw error
-  return count ?? 0
+      const { count, error } = await applyFilters(query, filters)
+      if (error) throw error
+      return count ?? 0
+    },
+    () => mockQueries.getQuestionCount(languageId, filters),
+  )
 }
 
-export async function getQuestionsByLanguage(
+export function getQuestionsByLanguage(
   languageId: string,
   page: number,
   pageSize: number = PAGE_SIZE,
   filters?: QuestionFilters,
 ): Promise<PaginatedResult<QuestionWithContext>> {
-  const { from, to } = getRange(page, pageSize)
+  return withFallback(
+    async (supabase) => {
+      const { from, to } = getRange(page, pageSize)
 
-  const query = supabase
-    .from('questions')
-    .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
-    .eq('language_id', languageId)
+      const query = supabase
+        .from('questions')
+        .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
+        .eq('language_id', languageId)
 
-  const { data, count, error } = await applyFilters(query, filters)
-    .order('display_order', { ascending: true })
-    .order('created_at', { ascending: true })
-    .range(from, to)
+      const { data, count, error } = await applyFilters(query, filters)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
+        .range(from, to)
 
-  if (error) throw error
-  return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+      if (error) throw error
+      return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+    },
+    () => mockQueries.getQuestionsByLanguage(languageId, page, pageSize, filters),
+  )
 }
 
-export async function getQuestionsByTopic(
+export function getQuestionsByTopic(
   topicId: string,
   page: number,
   pageSize: number = PAGE_SIZE,
   filters?: QuestionFilters,
 ): Promise<PaginatedResult<QuestionWithContext>> {
-  const { from, to } = getRange(page, pageSize)
+  return withFallback(
+    async (supabase) => {
+      const { from, to } = getRange(page, pageSize)
 
-  const query = supabase
-    .from('questions')
-    .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
-    .eq('topic_id', topicId)
+      const query = supabase
+        .from('questions')
+        .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
+        .eq('topic_id', topicId)
 
-  const { data, count, error } = await applyFilters(query, filters)
-    .order('display_order', { ascending: true })
-    .order('created_at', { ascending: true })
-    .range(from, to)
+      const { data, count, error } = await applyFilters(query, filters)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
+        .range(from, to)
 
-  if (error) throw error
-  return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+      if (error) throw error
+      return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+    },
+    () => mockQueries.getQuestionsByTopic(topicId, page, pageSize, filters),
+  )
 }
 
-export async function getQuestionBySlug(slug: string): Promise<QuestionWithContext | null> {
-  const { data, error } = await supabase
-    .from('questions')
-    .select(QUESTION_WITH_CONTEXT_SELECT)
-    .eq('slug', slug)
-    .maybeSingle()
+export function getQuestionBySlug(slug: string): Promise<QuestionWithContext | null> {
+  return withFallback(
+    async (supabase) => {
+      const { data, error } = await supabase
+        .from('questions')
+        .select(QUESTION_WITH_CONTEXT_SELECT)
+        .eq('slug', slug)
+        .maybeSingle()
 
-  if (error) throw error
-  return data as unknown as QuestionWithContext | null
+      if (error) throw error
+      return data as unknown as QuestionWithContext | null
+    },
+    () => mockQueries.getQuestionBySlug(slug),
+  )
 }
 
 export async function searchQuestions(
@@ -93,22 +117,27 @@ export async function searchQuestions(
     return buildPaginatedResult([], 0, page, pageSize)
   }
 
-  const { from, to } = getRange(page, pageSize)
-  const tsQuery = trimmed
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((term) => `${term}:*`)
-    .join(' & ')
+  return withFallback(
+    async (supabase) => {
+      const { from, to } = getRange(page, pageSize)
+      const tsQuery = trimmed
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((term) => `${term}:*`)
+        .join(' & ')
 
-  const { data, count, error } = await supabase
-    .from('questions')
-    .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
-    .textSearch('search_vector', tsQuery, { type: 'plain', config: 'english' })
-    .order('display_order', { ascending: true })
-    .range(from, to)
+      const { data, count, error } = await supabase
+        .from('questions')
+        .select(QUESTION_WITH_CONTEXT_SELECT, { count: 'exact' })
+        .textSearch('search_vector', tsQuery, { type: 'plain', config: 'english' })
+        .order('display_order', { ascending: true })
+        .range(from, to)
 
-  if (error) throw error
-  return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+      if (error) throw error
+      return buildPaginatedResult((data ?? []) as unknown as QuestionWithContext[], count ?? 0, page, pageSize)
+    },
+    () => mockQueries.searchQuestions(trimmed, page, pageSize),
+  )
 }
 
 /** Lightweight ordered id/slug list used to compute previous/next navigation within a browsing context. */
@@ -118,16 +147,21 @@ export interface QuestionNavItem {
   question: string
 }
 
-async function getOrderedNavList(column: 'language_id' | 'topic_id', contextId: string): Promise<QuestionNavItem[]> {
-  const { data, error } = await supabase
-    .from('questions')
-    .select('id, slug, question')
-    .eq(column, contextId)
-    .order('display_order', { ascending: true })
-    .order('created_at', { ascending: true })
+function getOrderedNavList(column: 'language_id' | 'topic_id', contextId: string): Promise<QuestionNavItem[]> {
+  return withFallback(
+    async (supabase) => {
+      const { data, error } = await supabase
+        .from('questions')
+        .select('id, slug, question')
+        .eq(column, contextId)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: true })
 
-  if (error) throw error
-  return data ?? []
+      if (error) throw error
+      return data ?? []
+    },
+    () => mockQueries.getOrderedNavList(column, contextId),
+  )
 }
 
 export interface AdjacentQuestions {

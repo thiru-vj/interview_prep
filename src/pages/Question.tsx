@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { Seo } from '@/components/common/Seo'
 import { Breadcrumbs } from '@/components/common/Breadcrumbs'
@@ -8,8 +8,14 @@ import { ErrorState } from '@/components/common/ErrorState'
 import { NotFoundState } from '@/components/common/NotFoundState'
 import { QuestionDetail } from '@/components/question/QuestionDetail'
 import { QuestionNavigation } from '@/components/question/QuestionNavigation'
+import { RelatedQuestions } from '@/components/question/RelatedQuestions'
 import { useQuestion } from '@/hooks/useQuestion'
 import { useAdjacentQuestions } from '@/hooks/useAdjacentQuestions'
+import { useProgress } from '@/hooks/useProgress'
+import { useHotkeys } from '@/hooks/useHotkeys'
+import { useLearningMode } from '@/hooks/useLearningMode'
+import { itemKey, recordVisit, setStatus, toggleBookmark } from '@/lib/progress'
+import { questionRef } from '@/utils/study'
 
 interface LocationState {
   returnTo?: string
@@ -18,7 +24,12 @@ interface LocationState {
 export function Question() {
   const { slug } = useParams<{ slug: string }>()
   const location = useLocation()
+  const navigate = useNavigate()
   const { data: question, loading, error } = useQuestion(slug)
+  const progress = useProgress()
+  const { enabled: learningMode } = useLearningMode()
+  // Which question's answer has been revealed — moving to another question hides it again.
+  const [revealedSlug, setRevealedSlug] = useState<string | null>(null)
 
   const returnTo = (location.state as LocationState | null)?.returnTo
 
@@ -32,7 +43,29 @@ export function Question() {
 
   const { data: adjacent } = useAdjacentQuestions(context, question?.id)
 
-  if (loading) return <LoadingState label="Loading question..." />
+  // Only record once the loaded question matches the URL (useAsync keeps stale data while loading).
+  const current = question && question.slug === slug ? question : null
+  useEffect(() => {
+    if (current) recordVisit(questionRef(current))
+  }, [current])
+
+  const revealed = !learningMode || revealedSlug === slug
+  const status = current ? progress.statuses[itemKey('question', current.slug)]?.status : undefined
+  const navState = returnTo ? { returnTo } : undefined
+
+  useHotkeys(
+    {
+      ArrowLeft: () => adjacent?.previous && navigate(`/questions/${adjacent.previous.slug}`, { state: navState }),
+      ArrowRight: () => adjacent?.next && navigate(`/questions/${adjacent.next.slug}`, { state: navState }),
+      ' ': () => setRevealedSlug(slug ?? null),
+      l: () => current && setStatus(questionRef(current), status === 'learned' ? null : 'learned'),
+      r: () => current && setStatus(questionRef(current), status === 'review' ? null : 'review'),
+      b: () => current && toggleBookmark(questionRef(current)),
+    },
+    Boolean(current),
+  )
+
+  if (loading && !current) return <LoadingState label="Loading question..." />
   if (error) return <ErrorState message="Unable to load this question. Please try again." />
   if (!question) return <NotFoundState title="Question not found" message="We couldn't find that question." />
 
@@ -64,7 +97,7 @@ export function Question() {
         Back to questions
       </Link>
 
-      <QuestionDetail question={question} />
+      <QuestionDetail question={question} revealed={revealed} onReveal={() => setRevealedSlug(question.slug)} />
 
       {adjacent && (
         <QuestionNavigation
@@ -72,8 +105,18 @@ export function Question() {
           next={adjacent.next}
           position={adjacent.position}
           total={adjacent.total}
+          state={navState}
         />
       )}
+
+      <RelatedQuestions question={question} state={navState} />
+
+      <p className="hidden text-xs text-slate-400 dark:text-slate-500 sm:block">
+        Shortcuts: <kbd className="font-mono">Space</kbd> reveal · <kbd className="font-mono">←</kbd>/
+        <kbd className="font-mono">→</kbd> previous/next · <kbd className="font-mono">L</kbd> learned ·{' '}
+        <kbd className="font-mono">R</kbd> review · <kbd className="font-mono">B</kbd> bookmark ·{' '}
+        <kbd className="font-mono">?</kbd> all shortcuts
+      </p>
     </div>
   )
 }

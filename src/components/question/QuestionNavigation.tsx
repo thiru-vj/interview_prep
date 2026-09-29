@@ -7,9 +7,11 @@ interface QuestionNavigationProps {
   next: QuestionNavItem | null
   position: number
   total: number
+  /** Router state to carry along (the listing to return to), so the browsing context is kept. */
+  state?: unknown
 }
 
-export function QuestionNavigation({ previous, next, position, total }: QuestionNavigationProps) {
+export function QuestionNavigation({ previous, next, position, total, state }: QuestionNavigationProps) {
   if (total === 0) return null
 
   return (
@@ -20,6 +22,8 @@ export function QuestionNavigation({ previous, next, position, total }: Question
       {previous ? (
         <Link
           to={`/questions/${previous.slug}`}
+          state={state}
+          title={previous.question}
           className="flex min-w-0 items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
         >
           <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -37,6 +41,8 @@ export function QuestionNavigation({ previous, next, position, total }: Question
       {next ? (
         <Link
           to={`/questions/${next.slug}`}
+          state={state}
+          title={next.question}
           className="flex min-w-0 items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
         >
           <span className="hidden sm:inline">Next Question</span>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import type { CheatsheetItem } from '@/types/database'
 import { QuestionCode } from '@/components/question/QuestionCode'
@@ -17,6 +18,11 @@ export function CheatsheetItemCard({ item, mode }: CheatsheetItemCardProps) {
   }, [mode])
 
   const showDetails = mode === 'explanation' || expanded
+  // "Array.prototype.map()" → "map", "<div>" → "div": the most specific identifier makes the best search term.
+  const searchTerm = item.name
+    .split(/[^A-Za-z0-9_-]+/)
+    .filter(Boolean)
+    .at(-1)
   const isAccordion = mode === 'normal'
 
   return (
@@ -89,6 +95,15 @@ export function CheatsheetItemCard({ item, mode }: CheatsheetItemCardProps) {
             <div className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
               {item.notes}
             </div>
+          )}
+
+          {searchTerm && (
+            <Link
+              to={`/search?q=${encodeURIComponent(searchTerm)}&page=1`}
+              className="w-fit text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+            >
+              Interview questions about {searchTerm} →
+            </Link>
           )}
         </div>
       )}

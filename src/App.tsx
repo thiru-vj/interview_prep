@@ -12,6 +12,10 @@ const Cheatsheets = lazy(() => import('@/pages/Cheatsheets').then((m) => ({ defa
 const CheatsheetTechnology = lazy(() =>
   import('@/pages/CheatsheetTechnology').then((m) => ({ default: m.CheatsheetTechnology })),
 )
+const Dsa = lazy(() => import('@/pages/Dsa').then((m) => ({ default: m.Dsa })))
+const Study = lazy(() => import('@/pages/Study').then((m) => ({ default: m.Study })))
+const Progress = lazy(() => import('@/pages/Progress').then((m) => ({ default: m.Progress })))
+const Roadmap = lazy(() => import('@/pages/Roadmap').then((m) => ({ default: m.Roadmap })))
 const Search = lazy(() => import('@/pages/Search').then((m) => ({ default: m.Search })))
 const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })))
 
@@ -27,6 +31,10 @@ export function App() {
           <Route path="/questions/:slug" element={<Question />} />
           <Route path="/cheatsheets" element={<Cheatsheets />} />
           <Route path="/cheatsheets/:slug" element={<CheatsheetTechnology />} />
+          <Route path="/dsa" element={<Dsa />} />
+          <Route path="/study" element={<Study />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/search" element={<Search />} />
           <Route path="*" element={<NotFound />} />
         </Route>

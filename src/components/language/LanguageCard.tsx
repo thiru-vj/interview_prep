@@ -3,6 +3,9 @@ import { ArrowRight } from 'lucide-react'
 import type { LanguageWithCount } from '@/types/database'
 import { getLanguageIcon } from '@/utils/icons'
 import { getCategoryBadgeClassName, getCategoryLabel } from '@/utils/categories'
+import { ProgressBar } from '@/components/study/ProgressBar'
+import { useProgress } from '@/hooks/useProgress'
+import { countByStatus } from '@/lib/progress'
 
 interface LanguageCardProps {
   language: LanguageWithCount
@@ -10,6 +13,8 @@ interface LanguageCardProps {
 
 export function LanguageCard({ language }: LanguageCardProps) {
   const Icon = getLanguageIcon(language.icon)
+  const progress = useProgress()
+  const learned = countByStatus(progress, 'learned', (entry) => entry.languageId === language.id)
 
   return (
     <Link
@@ -40,9 +45,12 @@ export function LanguageCard({ language }: LanguageCardProps) {
           <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">{language.description}</p>
         )}
       </div>
-      <p className="mt-auto text-sm font-medium text-blue-600 dark:text-blue-400">
-        {language.question_count} {language.question_count === 1 ? 'Question' : 'Questions'}
-      </p>
+      <div className="mt-auto flex flex-col gap-2">
+        <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+          {language.question_count} {language.question_count === 1 ? 'Question' : 'Questions'}
+        </p>
+        {learned > 0 && <ProgressBar done={learned} total={language.question_count} label="learned" />}
+      </div>
     </Link>
   )
 }

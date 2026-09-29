@@ -2,3 +2,6 @@ dist
 node_modules
 package-lock.json
 supabase/*.sql
+
+# DSA problem banks: fenced code blocks are tested source; keep them byte-for-byte
+scripts/seed-data-dsa/*.md
