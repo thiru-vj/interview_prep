@@ -14,9 +14,14 @@ const ROLES: { value: AccessRole; label: string; description: string; icon: type
   },
 ]
 
-export function AccessRoleCard() {
+interface AccessRoleCardProps {
+  /** Role pre-selected before the viewer picks one, e.g. 'admin' on the access-denied screen. */
+  initialChoice?: AccessRole
+}
+
+export function AccessRoleCard({ initialChoice }: AccessRoleCardProps = {}) {
   const { role, restoring, unlockAdmin, switchToUser } = useAccess()
-  const [choice, setChoice] = useState<AccessRole>(role)
+  const [choice, setChoice] = useState<AccessRole>(initialChoice ?? role)
   const [key, setKey] = useState('')
   const [status, setStatus] = useState<'idle' | 'checking' | 'invalid' | 'error'>('idle')
 
